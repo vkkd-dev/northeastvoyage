@@ -15,8 +15,8 @@ function HomePage() {
 
   return (
     <div className=" relative overflow-x-hidden">
-      <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <Navbar nav={nav} openNav={openNavbar} />
+      <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <Hero />
       <Destinations />
       <UpcomingTrip />
