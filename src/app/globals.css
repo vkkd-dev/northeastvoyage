@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .max-container {
+    @apply mx-auto max-w-full;
+  }
+
+  .padding-container {
+    @apply px-2 lg:px-20;
+  }
+
+  .nav-links {
+    @apply relative text-black font-bold cursor-pointer text-[17px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center uppercase hidden;
+  }
+
+  .nav-links-mobile {
+    @apply relative mb-[2rem] text-black font-bold cursor-pointer text-[25px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-fit after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center uppercase;
+  }
+
+  .heading {
+    @apply text-[#333] text-[22px] sm:text-[30px] md:text-[38px] font-bold capitalize;
+  }
+
+  .destination-h1 {
+    @apply text-black mt-[1rem] text-[20xpx] text-center font-semibold;
+  }
+
+  .footer-heading {
+    @apply mb-[1.5rem] text-white text-[20px] font-bold;
+  }
+
+  .footer-link {
+    @apply mb-[1.5rem] text-white text-[20px] font-bold;
+  }
+
+  .footer-text {
+    @apply mb-[1.5rem] text-white text-[18px] font-light;
+  }
+}
