@@ -14,7 +14,7 @@ function HomePage() {
   const closeNavbar = () => setNav(false);
 
   return (
-    <div className=" relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden">
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <Hero />
