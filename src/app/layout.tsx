@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { cn } from "@/lib/utils";
 import "./globals.css";
+import { UserProvider } from "@/context/AdminContext";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Northeast Voyage",
@@ -13,9 +16,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <main className="font-primary">{children}</main>
-      </body>
+      <UserProvider>
+        <body
+        // className={cn({
+        //   "debug-screens": process.env.NODE_ENV === "development",
+        // })}
+        >
+          <main className="font-primary">
+            {children}
+            <Toaster />
+          </main>
+        </body>
+      </UserProvider>
     </html>
   );
 }
