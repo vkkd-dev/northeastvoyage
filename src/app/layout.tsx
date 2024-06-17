@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
-import "./globals.css";
 import { UserProvider } from "@/context/AdminContext";
 import { Toaster } from "@/components/ui/toaster";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Northeast Voyage",

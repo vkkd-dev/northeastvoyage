@@ -1,4 +1,5 @@
 import { Bars3Icon, PhoneIcon } from "@heroicons/react/16/solid";
+import { CgPhone } from "react-icons/cg";
 
 interface Props {
   nav: boolean;
@@ -12,12 +13,12 @@ function Navbar({ nav, openNav }: Props) {
 
   return (
     <div className="w-[100%] bg-white">
-      <div className="flex w-[80%] mx-auto items-center justify-between h-[12vh]">
+      <div className="flex w-[80%] mx-auto items-center justify-between h-[10vh]">
         <div className="relative cursor-pointer">
-          <h1 className="lg:text-2xl font-extrabold text-primary">
+          <h1 className="text-xl lg:text-3xl font-extrabold text-primary">
             Northeast Voyage
           </h1>
-          <h1 className="text-xs lg:text-lg font-bold">
+          <h1 className="text-xs lg:text-sm font-bold">
             A SOCIAL TRAVEL COMMUNITY
           </h1>
         </div>
@@ -35,15 +36,19 @@ function Navbar({ nav, openNav }: Props) {
             Contact Us
           </a>
           {!nav && (
-            <div className="flex space-x-3">
-              <PhoneIcon
-                onClick={handleDial}
-                className="w-[1.5rem] lg:w-[2rem] lg:hidden h-[1.5rem] lg:h-[2rem] text-black font-bolds"
-              />
-              <Bars3Icon
-                onClick={openNav}
-                className="w-[1.5rem] lg:w-[2rem] lg:hidden h-[1.5rem] lg:h-[2rem] text-black font-bolds"
-              />
+            <div className="flex space-x-3 lg:hidden">
+              <div className="bg-[#D4D4D4] p-2 rounded-full">
+                <CgPhone
+                  onClick={handleDial}
+                  className="w-[1.5rem] lg:w-[2rem]  h-[1.5rem] lg:h-[2rem] text-black font-bolds"
+                />
+              </div>
+              <div className="bg-[#D4D4D4] p-2 rounded-full">
+                <Bars3Icon
+                  onClick={openNav}
+                  className="w-[1.5rem] lg:w-[2rem] h-[1.5rem] lg:h-[2rem] text-black font-bolds"
+                />
+              </div>
             </div>
           )}
         </div>

@@ -1,64 +1,78 @@
 import TripCard from "./TripCard";
 
+const tripData = [
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut1.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut2.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut3.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut4.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut5.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut6.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut7.png",
+  },
+  {
+    name: "Trip to Tawang",
+    city: "Guwahati to Guwahati",
+    price: "₹7,999/per person",
+    duration: "2N/3D",
+    image: "/ut8.png",
+  },
+];
+
 function UpcomingTrip() {
   return (
-    <div className="pt-[5rem] pb-[4rem] padding-container">
+    <div className="padding-container">
       <h1 className="heading">Upcoming Trips</h1>
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[1rem] items-center mx-auto mt-[4rem]">
-        <div>
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-[1rem] lg:gap-[2rem] items-center mx-auto mt-[1rem]">
+        {tripData.map((trip) => (
           <TripCard
-            name="Trip to Tawang"
-            city="Guwahati to Guwahati"
-            price="₹7,999/per person"
-            duration="2N/3D"
-            image="/h1.png"
+            name={trip.name}
+            city={trip.city}
+            price={trip.price}
+            duration={trip.duration}
+            image={trip.image}
           />
-        </div>
-        <div>
-          <TripCard
-            name="Trip to Tawang"
-            city="Guwahati to Guwahati"
-            price="₹7,999/per person"
-            duration="2N/3D"
-            image="/h2.png"
-          />
-        </div>
-        <div>
-          <TripCard
-            name="Trip to Tawang"
-            city="Guwahati to Guwahati"
-            price="₹7,999/per person"
-            duration="2N/3D"
-            image="/h3.png"
-          />
-        </div>
-        <div>
-          <TripCard
-            name="Trip to Tawang"
-            city="Guwahati to Guwahati"
-            price="₹7,999/per person"
-            duration="2N/3D"
-            image="/h4.png"
-          />
-        </div>
-        <div>
-          <TripCard
-            name="Trip to Tawang"
-            city="Guwahati to Guwahati"
-            price="₹7,999/per person"
-            duration="2N/3D"
-            image="/h5.png"
-          />
-        </div>
-        <div>
-          <TripCard
-            name="Trip to Tawang"
-            city="Guwahati to Guwahati"
-            price="₹7,999/per person"
-            duration="2N/3D"
-            image="/h6.png"
-          />
-        </div>
+        ))}
       </div>
     </div>
   );

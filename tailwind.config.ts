@@ -22,6 +22,7 @@ const config = {
       },
       backgroundImage: {
         hero: "url('/bg-img.png')",
+        connect: "url('/cover.jpeg')",
       },
       colors: {
         primary: "#65A78E",

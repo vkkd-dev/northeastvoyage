@@ -2,7 +2,7 @@ import SearchBox from "./SearchBox";
 
 function Hero() {
   return (
-    <div className="relative w-[100%] h-[88vh]">
+    <div className="relative w-[100%] h-[30vh] lg:h-[90vh]">
       <div className="absolute top-0 left-0 w-[100%] h-[100%] opacity-50"></div>
       <div
         id="hero"

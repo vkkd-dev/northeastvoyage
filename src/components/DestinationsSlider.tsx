@@ -5,7 +5,7 @@ import "react-multi-carousel/lib/styles.css";
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1300 },
-    items: 4,
+    items: 8,
     slideToSlide: 1,
   },
   tablet: {
@@ -49,8 +49,8 @@ function DestinationsSlider() {
           <Image
             src="/d1.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Assam</h1>
@@ -59,8 +59,8 @@ function DestinationsSlider() {
           <Image
             src="/d2.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Arunachal</h1>
@@ -69,8 +69,8 @@ function DestinationsSlider() {
           <Image
             src="/d3.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Manipur</h1>
@@ -79,29 +79,18 @@ function DestinationsSlider() {
           <Image
             src="/d4.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Meghalaya</h1>
         </div>
-      </Carousel>
-      <Carousel
-        additionalTransfrom={0}
-        arrows={false}
-        autoPlay={false}
-        autoPlaySpeed={5000}
-        centerMode={false}
-        infinite={true}
-        responsive={responsive}
-        itemClass="item"
-      >
         <div className="m-1">
           <Image
             src="/d1.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Mizoram</h1>
@@ -110,8 +99,8 @@ function DestinationsSlider() {
           <Image
             src="/d5.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Nagaland</h1>
@@ -120,8 +109,8 @@ function DestinationsSlider() {
           <Image
             src="/d6.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Tripura</h1>
@@ -130,13 +119,66 @@ function DestinationsSlider() {
           <Image
             src="/d1.png"
             alt="destination"
-            height={200}
-            width={200}
+            height={100}
+            width={100}
             className="rounded-full mx-auto"
           />
           <h1 className="destination-h1">Sikkim</h1>
         </div>
       </Carousel>
+      <div className="block sm:hidden">
+        <Carousel
+          additionalTransfrom={0}
+          arrows={false}
+          autoPlay={false}
+          autoPlaySpeed={5000}
+          centerMode={false}
+          infinite={true}
+          responsive={responsive}
+          itemClass="item"
+        >
+          <div className="m-1">
+            <Image
+              src="/d1.png"
+              alt="destination"
+              height={200}
+              width={200}
+              className="rounded-full mx-auto"
+            />
+            <h1 className="destination-h1">Mizoram</h1>
+          </div>
+          <div className="m-1">
+            <Image
+              src="/d5.png"
+              alt="destination"
+              height={200}
+              width={200}
+              className="rounded-full mx-auto"
+            />
+            <h1 className="destination-h1">Nagaland</h1>
+          </div>
+          <div className="m-1">
+            <Image
+              src="/d6.png"
+              alt="destination"
+              height={200}
+              width={200}
+              className="rounded-full mx-auto"
+            />
+            <h1 className="destination-h1">Tripura</h1>
+          </div>
+          <div className="m-1">
+            <Image
+              src="/d1.png"
+              alt="destination"
+              height={200}
+              width={200}
+              className="rounded-full mx-auto"
+            />
+            <h1 className="destination-h1">Sikkim</h1>
+          </div>
+        </Carousel>
+      </div>
     </div>
   );
 }

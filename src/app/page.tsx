@@ -1,4 +1,5 @@
 "use client";
+import Cover from "@/components/Cover";
 import Destinations from "@/components/Destinations";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -21,6 +22,7 @@ function HomePage() {
       <Destinations />
       <UpcomingTrip />
       <Reviews />
+      {/* <Cover /> */}
       <Footer />
     </div>
   );
