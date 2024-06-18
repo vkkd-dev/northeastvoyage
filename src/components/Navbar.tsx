@@ -15,15 +15,18 @@ function Navbar({ nav, openNav }: Props) {
     <div className="w-[100%] bg-white">
       <div className="flex w-[80%] mx-auto items-center justify-between h-[10vh]">
         <div className="relative cursor-pointer">
-          <h1 className="text-xl lg:text-3xl font-extrabold text-primary">
+          <a
+            href="/"
+            className="text-xl lg:text-3xl font-extrabold text-primary"
+          >
             Northeast Voyage
-          </h1>
+          </a>
           <h1 className="text-xs lg:text-sm font-bold">
             A SOCIAL TRAVEL COMMUNITY
           </h1>
         </div>
         <div className="flex items-center space-x-12">
-          <a href="#" className="nav-links">
+          <a href="/" className="nav-links">
             Home
           </a>
           <a href="#" className="nav-links">
