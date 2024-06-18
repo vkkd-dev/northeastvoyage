@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
 import { tripData } from "@/data/tripData";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 interface Destination {
   src: string;
@@ -32,7 +32,7 @@ const AboutPage = () => {
   }
 
   return (
-    <div>
+    <Suspense>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="flex flex-col h-[50vh]">
@@ -55,7 +55,7 @@ const AboutPage = () => {
           ))}
         </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

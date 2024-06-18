@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
 import { tripData } from "@/data/tripData";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import { LuDownload } from "react-icons/lu";
@@ -38,7 +38,7 @@ const TripPage = () => {
   }
 
   return (
-    <div>
+    <Suspense>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="flex flex-col h-[75vh] lg:h-[90vh]">
@@ -76,7 +76,7 @@ const TripPage = () => {
           ))}
         </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
