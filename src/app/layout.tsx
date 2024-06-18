@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { UserProvider } from "@/context/AdminContext";
 import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default function RootLayout({
         // })}
         >
           <main className="font-primary">
-            {children}
+            <Suspense fallback={<>Loading...</>}>{children}</Suspense>
             <Toaster />
           </main>
         </body>
