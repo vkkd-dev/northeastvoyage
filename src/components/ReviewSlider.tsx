@@ -1,7 +1,17 @@
-import Image from "next/image";
 import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
 import ClientReview from "./ClientReview";
+import "react-multi-carousel/lib/styles.css";
+import { useEffect, useState } from "react";
+import { DocumentData, collection, getDocs } from "firebase/firestore";
+import { firestore } from "@/app/firebase/firebase-cofig";
+import Image from "next/image";
+
+interface Review {
+  id: string;
+  image: string;
+  name: string;
+  review: string;
+}
 
 const responsive = {
   desktop: {
@@ -22,6 +32,22 @@ const responsive = {
 };
 
 function ReviewSlider() {
+  const [reviewsData, setReviewsData] = useState<Review[]>([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const reviewsCollection = collection(firestore, "reviews");
+      const reviewsSnapshot = await getDocs(reviewsCollection);
+      const reviewsList = reviewsSnapshot.docs.map((doc: DocumentData) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Review[];
+      setReviewsData(reviewsList);
+    };
+
+    fetchReviews();
+  }, []);
+
   return (
     <Carousel
       additionalTransfrom={0}
@@ -33,9 +59,23 @@ function ReviewSlider() {
       responsive={responsive}
       itemClass="item"
     >
-      <ClientReview name="Test" image="/user1.jpg" />
-      <ClientReview name="Test" image="/user2.jpg" />
-      <ClientReview name="Test" image="/user3.jpg" />
+      {reviewsData.map((review, index) => (
+        <div key={index} className="p-4">
+          <div>
+            <Image
+              width={100}
+              height={100}
+              alt={review.name}
+              src={review.image}
+              className="rounded-full mx-auto"
+            />
+          </div>
+          <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center text-[18px] text-black">
+            {review.name}
+          </h1>
+          <p className="text-center">{review.review}</p>
+        </div>
+      ))}
     </Carousel>
   );
 }

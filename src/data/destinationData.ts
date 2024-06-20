@@ -1,6 +1,6 @@
 export const destinationData = [
   { 
-    src: "/d1.png", 
+    img: "/d1.png", 
     alt: "Assam",
     description: `
       Assam, located in northeastern India, is a land of enchanting natural beauty 
@@ -22,7 +22,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d2.png", 
+    img: "/d2.png", 
     alt: "Arunachal",
     description: `
       Arunachal Pradesh, nestled in the northeastern part of India, is a land of 
@@ -43,7 +43,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d3.png", 
+    img: "/d3.png", 
     alt: "Manipur",
     description: `
       Manipur, located in the northeastern part of India, is a state known 
@@ -66,7 +66,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d4.png", 
+    img: "/d4.png", 
     alt: "Meghalaya",
     description: `
       Meghalaya, meaning 'The Abode of Clouds', is a state in northeastern 
@@ -87,7 +87,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d1.png", 
+    img: "/d1.png", 
     alt: "Mizoram",
     description: `
       Mizoram, located in northeastern India, is a land of rolling hills, 
@@ -107,7 +107,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d5.png", 
+    img: "/d5.png", 
     alt: "Nagaland",
     description: `
       Nagaland, located in northeastern India, is known for its rich 
@@ -129,7 +129,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d6.png", 
+    img: "/d6.png", 
     alt: "Tripura",
     description: `
       Tripura, located in northeastern India, is known for its 
@@ -154,7 +154,7 @@ export const destinationData = [
     `
   },
   { 
-    src: "/d1.png", 
+    img: "/d1.png", 
     alt: "Sikkim",
     description: `
       Sikkim, nestled in the lap of the Himalayas, is a 

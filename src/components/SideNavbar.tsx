@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { Nav } from "./ui/nav";
 import {
-  ShoppingCart,
   LayoutDashboard,
-  UsersRound,
+  CircleUserRound,
   Settings,
   ChevronRight,
+  Star,
+  Plane,
+  Map,
+  GalleryThumbnails,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -58,19 +61,31 @@ const SideNavbar = () => {
           {
             title: "Hero",
             href: "/hero",
-            icon: UsersRound,
+            icon: GalleryThumbnails,
             variant: "ghost",
           },
           {
-            title: "Content",
-            href: "/content",
-            icon: ShoppingCart,
+            title: "Destinations",
+            href: "/destinations",
+            icon: Map,
+            variant: "ghost",
+          },
+          {
+            title: "Trips",
+            href: "/trips",
+            icon: Plane,
+            variant: "ghost",
+          },
+          {
+            title: "Reviews",
+            href: "/reviews",
+            icon: Star,
             variant: "ghost",
           },
           {
             title: "Profile",
             href: "/profile",
-            icon: Settings,
+            icon: CircleUserRound,
             variant: "ghost",
           },
         ]}

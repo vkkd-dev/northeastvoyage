@@ -13,7 +13,7 @@ function Navbar({ nav, openNav }: Props) {
 
   return (
     <div className="w-[100%] bg-white">
-      <div className="flex w-[80%] mx-auto items-center justify-between h-[10vh]">
+      <div className="flex w-[90%] lg:w-[80%] mx-auto items-center justify-between h-[10vh]">
         <div className="relative cursor-pointer">
           <a
             href="/"

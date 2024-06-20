@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { BiHistory, BiLocationPlus } from "react-icons/bi";
-
+import { FaClock } from "react-icons/fa6";
+import { HiLocationMarker } from "react-icons/hi";
+import { FaLocationDot } from "react-icons/fa6";
 // Define the TypeScript interface for the trip object
 interface Trip {
   name: string;
@@ -32,25 +33,26 @@ function TripCard({ trip }: TripCardProps) {
       className="cursor-pointer bg-white rounded-lg overflow-hidden"
       onClick={handleNavigation}
     >
-      <div className="relative overflow-hidden w-[100%] h-[20rem]">
+      <div className="relative overflow-hidden w-full h-80">
         <Image
           src={trip.image}
           alt={trip.name}
           className="transform object-cover transition-all duration-700 scale-100 hover:scale-125"
           fill
         />
-        <h1 className="text-white absolute text-xs lg:text-base top-10 right-0 bg-accent p-2">
-          {trip.price}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+        <h1 className="text-white absolute text-xs lg:text-base top-5 right-0 bg-accent p-2">
+          ₹{trip.price}/per person
         </h1>
         <h1 className="text-white text-sm lg:text-lg absolute bottom-28 left-2 lg:left-5 font-bold">
           {trip.name}
         </h1>
         <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-5 left-2 lg:left-5 font-bold">
-          <BiLocationPlus />
+          <FaLocationDot />
           {trip.duration}
         </h1>
         <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-14 left-2 lg:left-5 font-bold">
-          <BiHistory />
+          <FaClock />
           {trip.city}
         </h1>
       </div>
