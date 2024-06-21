@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 interface NavProps {
   isCollapsed: boolean;
@@ -26,6 +26,16 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const pathName = usePathname();
+
+  useEffect(() => {
+    // Use useEffect to run client-side code after component mounts
+    // Check if window is defined to avoid SSR errors
+    if (typeof window !== "undefined") {
+      // Client-side code accessing window can go here
+      // Example: Add event listeners or manipulate DOM elements
+    }
+  }, []); // Empty dependency array ensures this runs once after mount
+
   return (
     <TooltipProvider>
       <div

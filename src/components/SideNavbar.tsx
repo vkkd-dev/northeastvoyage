@@ -22,6 +22,12 @@ const SideNavbar = () => {
   useEffect(() => {
     // Mark the component as mounted when it mounts on the client
     setIsMounted(true);
+    // Use useEffect to run client-side code after component mounts
+    // Check if window is defined to avoid SSR errors
+    if (typeof window !== "undefined") {
+      // Client-side code accessing window can go here
+      // Example: Add event listeners or manipulate DOM elements
+    }
   }, []);
 
   const mobileWidth = onlyWidth < 768;
