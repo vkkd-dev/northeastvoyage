@@ -2,21 +2,21 @@
 
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
 import getImageUrl from "@/hooks/getImageUrl";
 import { useEffect, useRef, useState } from "react";
-import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
-import { GiConfirmed } from "react-icons/gi";
-import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../firebase/firebase-cofig";
-import { v4 as uuidv4 } from "uuid";
+// import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
+// import { GiConfirmed } from "react-icons/gi";
+// import { ref, uploadBytes } from "firebase/storage";
+// import { storage } from "../firebase/firebase-cofig";
+// import { v4 as uuidv4 } from "uuid";
 
 const HeroPage = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const imgRef = useRef<HTMLInputElement | null>(null);
+  // const imgRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const fetchImageUrl = async () => {
@@ -27,38 +27,38 @@ const HeroPage = () => {
     fetchImageUrl();
   }, []);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
-      setPreviewUrl(URL.createObjectURL(event.target.files[0]));
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     setSelectedFile(event.target.files[0]);
+  //     setPreviewUrl(URL.createObjectURL(event.target.files[0]));
+  //   }
+  // };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("No file selected");
-      return;
-    }
+  // const handleUpload = async () => {
+  //   if (!selectedFile) {
+  //     alert("No file selected");
+  //     return;
+  //   }
 
-    const uniqueImageId = uuidv4();
-    const currentImageRef = ref(storage, "hero/currentImage");
+  //   const uniqueImageId = uuidv4();
+  //   const currentImageRef = ref(storage, "hero/currentImage");
 
-    try {
-      await uploadBytes(currentImageRef, selectedFile);
+  //   try {
+  //     await uploadBytes(currentImageRef, selectedFile);
 
-      const newImageUrl = await getImageUrl("hero/currentImage");
-      setImageUrl(newImageUrl);
+  //     const newImageUrl = await getImageUrl("hero/currentImage");
+  //     setImageUrl(newImageUrl);
 
-      URL.revokeObjectURL(previewUrl!);
-      setPreviewUrl(null);
-      setSelectedFile(null);
+  //     URL.revokeObjectURL(previewUrl!);
+  //     setPreviewUrl(null);
+  //     setSelectedFile(null);
 
-      alert("Image uploaded successfully");
-    } catch (error) {
-      console.error("Error uploading image: ", error);
-      alert("Error uploading image");
-    }
-  };
+  //     alert("Image uploaded successfully");
+  //   } catch (error) {
+  //     console.error("Error uploading image: ", error);
+  //     alert("Error uploading image");
+  //   }
+  // };
 
   return (
     <div className="min-h-screen w-full bg-white text-black flex">
@@ -73,7 +73,7 @@ const HeroPage = () => {
           ) : (
             <p>Loading image...</p>
           )}
-          <Input
+          {/* <Input
             type="file"
             className="hidden"
             ref={imgRef}
@@ -94,7 +94,7 @@ const HeroPage = () => {
               <GiConfirmed size={20} />
               Confirm
             </Button>
-          )}
+          )} */}
         </div>
       </div>
     </div>
