@@ -1,38 +1,38 @@
-"use client";
+"use client"; // Ensure code runs only in client-side environment
 
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import getImageUrl from "@/hooks/getImageUrl";
 import { useEffect, useRef, useState } from "react";
-// import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
-// import { GiConfirmed } from "react-icons/gi";
+import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
+import { GiConfirmed } from "react-icons/gi";
 // import { ref, uploadBytes } from "firebase/storage";
 // import { storage } from "../firebase/firebase-cofig";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const HeroPage = () => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  // const imgRef = useRef<HTMLInputElement | null>(null);
+  const imgRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const fetchImageUrl = async () => {
-      const url = await getImageUrl("hero/currentImage");
+      const url = await getImageUrl("hero/currentImage"); // Use a constant path for the current image
       setImageUrl(url);
     };
 
     fetchImageUrl();
   }, []);
 
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files && event.target.files[0]) {
-  //     setSelectedFile(event.target.files[0]);
-  //     setPreviewUrl(URL.createObjectURL(event.target.files[0]));
-  //   }
-  // };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+      setPreviewUrl(URL.createObjectURL(event.target.files[0])); // Browser API used here
+    }
+  };
 
   // const handleUpload = async () => {
   //   if (!selectedFile) {
@@ -73,7 +73,7 @@ const HeroPage = () => {
           ) : (
             <p>Loading image...</p>
           )}
-          {/* <Input
+          <Input
             type="file"
             className="hidden"
             ref={imgRef}
@@ -81,7 +81,7 @@ const HeroPage = () => {
           />
           <Button
             className="text-white font-bold gap-2"
-            onClick={() => imgRef.current?.click()}
+            onClick={() => imgRef.current?.click()} // Optional chaining used here
           >
             <MdOutlinePhotoSizeSelectActual size={20} />
             Change Image
@@ -89,12 +89,12 @@ const HeroPage = () => {
           {previewUrl && (
             <Button
               className="text-white font-bold gap-2"
-              onClick={handleUpload}
+              // onClick={handleUpload}
             >
               <GiConfirmed size={20} />
               Confirm
             </Button>
-          )} */}
+          )}
         </div>
       </div>
     </div>

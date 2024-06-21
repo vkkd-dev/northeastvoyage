@@ -1,18 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { firestore, storage } from "../firebase/firebase-cofig";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// import {
+//   addDoc,
+//   collection,
+//   deleteDoc,
+//   doc,
+//   getDocs,
+//   updateDoc,
+// } from "firebase/firestore";
+// import { firestore, storage } from "../firebase/firebase-cofig";
+// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useToast } from "@/components/ui/use-toast";
 import { SiTicktick } from "react-icons/si";
 import { MdErrorOutline } from "react-icons/md";
@@ -51,27 +51,27 @@ const ContentPage = () => {
   const [isFetching, setIsFetching] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchDestinations();
-  }, []);
+  // useEffect(() => {
+  //   fetchDestinations();
+  // }, []);
 
-  const fetchDestinations = async () => {
-    setIsFetching(true);
-    try {
-      const querySnapshot = await getDocs(
-        collection(firestore, "destinations")
-      );
-      const destinations = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Destination[];
-      setDestinationData(destinations);
-    } catch (error) {
-      console.error("Error fetching destinations:", error);
-    } finally {
-      setIsFetching(false);
-    }
-  };
+  // const fetchDestinations = async () => {
+  //   setIsFetching(true);
+  //   try {
+  //     const querySnapshot = await getDocs(
+  //       collection(firestore, "destinations")
+  //     );
+  //     const destinations = querySnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     })) as Destination[];
+  //     setDestinationData(destinations);
+  //   } catch (error) {
+  //     console.error("Error fetching destinations:", error);
+  //   } finally {
+  //     setIsFetching(false);
+  //   }
+  // };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -103,160 +103,160 @@ const ContentPage = () => {
     setEditModalOpen(false);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (
-      formData.alt === "" ||
-      formData.description === "" ||
-      imageFile === null
-    ) {
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <MdErrorOutline size={20} />
-            <p>Fill all the fields</p>
-          </div>
-        ),
-        variant: "destructive",
-        className: "bg-black text-white",
-      });
-      return;
-    }
-    try {
-      let imageUrl = formData.img;
-      if (imageFile) {
-        const storageRef = ref(storage, `destinations/${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
-      }
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (
+  //     formData.alt === "" ||
+  //     formData.description === "" ||
+  //     imageFile === null
+  //   ) {
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <MdErrorOutline size={20} />
+  //           <p>Fill all the fields</p>
+  //         </div>
+  //       ),
+  //       variant: "destructive",
+  //       className: "bg-black text-white",
+  //     });
+  //     return;
+  //   }
+  //   try {
+  //     let imageUrl = formData.img;
+  //     if (imageFile) {
+  //       const storageRef = ref(storage, `destinations/${imageFile.name}`);
+  //       await uploadBytes(storageRef, imageFile);
+  //       imageUrl = await getDownloadURL(storageRef);
+  //     }
 
-      const docRef = await addDoc(collection(firestore, "destinations"), {
-        alt: formData.alt,
-        description: formData.description,
-        img: imageUrl,
-      });
+  //     const docRef = await addDoc(collection(firestore, "destinations"), {
+  //       alt: formData.alt,
+  //       description: formData.description,
+  //       img: imageUrl,
+  //     });
 
-      setDestinationData((prevData) => [
-        ...prevData,
-        { id: docRef.id, ...formData, img: imageUrl },
-      ]);
-      setFormData({ alt: "", description: "", img: "" });
-      setImageFile(null);
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>New Destination Added</p>
-          </div>
-        ),
-        variant: "destructive",
-        className: "bg-black text-white",
-      });
-    } catch (error) {
-      console.error("Error adding document:", error);
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Error adding document</p>
-          </div>
-        ),
-      });
-    }
-  };
+  //     setDestinationData((prevData) => [
+  //       ...prevData,
+  //       { id: docRef.id, ...formData, img: imageUrl },
+  //     ]);
+  //     setFormData({ alt: "", description: "", img: "" });
+  //     setImageFile(null);
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <SiTicktick size={20} />
+  //           <p>New Destination Added</p>
+  //         </div>
+  //       ),
+  //       variant: "destructive",
+  //       className: "bg-black text-white",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error adding document:", error);
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <SiTicktick size={20} />
+  //           <p>Error adding document</p>
+  //         </div>
+  //       ),
+  //     });
+  //   }
+  // };
 
-  const handleDelete = async () => {
-    if (!deleteDestinationId) return;
-    try {
-      await deleteDoc(doc(firestore, "destinations", deleteDestinationId));
-      setDestinationData(
-        destinationData.filter(
-          (destination) => destination.id !== deleteDestinationId
-        )
-      );
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Destination Removed</p>
-          </div>
-        ),
-        variant: "destructive",
-        className: "bg-black text-white",
-      });
-    } catch (error) {
-      console.error("Error deleting destination:", error);
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Error deleting destination</p>
-          </div>
-        ),
-      });
-    } finally {
-      setShowConfirmDialog(false);
-      setDeleteDestinationId(null);
-    }
-  };
+  // const handleDelete = async () => {
+  //   if (!deleteDestinationId) return;
+  //   try {
+  //     await deleteDoc(doc(firestore, "destinations", deleteDestinationId));
+  //     setDestinationData(
+  //       destinationData.filter(
+  //         (destination) => destination.id !== deleteDestinationId
+  //       )
+  //     );
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <SiTicktick size={20} />
+  //           <p>Destination Removed</p>
+  //         </div>
+  //       ),
+  //       variant: "destructive",
+  //       className: "bg-black text-white",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error deleting destination:", error);
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <SiTicktick size={20} />
+  //           <p>Error deleting destination</p>
+  //         </div>
+  //       ),
+  //     });
+  //   } finally {
+  //     setShowConfirmDialog(false);
+  //     setDeleteDestinationId(null);
+  //   }
+  // };
 
   const openConfirmDialog = (id: string) => {
     setDeleteDestinationId(id);
     setShowConfirmDialog(true);
   };
 
-  const handleUpdate = async () => {
-    try {
-      let imageUrl = formData.img;
-      if (imageFile) {
-        const storageRef = ref(storage, `destinations/${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
-      }
+  // const handleUpdate = async () => {
+  //   try {
+  //     let imageUrl = formData.img;
+  //     if (imageFile) {
+  //       const storageRef = ref(storage, `destinations/${imageFile.name}`);
+  //       await uploadBytes(storageRef, imageFile);
+  //       imageUrl = await getDownloadURL(storageRef);
+  //     }
 
-      await updateDoc(doc(firestore, "destinations", editDestinationId!), {
-        alt: formData.alt,
-        description: formData.description,
-        img: imageUrl,
-      });
+  //     await updateDoc(doc(firestore, "destinations", editDestinationId!), {
+  //       alt: formData.alt,
+  //       description: formData.description,
+  //       img: imageUrl,
+  //     });
 
-      // Update local state with updated data
-      setDestinationData((prevData) =>
-        prevData.map((item) =>
-          item.id === editDestinationId
-            ? {
-                id: item.id,
-                alt: formData.alt,
-                description: formData.description,
-                img: imageUrl,
-              }
-            : item
-        )
-      );
+  //     // Update local state with updated data
+  //     setDestinationData((prevData) =>
+  //       prevData.map((item) =>
+  //         item.id === editDestinationId
+  //           ? {
+  //               id: item.id,
+  //               alt: formData.alt,
+  //               description: formData.description,
+  //               img: imageUrl,
+  //             }
+  //           : item
+  //       )
+  //     );
 
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Destination Updated</p>
-          </div>
-        ),
-        variant: "destructive",
-        className: "bg-black text-white",
-      });
-      closeEditModal();
-    } catch (error) {
-      console.error("Error updating document:", error);
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Error updating document</p>
-          </div>
-        ),
-      });
-    }
-  };
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <SiTicktick size={20} />
+  //           <p>Destination Updated</p>
+  //         </div>
+  //       ),
+  //       variant: "destructive",
+  //       className: "bg-black text-white",
+  //     });
+  //     closeEditModal();
+  //   } catch (error) {
+  //     console.error("Error updating document:", error);
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <SiTicktick size={20} />
+  //           <p>Error updating document</p>
+  //         </div>
+  //       ),
+  //     });
+  //   }
+  // };
 
   const truncateText = (text: string) => {
     if (text.length <= 120) return text;
@@ -272,7 +272,7 @@ const ContentPage = () => {
         <div className="container mx-auto p-4">
           {/* Form to add new destination */}
           <form
-            onSubmit={handleSubmit}
+            // onSubmit={handleSubmit}
             className="mb-4 border px-10 pt-6 pb-3 rounded-lg"
             encType="multipart/form-data"
           >
@@ -450,7 +450,7 @@ const ContentPage = () => {
                     <button
                       type="button"
                       className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-200"
-                      onClick={handleUpdate}
+                      // onClick={handleUpdate}
                     >
                       Update
                     </button>
@@ -464,7 +464,8 @@ const ContentPage = () => {
           {showConfirmDialog && (
             <ConfirmDialog
               isOpen={showConfirmDialog}
-              onConfirm={handleDelete}
+              // onConfirm={handleDelete}
+              onConfirm={() => {}}
               onCancel={() => setShowConfirmDialog(false)}
               message="Are you sure you want to delete this destination?"
             />
