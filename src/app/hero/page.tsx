@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Ensure code runs only in client-side environment
 
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
@@ -16,7 +16,15 @@ const HeroPage = () => {
   const [imageUrl, setImageUrl] = useState<string | null>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const imgRef = useRef<HTMLInputElement | null>(null); // Add type annotation
+  const imgRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Code that uses window or browser APIs
+      window.scrollTo(0, 0); // Example: Scroll to top of the page
+      console.log("Window width:", window.innerWidth); // Example: Access window innerWidth
+    }
+  }, []); // Empty dependency array means this effect runs once after the component mounts
 
   useEffect(() => {
     const fetchImageUrl = async () => {
@@ -30,7 +38,7 @@ const HeroPage = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
-      setPreviewUrl(URL.createObjectURL(event.target.files[0]));
+      setPreviewUrl(URL.createObjectURL(event.target.files[0])); // Browser API used here
     }
   };
 
@@ -40,27 +48,15 @@ const HeroPage = () => {
       return;
     }
 
-    // Generate a unique identifier for the new image
     const uniqueImageId = uuidv4();
-    // const newImageRef = ref(storage, `hero/${uniqueImageId}`);
+    const currentImageRef = ref(storage, "hero/currentImage");
 
     try {
-      // Delete the previous image
-      // const oldImageRef = ref(storage, "hero/currentImage");
-      // await deleteObject(oldImageRef);
-
-      // Upload the new image with the unique identifier
-      // await uploadBytes(newImageRef, selectedFile);
-
-      // Update the currentImage reference to point to the new image
-      const currentImageRef = ref(storage, "hero/currentImage");
       await uploadBytes(currentImageRef, selectedFile);
 
-      // Get the new image URL and update the state
       const newImageUrl = await getImageUrl("hero/currentImage");
       setImageUrl(newImageUrl);
 
-      // Clean up the preview URL
       URL.revokeObjectURL(previewUrl!);
       setPreviewUrl(null);
       setSelectedFile(null);
@@ -73,7 +69,7 @@ const HeroPage = () => {
   };
 
   return (
-    <div className={"min-h-screen w-full bg-white text-black flex "}>
+    <div className="min-h-screen w-full bg-white text-black flex">
       <SideNavbar />
       <div className="flex flex-col gap-5 w-full p-8">
         <PageTitle title="Hero" />
@@ -93,7 +89,7 @@ const HeroPage = () => {
           />
           <Button
             className="text-white font-bold gap-2"
-            onClick={() => imgRef.current?.click()}
+            onClick={() => imgRef.current?.click()} // Optional chaining used here
           >
             <MdOutlinePhotoSizeSelectActual size={20} />
             Change Image

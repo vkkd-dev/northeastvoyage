@@ -1,5 +1,6 @@
-"use client";
+"use client"; // This is to ensure the code runs only in the client-side environment
 
+import { useRouter } from "next/router";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
@@ -23,6 +24,15 @@ const AboutPage = () => {
   const openNavbar = () => setNav(true);
   const closeNavbar = () => setNav(false);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter(); // Use useRouter hook to access router instance
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Code that uses window or browser APIs
+      window.scrollTo(0, 0); // Example: Scroll to top of the page
+      console.log("Window width:", window.innerWidth); // Example: Access window innerWidth
+    }
+  }, []); // Empty dependency array means this effect runs once after the component mounts
 
   const fetchTrips = async () => {
     setIsLoading(true);
