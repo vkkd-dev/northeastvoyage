@@ -1,4 +1,5 @@
-import { Bars3Icon, PhoneIcon } from "@heroicons/react/16/solid";
+"use client";
+import { Bars3Icon } from "@heroicons/react/16/solid";
 import { CgPhone } from "react-icons/cg";
 
 interface Props {
