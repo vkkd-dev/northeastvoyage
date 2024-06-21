@@ -3,7 +3,6 @@
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
-import { tripData } from "@/data/tripData";
 import { collection, getDocs } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

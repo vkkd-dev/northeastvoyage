@@ -34,7 +34,7 @@ const TripPage = () => {
     setIsLoading(true);
 
     try {
-      const tripsCollection = collection(firestore, "trips"); // Reference to the "trips" collection in Firestore
+      const tripsCollection = collection(firestore, "trips");
       const querySnapshot = await getDocs(tripsCollection);
 
       const trips: any = [];
@@ -62,7 +62,15 @@ const TripPage = () => {
   }, [searchParams]);
 
   if (!trip) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center mt-4">
+        <ImSpinner2
+          height={24}
+          width={24}
+          className="animate-spin self-center text-center mt-4"
+        />
+      </div>
+    );
   }
 
   return (
