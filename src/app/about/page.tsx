@@ -26,14 +26,6 @@ const AboutPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter(); // Use useRouter hook to access router instance
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Code that uses window or browser APIs
-      window.scrollTo(0, 0); // Example: Scroll to top of the page
-      console.log("Window width:", window.innerWidth); // Example: Access window innerWidth
-    }
-  }, []); // Empty dependency array means this effect runs once after the component mounts
-
   const fetchTrips = async () => {
     setIsLoading(true);
 

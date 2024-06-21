@@ -19,14 +19,6 @@ const HeroPage = () => {
   const imgRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Code that uses window or browser APIs
-      window.scrollTo(0, 0); // Example: Scroll to top of the page
-      console.log("Window width:", window.innerWidth); // Example: Access window innerWidth
-    }
-  }, []); // Empty dependency array means this effect runs once after the component mounts
-
-  useEffect(() => {
     const fetchImageUrl = async () => {
       const url = await getImageUrl("hero/currentImage"); // Use a constant path for the current image
       setImageUrl(url);

@@ -5,7 +5,6 @@ import { Nav } from "./ui/nav";
 import {
   LayoutDashboard,
   CircleUserRound,
-  Settings,
   ChevronRight,
   Star,
   Plane,
