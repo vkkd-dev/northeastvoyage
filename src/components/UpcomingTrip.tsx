@@ -21,7 +21,7 @@ function UpcomingTrip() {
     };
 
     fetchTrips();
-  }, []); // Run once on component mount
+  }, []);
 
   return (
     <div className="padding-container">

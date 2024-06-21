@@ -23,6 +23,9 @@ import { RiPriceTag3Line } from "react-icons/ri";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { ImSpinner2 } from "react-icons/im";
 
 interface Trip {
   id: string;
@@ -48,6 +51,11 @@ const TripsPage = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editTripId, setEditTripId] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [deleteTripId, setDeleteTripId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -55,6 +63,7 @@ const TripsPage = () => {
   }, []);
 
   const fetchTrips = async () => {
+    setIsFetching(true);
     try {
       const querySnapshot = await getDocs(collection(firestore, "trips"));
       const trips = querySnapshot.docs.map((doc) => ({
@@ -81,6 +90,8 @@ const TripsPage = () => {
           </div>
         ),
       });
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -119,6 +130,7 @@ const TripsPage = () => {
       return;
     }
     try {
+      setIsLoading(true);
       let imageUrl = formData.image;
       if (imageFile) {
         const storageRef = ref(storage, `trips/${imageFile.name}`);
@@ -139,15 +151,7 @@ const TripsPage = () => {
         ...prevData,
         { id: docRef.id, ...formData, image: imageUrl },
       ]);
-      setFormData({
-        city: "",
-        description: "",
-        duration: "",
-        name: "",
-        price: "",
-        image: "",
-      });
-      setImageFile(null);
+
       toast({
         description: (
           <div className="flex items-center gap-2">
@@ -168,39 +172,54 @@ const TripsPage = () => {
           </div>
         ),
       });
+    } finally {
+      setFormData({
+        city: "",
+        description: "",
+        duration: "",
+        name: "",
+        price: "",
+        image: "",
+      });
+      setImageFile(null);
+      setIsLoading(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this trip?"
-    );
-    if (confirmDelete) {
-      try {
-        await deleteDoc(doc(firestore, "trips", id));
-        setTripsData((prevData) => prevData.filter((item) => item.id !== id));
-        toast({
-          description: (
-            <div className="flex items-center gap-2">
-              <SiTicktick size={20} />
-              <p>Trip Removed</p>
-            </div>
-          ),
-          variant: "destructive",
-          className: "bg-black text-white",
-        });
-      } catch (error) {
-        console.error("Error deleting trip:", error);
-        toast({
-          description: (
-            <div className="flex items-center gap-2">
-              <SiTicktick size={20} />
-              <p>Error deleting document</p>
-            </div>
-          ),
-        });
-      }
+  const handleDelete = async () => {
+    if (!deleteTripId) return;
+    try {
+      await deleteDoc(doc(firestore, "trips", deleteTripId));
+      setTripsData(tripsData.filter((trip) => trip.id !== deleteTripId));
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Trip Removed</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+    } catch (error) {
+      console.error("Error deleting trip:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error deleting trip</p>
+          </div>
+        ),
+      });
+    } finally {
+      setShowConfirmDialog(false);
+      setDeleteTripId(null);
     }
+  };
+
+  const openConfirmDialog = (id: string) => {
+    setDeleteTripId(id);
+    setShowConfirmDialog(true);
   };
 
   const openEditModal = (trip: Trip) => {
@@ -355,7 +374,7 @@ const TripsPage = () => {
 
               {/* Price Input */}
               <input
-                type="text"
+                type="number"
                 placeholder="Price"
                 value={formData.price}
                 onChange={(e) =>
@@ -380,57 +399,75 @@ const TripsPage = () => {
               </div>
 
               {/* Submit Button */}
-              <button
+              <Button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-1 self-start rounded hover:bg-blue-600 transition duration-200"
               >
                 Add Trip
-              </button>
+              </Button>
             </div>
           </form>
 
+          {isFetching && (
+            <div className="flex justify-center items-center mt-4">
+              <ImSpinner2
+                height={24}
+                width={24}
+                className="animate-spin self-center text-center mt-4"
+              />
+            </div>
+          )}
+
+          {tripsData.length === 0 && !isFetching && (
+            <h1 className="text-center">No trips found.</h1>
+          )}
+
           {/* List of trips */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {tripsData.map((trip) => (
-              <div key={trip.id} className="border border-gray-300 rounded p-2">
-                <div className="relative w-full h-40 mb-2 overflow-hidden">
-                  <Image
-                    src={trip.image}
-                    alt={trip.name}
-                    width={300}
-                    height={200}
-                    className="rounded"
-                  />
+            {!isFetching &&
+              tripsData.map((trip) => (
+                <div
+                  key={trip.id}
+                  className="border border-gray-300 rounded p-2"
+                >
+                  <div className="relative w-full h-40 mb-2 overflow-hidden">
+                    <Image
+                      src={trip.image}
+                      alt={trip.name}
+                      width={300}
+                      height={200}
+                      className="rounded"
+                    />
+                  </div>
+                  <div className="flex flex-col mb-2 gap-2">
+                    <h2 className="text-lg font-bold">{trip.name}</h2>
+                    <h2 className="text-sm font-semibold">{trip.city}</h2>
+                    <h2 className="text-sm font-semibold flex items-center gap-1">
+                      <LuClock10 /> {trip.duration}
+                    </h2>
+                    <h2 className="text-sm font-semibold flex items-center gap-1">
+                      <RiPriceTag3Line />₹{trip.price}
+                    </h2>
+                    <p>{truncateText(trip.description)}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => openEditModal(trip)}
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
+                    >
+                      <BiSolidEditAlt />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => openConfirmDialog(trip.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
+                    >
+                      <IoIosRemoveCircle />
+                      Remove
+                    </button>
+                  </div>
                 </div>
-                <div className="flex flex-col mb-2 gap-2">
-                  <h2 className="text-lg font-bold">{trip.name}</h2>
-                  <h2 className="text-sm font-semibold">{trip.city}</h2>
-                  <h2 className="text-sm font-semibold flex items-center gap-1">
-                    <LuClock10 /> {trip.duration}
-                  </h2>
-                  <h2 className="text-sm font-semibold flex items-center gap-1">
-                    <RiPriceTag3Line />₹{trip.price}
-                  </h2>
-                  <p>{truncateText(trip.description)}</p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => openEditModal(trip)}
-                    className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
-                  >
-                    <BiSolidEditAlt />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(trip.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
-                  >
-                    <IoIosRemoveCircle />
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* Edit Modal */}
@@ -550,6 +587,16 @@ const TripsPage = () => {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Confirmation Dialog */}
+          {showConfirmDialog && (
+            <ConfirmDialog
+              isOpen={showConfirmDialog}
+              onConfirm={handleDelete}
+              onCancel={() => setShowConfirmDialog(false)}
+              message="Are you sure you want to delete this trip?"
+            />
           )}
         </div>
       </div>

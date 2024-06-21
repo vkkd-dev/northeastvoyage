@@ -4,24 +4,41 @@ import { useEffect, useState } from "react";
 import SearchBox from "./SearchBox";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "@/app/firebase/firebase-cofig";
+import { ImSpinner2 } from "react-icons/im";
 
 function Hero() {
   const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchHeroImage = async () => {
+    setIsLoading(true);
+    try {
+      // Replace 'hero-image-path' with the actual path to your hero image in Firebase Storage
+      const heroImageRef = ref(storage, "hero/currentImage");
+      const url = await getDownloadURL(heroImageRef);
+      setHeroImageUrl(url);
+    } catch (error) {
+      console.error("Error fetching hero image:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchHeroImage = async () => {
-      try {
-        // Replace 'hero-image-path' with the actual path to your hero image in Firebase Storage
-        const heroImageRef = ref(storage, "hero/currentImage");
-        const url = await getDownloadURL(heroImageRef);
-        setHeroImageUrl(url);
-      } catch (error) {
-        console.error("Error fetching hero image:", error);
-      }
-    };
-
     fetchHeroImage();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="relative w-full h-[30vh] lg:h-[90vh] flex justify-center items-center mt-4">
+        <ImSpinner2
+          height={30}
+          width={30}
+          className="animate-spin self-center text-center mt-4"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-[30vh] lg:h-[90vh]">

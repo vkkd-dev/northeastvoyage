@@ -19,6 +19,10 @@ import { MdErrorOutline } from "react-icons/md";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { IoIosRemoveCircle } from "react-icons/io";
 import Image from "next/image";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { ImSpinner2 } from "react-icons/im";
+import { Input } from "@/components/ui/input";
 
 interface Destination {
   id: string;
@@ -40,6 +44,11 @@ const ContentPage = () => {
     null
   );
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [deleteDestinationId, setDeleteDestinationId] = useState<string | null>(
+    null
+  );
+  const [isFetching, setIsFetching] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -47,6 +56,7 @@ const ContentPage = () => {
   }, []);
 
   const fetchDestinations = async () => {
+    setIsFetching(true);
     try {
       const querySnapshot = await getDocs(
         collection(firestore, "destinations")
@@ -58,6 +68,8 @@ const ContentPage = () => {
       setDestinationData(destinations);
     } catch (error) {
       console.error("Error fetching destinations:", error);
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -153,38 +165,44 @@ const ContentPage = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this destination?"
-    );
-    if (confirmDelete) {
-      try {
-        await deleteDoc(doc(firestore, "destinations", id));
-        setDestinationData((prevData) =>
-          prevData.filter((item) => item.id !== id)
-        );
-        toast({
-          description: (
-            <div className="flex items-center gap-2">
-              <SiTicktick size={20} />
-              <p>Destination Removed</p>
-            </div>
-          ),
-          variant: "destructive",
-          className: "bg-black text-white",
-        });
-      } catch (error) {
-        console.error("Error deleting document:", error);
-        toast({
-          description: (
-            <div className="flex items-center gap-2">
-              <SiTicktick size={20} />
-              <p>Error deleting document</p>
-            </div>
-          ),
-        });
-      }
+  const handleDelete = async () => {
+    if (!deleteDestinationId) return;
+    try {
+      await deleteDoc(doc(firestore, "destinations", deleteDestinationId));
+      setDestinationData(
+        destinationData.filter(
+          (destination) => destination.id !== deleteDestinationId
+        )
+      );
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Destination Removed</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+    } catch (error) {
+      console.error("Error deleting destination:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error deleting destination</p>
+          </div>
+        ),
+      });
+    } finally {
+      setShowConfirmDialog(false);
+      setDeleteDestinationId(null);
     }
+  };
+
+  const openConfirmDialog = (id: string) => {
+    setDeleteDestinationId(id);
+    setShowConfirmDialog(true);
   };
 
   const handleUpdate = async () => {
@@ -284,11 +302,11 @@ const ContentPage = () => {
 
               {/* Image Input */}
               <div className="flex gap-2 items-center">
-                <input
+                <Input
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="py-1 rounded"
+                  className="rounded"
                 />
                 {imageFile && (
                   <span className="text-sm text-gray-500">
@@ -298,55 +316,71 @@ const ContentPage = () => {
               </div>
 
               {/* Submit Button */}
-              <button
+              <Button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-200 self-start"
+                className="bg-blue-500 text-white px-4 rounded hover:bg-blue-600 transition duration-200 self-start"
               >
                 Add Destination
-              </button>
+              </Button>
             </div>
           </form>
 
+          {/* Loading Spinner */}
+          {isFetching && (
+            <div className="flex justify-center items-center mt-4">
+              <ImSpinner2
+                height={24}
+                width={24}
+                className="animate-spin self-center text-center"
+              />
+            </div>
+          )}
+
+          {destinationData.length === 0 && !isFetching && (
+            <h1 className="text-center">No destinations found.</h1>
+          )}
+
           {/* List of destinations */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {destinationData.map((destination) => (
-              <div
-                key={destination.id}
-                className="border border-gray-300 rounded p-2 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="relative w-full h-40 mb-2 overflow-hidden">
-                    <Image
-                      src={destination.img}
-                      alt={destination.alt}
-                      width={300}
-                      height={200}
-                      className="rounded"
-                    />
+            {!isFetching &&
+              destinationData.map((destination) => (
+                <div
+                  key={destination.id}
+                  className="border border-gray-300 rounded p-2 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="relative w-full h-40 mb-2 overflow-hidden">
+                      <Image
+                        src={destination.img}
+                        alt={destination.alt}
+                        width={300}
+                        height={200}
+                        className="rounded"
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <h2 className="text-lg font-bold">{destination.alt}</h2>
+                      <p>{truncateText(destination.description)}</p>
+                    </div>
                   </div>
-                  <div className="mb-2">
-                    <h2 className="text-lg font-bold">{destination.alt}</h2>
-                    <p>{truncateText(destination.description)}</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => openEditModal(destination)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
+                    >
+                      <BiSolidEditAlt />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => openConfirmDialog(destination.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
+                    >
+                      <IoIosRemoveCircle />
+                      Remove
+                    </button>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => openEditModal(destination)}
-                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
-                  >
-                    <BiSolidEditAlt />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(destination.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
-                  >
-                    <IoIosRemoveCircle />
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* Edit Modal */}
@@ -424,6 +458,16 @@ const ContentPage = () => {
                 </form>
               </div>
             </div>
+          )}
+
+          {/* Confirm Dialog */}
+          {showConfirmDialog && (
+            <ConfirmDialog
+              isOpen={showConfirmDialog}
+              onConfirm={handleDelete}
+              onCancel={() => setShowConfirmDialog(false)}
+              message="Are you sure you want to delete this destination?"
+            />
           )}
         </div>
       </div>

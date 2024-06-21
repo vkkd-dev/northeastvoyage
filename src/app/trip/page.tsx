@@ -3,12 +3,14 @@
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
-import { tripData } from "@/data/tripData";
+import { collection, getDocs } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import { LuDownload } from "react-icons/lu";
+import { firestore } from "../firebase/firebase-cofig";
+import { ImSpinner2 } from "react-icons/im";
 
 interface Trip {
   name: string;
@@ -21,10 +23,36 @@ interface Trip {
 
 const TripPage = () => {
   const searchParams = useSearchParams();
+  const [tripData, setTripData] = useState([]);
   const [trip, setTrip] = useState<Trip | null>(null);
   const [nav, setNav] = useState(false);
   const openNavbar = () => setNav(true);
   const closeNavbar = () => setNav(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchTrips = async () => {
+    setIsLoading(true);
+
+    try {
+      const tripsCollection = collection(firestore, "trips"); // Reference to the "trips" collection in Firestore
+      const querySnapshot = await getDocs(tripsCollection);
+
+      const trips: any = [];
+      querySnapshot.forEach((doc) => {
+        trips.push({ id: doc.id, ...doc.data() });
+      });
+
+      setTripData(trips);
+    } catch (error) {
+      console.error("Error fetching hero image:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrips();
+  }, []);
 
   useEffect(() => {
     const tripData = searchParams.get("trip");
@@ -70,11 +98,27 @@ const TripPage = () => {
           </p>
         </div>
         <h1 className="mt-10 font-semibold text-2xl">Similar Trips</h1>
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-          {tripData.slice(0, 4).map((trip, index) => (
-            <TripCard key={index} trip={trip} />
-          ))}
-        </div>
+        {isLoading && (
+          <div className="flex justify-center items-center mt-4">
+            <ImSpinner2
+              height={24}
+              width={24}
+              className="animate-spin self-center text-center mt-4"
+            />
+          </div>
+        )}
+
+        {tripData.length === 0 && !isLoading && (
+          <h1 className="text-center">No trips found.</h1>
+        )}
+
+        {!isLoading && (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            {tripData.slice(0, 4).map((trip, index) => (
+              <TripCard key={index} trip={trip} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

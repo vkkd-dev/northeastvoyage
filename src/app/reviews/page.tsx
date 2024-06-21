@@ -20,7 +20,10 @@ import { MdErrorOutline } from "react-icons/md";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ImSpinner2 } from "react-icons/im";
 
 interface Review {
   id: string;
@@ -30,8 +33,8 @@ interface Review {
 }
 
 const truncateText = (text: string): string => {
-  if (text.length <= 90) return text;
-  return text.slice(0, 90) + "...";
+  if (text.length <= 50) return text;
+  return text.slice(0, 50) + "...";
 };
 
 const ReviewPage = () => {
@@ -47,10 +50,14 @@ const ReviewPage = () => {
   });
   const [editData, setEditData] = useState<Review | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [deleteReviewId, setDeleteReviewId] = useState<string | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchReviews = async () => {
+  const fetchReviews = async () => {
+    setIsFetching(true);
+    try {
       const reviewsCollection = collection(firestore, "reviews");
       const reviewsSnapshot = await getDocs(reviewsCollection);
       const reviewsList = reviewsSnapshot.docs.map((doc: DocumentData) => ({
@@ -58,13 +65,20 @@ const ReviewPage = () => {
         ...doc.data(),
       })) as Review[];
       setReviewsData(reviewsList);
-    };
+    } catch (error) {
+      console.error("Error fetching destinations:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
+  useEffect(() => {
     fetchReviews();
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!formData.image) return;
 
     if (formData.name === "" || formData.review === "" || !formData.image) {
       toast({
@@ -97,20 +111,23 @@ const ReviewPage = () => {
             review: formData.review,
             image: downloadURL,
           };
-          await addDoc(collection(firestore, "reviews"), newReview);
-          setReviewsData([...reviewsData, { id: "", ...newReview }]);
+          const docRef = await addDoc(
+            collection(firestore, "reviews"),
+            newReview
+          );
+          setReviewsData([...reviewsData, { id: docRef.id, ...newReview }]);
+          toast({
+            description: (
+              <div className="flex items-center gap-2">
+                <SiTicktick size={20} />
+                <p>Review Added</p>
+              </div>
+            ),
+            variant: "destructive",
+            className: "bg-green-500 text-white",
+          });
         }
       );
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>New Review Added</p>
-          </div>
-        ),
-        variant: "destructive",
-        className: "bg-black text-white",
-      });
     } catch (error) {
       console.error("Error adding review:", error);
       toast({
@@ -126,33 +143,42 @@ const ReviewPage = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this review?")) {
-      try {
-        await deleteDoc(doc(firestore, "reviews", id));
-        setReviewsData(reviewsData.filter((review) => review.id !== id));
-        toast({
-          description: (
-            <div className="flex items-center gap-2">
-              <SiTicktick size={20} />
-              <p>Review Removed</p>
-            </div>
-          ),
-          variant: "destructive",
-          className: "bg-black text-white",
-        });
-      } catch (error) {
-        console.error("Error deleting trip:", error);
-        toast({
-          description: (
-            <div className="flex items-center gap-2">
-              <SiTicktick size={20} />
-              <p>Error deleting review</p>
-            </div>
-          ),
-        });
-      }
+  const handleDelete = async () => {
+    if (!deleteReviewId) return;
+    try {
+      await deleteDoc(doc(firestore, "reviews", deleteReviewId));
+      setReviewsData(
+        reviewsData.filter((review) => review.id !== deleteReviewId)
+      );
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Review Removed</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error deleting review</p>
+          </div>
+        ),
+      });
+    } finally {
+      setShowConfirmDialog(false);
+      setDeleteReviewId(null);
     }
+  };
+
+  const openConfirmDialog = (id: string) => {
+    setDeleteReviewId(id);
+    setShowConfirmDialog(true);
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -264,55 +290,70 @@ const ReviewPage = () => {
                 onChange={handleFileChange}
                 className="rounded"
               />
-              <button
+              <Button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-1 self-start rounded hover:bg-blue-600 transition duration-200"
+                className="bg-blue-500 text-white px-4 self-start rounded hover:bg-blue-600 transition duration-200"
               >
                 Add Review
-              </button>
+              </Button>
             </div>
           </form>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {reviewsData.map((review) => (
-              <div
-                key={review.id}
-                className="border border-gray-300 rounded p-2"
-              >
-                <div className="relative w-full flex items-center justify-center h-50 mb-2">
-                  <Image
-                    src={review.image}
-                    alt={review.name}
-                    width={200}
-                    height={200}
-                    className="rounded"
-                  />
-                </div>
-                <div className="mb-2">
-                  <h2 className="text-lg font-bold text-center">
-                    {review.name}
-                  </h2>
-                  <p className="h-20">{truncateText(review.review)}</p>
-                </div>
+          {isFetching && (
+            <div className="flex justify-center items-center mt-4">
+              <ImSpinner2
+                height={24}
+                width={24}
+                className="animate-spin self-center text-center mt-4"
+              />
+            </div>
+          )}
 
-                <div className="flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => openEditModal(review)}
-                    className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
-                  >
-                    <BiSolidEditAlt />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(review.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
-                  >
-                    <IoIosRemoveCircle />
-                    Remove
-                  </button>
+          {reviewsData.length === 0 && !isFetching && (
+            <h1 className="text-center">No Reviews found.</h1>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {!isFetching &&
+              reviewsData.map((review) => (
+                <div
+                  key={review.id}
+                  className="border border-gray-300 rounded p-2"
+                >
+                  <div className="relative w-full flex items-center justify-center h-50 mb-2">
+                    <Image
+                      src={review.image}
+                      alt={review.name}
+                      width={200}
+                      height={200}
+                      className="rounded"
+                    />
+                  </div>
+                  <div className="mb-2">
+                    <h2 className="text-lg font-bold text-center">
+                      {review.name}
+                    </h2>
+                    <p className="min-h-20">{truncateText(review.review)}</p>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => openEditModal(review)}
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
+                    >
+                      <BiSolidEditAlt />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => openConfirmDialog(review.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
+                    >
+                      <IoIosRemoveCircle />
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* Edit Modal */}
@@ -369,6 +410,16 @@ const ReviewPage = () => {
                 </form>
               </div>
             </div>
+          )}
+
+          {/* Confirm Delete Dialog */}
+          {showConfirmDialog && (
+            <ConfirmDialog
+              isOpen={showConfirmDialog}
+              onConfirm={handleDelete}
+              onCancel={() => setShowConfirmDialog(false)}
+              message="Are you sure you want to delete this review?"
+            />
           )}
         </div>
       </div>
