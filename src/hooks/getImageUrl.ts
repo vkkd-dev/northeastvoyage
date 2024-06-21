@@ -1,3 +1,5 @@
+"use client"; // Ensure code runs only in client-side environment
+
 import { storage } from "@/app/firebase/firebase-cofig";
 import { ref, getDownloadURL } from "firebase/storage";
 
