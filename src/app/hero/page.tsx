@@ -8,7 +8,7 @@ import getImageUrl from "@/hooks/getImageUrl";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
-// import { ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 // import { storage } from "../firebase/firebase-cofig";
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,31 +34,31 @@ const HeroPage = () => {
     }
   };
 
-  // const handleUpload = async () => {
-  //   if (!selectedFile) {
-  //     alert("No file selected");
-  //     return;
-  //   }
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("No file selected");
+      return;
+    }
 
-  //   const uniqueImageId = uuidv4();
-  //   const currentImageRef = ref(storage, "hero/currentImage");
+    const storage = getStorage();
+    const currentImageRef = ref(storage, "hero/currentImage");
 
-  //   try {
-  //     await uploadBytes(currentImageRef, selectedFile);
+    try {
+      await uploadBytes(currentImageRef, selectedFile);
 
-  //     const newImageUrl = await getImageUrl("hero/currentImage");
-  //     setImageUrl(newImageUrl);
+      const newImageUrl = await getImageUrl("hero/currentImage");
+      setImageUrl(newImageUrl);
 
-  //     URL.revokeObjectURL(previewUrl!);
-  //     setPreviewUrl(null);
-  //     setSelectedFile(null);
+      URL.revokeObjectURL(previewUrl!);
+      setPreviewUrl(null);
+      setSelectedFile(null);
 
-  //     alert("Image uploaded successfully");
-  //   } catch (error) {
-  //     console.error("Error uploading image: ", error);
-  //     alert("Error uploading image");
-  //   }
-  // };
+      alert("Image uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading image: ", error);
+      alert("Error uploading image");
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-white text-black flex">
@@ -89,7 +89,7 @@ const HeroPage = () => {
           {previewUrl && (
             <Button
               className="text-white font-bold gap-2"
-              // onClick={handleUpload}
+              onClick={handleUpload}
             >
               <GiConfirmed size={20} />
               Confirm
