@@ -2,22 +2,35 @@ import { useEffect, useState } from "react";
 import TripCard from "./TripCard";
 import { collection, getDocs } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
-// import { tripData } from "@/data/tripData";
+
+interface Trip {
+  id: string;
+  name: string;
+  city: string;
+  price: string;
+  duration: string;
+  image: string;
+  description: string;
+}
 
 function UpcomingTrip() {
-  const [tripData, setTripData] = useState([]);
+  const [tripData, setTripData] = useState<Trip[]>([]);
 
   useEffect(() => {
     const fetchTrips = async () => {
-      const tripsCollection = collection(firestore, "trips"); // Reference to the "trips" collection in Firestore
-      const querySnapshot = await getDocs(tripsCollection);
+      try {
+        const tripsCollection = collection(firestore, "trips");
+        const querySnapshot = await getDocs(tripsCollection);
 
-      const trips: any = [];
-      querySnapshot.forEach((doc) => {
-        trips.push({ id: doc.id, ...doc.data() });
-      });
+        const trips: Trip[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Trip[];
 
-      setTripData(trips);
+        setTripData(trips);
+      } catch (error) {
+        console.error("Error fetching trips:", error);
+      }
     };
 
     fetchTrips();

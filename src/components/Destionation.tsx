@@ -7,6 +7,7 @@ import "react-multi-carousel/lib/styles.css";
 import { useRouter } from "next/navigation";
 
 interface Destination {
+  id: string;
   alt: string;
   description: string;
   img: string;
@@ -40,9 +41,11 @@ const Destination: React.FC = () => {
         const querySnapshot = await getDocs(
           collection(firestore, "destinations")
         );
-        const destinations = querySnapshot.docs.map(
-          (doc) => doc.data() as Destination
-        );
+        const destinations = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Destination[];
+        console.log("destinations:", destinations);
         setDestinationData(destinations);
       } catch (error) {
         console.error("Error fetching destinations:", error);
@@ -53,10 +56,11 @@ const Destination: React.FC = () => {
   }, []);
 
   const handleNavigation = (destination: Destination) => {
-    const query = new URLSearchParams({
-      trip: JSON.stringify(destination),
-    }).toString();
-    router.push(`/about?${query}`);
+    // const query = new URLSearchParams({
+    //   trip: JSON.stringify(destination),
+    // }).toString();
+    // router.push(`/about?${query}`);
+    router.push(`/about/${destination.id}`);
   };
 
   const renderMobileView = () => {

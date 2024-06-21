@@ -12,19 +12,19 @@ import {
   GalleryThumbnails,
 } from "lucide-react";
 import { Button } from "./ui/button";
-// import { useWindowWidth } from "@react-hook/window-size";
+import { useWindowWidth } from "@react-hook/window-size";
 
 const SideNavbar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  // const onlyWidth = useWindowWidth();
+  const onlyWidth = useWindowWidth();
 
   useEffect(() => {
     // Mark the component as mounted when it mounts on the client
     setIsMounted(true);
   }, []);
 
-  // const mobileWidth = onlyWidth < 768;
+  const mobileWidth = onlyWidth < 768;
 
   function toggleSidebar() {
     setIsCollapsed(!isCollapsed);
@@ -37,7 +37,7 @@ const SideNavbar = () => {
 
   return (
     <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 ">
-      {/* {!mobileWidth && (
+      {!mobileWidth && (
         <div className="absolute right-[-20px] top-7">
           <Button
             onClick={toggleSidebar}
@@ -47,21 +47,9 @@ const SideNavbar = () => {
             <ChevronRight />
           </Button>
         </div>
-      )} */}
-      {
-        <div className="absolute right-[-20px] top-7">
-          <Button
-            onClick={toggleSidebar}
-            variant="secondary"
-            className="rounded-full p-2"
-          >
-            <ChevronRight />
-          </Button>
-        </div>
-      }
+      )}
       <Nav
-        // isCollapsed={mobileWidth ? true : isCollapsed}
-        isCollapsed={isCollapsed}
+        isCollapsed={mobileWidth ? true : isCollapsed}
         links={[
           {
             title: "Dashboard",

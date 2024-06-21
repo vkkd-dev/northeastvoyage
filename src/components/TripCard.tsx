@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaClock } from "react-icons/fa6";
-import { HiLocationMarker } from "react-icons/hi";
 import { FaLocationDot } from "react-icons/fa6";
+
 // Define the TypeScript interface for the trip object
 interface Trip {
+  id: string;
   name: string;
   city: string;
   price: string;
@@ -22,10 +23,7 @@ function TripCard({ trip }: TripCardProps) {
   const router = useRouter();
 
   const handleNavigation = () => {
-    const query = new URLSearchParams({
-      trip: JSON.stringify(trip),
-    }).toString();
-    router.push(`/trip?${query}`);
+    router.push(`/trip/${trip.id}`);
   };
 
   return (
