@@ -1,4 +1,4 @@
-"use client"; // Ensure code runs only in client-side environment
+"use client";
 
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
@@ -13,14 +13,14 @@ import { storage } from "../firebase/firebase-cofig";
 import { v4 as uuidv4 } from "uuid";
 
 const HeroPage = () => {
-  const [imageUrl, setImageUrl] = useState<string | null>("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const imgRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const fetchImageUrl = async () => {
-      const url = await getImageUrl("hero/currentImage"); // Use a constant path for the current image
+      const url = await getImageUrl("hero/currentImage");
       setImageUrl(url);
     };
 
@@ -30,7 +30,7 @@ const HeroPage = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
-      setPreviewUrl(URL.createObjectURL(event.target.files[0])); // Browser API used here
+      setPreviewUrl(URL.createObjectURL(event.target.files[0]));
     }
   };
 
@@ -81,7 +81,7 @@ const HeroPage = () => {
           />
           <Button
             className="text-white font-bold gap-2"
-            onClick={() => imgRef.current?.click()} // Optional chaining used here
+            onClick={() => imgRef.current?.click()}
           >
             <MdOutlinePhotoSizeSelectActual size={20} />
             Change Image
