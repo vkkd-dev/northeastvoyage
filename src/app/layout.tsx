@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { cn } from "@/lib/utils";
 import { UserProvider } from "@/context/AdminContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 export const metadata: Metadata = {

@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
-// import {
-//   addDoc,
-//   collection,
-//   deleteDoc,
-//   doc,
-//   getDocs,
-//   updateDoc,
-// } from "firebase/firestore";
-// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-// import { firestore, storage } from "../firebase/firebase-cofig";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { firestore, storage } from "../firebase/firebase-cofig";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { useToast } from "@/components/ui/use-toast";
@@ -58,42 +58,42 @@ const TripsPage = () => {
 
   const { toast } = useToast();
 
-  // useEffect(() => {
-  //   fetchTrips();
-  // }, []);
+  useEffect(() => {
+    fetchTrips();
+  }, []);
 
-  // const fetchTrips = async () => {
-  //   setIsFetching(true);
-  //   try {
-  //     const querySnapshot = await getDocs(collection(firestore, "trips"));
-  //     const trips = querySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     })) as Trip[];
+  const fetchTrips = async () => {
+    setIsFetching(true);
+    try {
+      const querySnapshot = await getDocs(collection(firestore, "trips"));
+      const trips = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Trip[];
 
-  //     // Fetch download URLs for images from Firebase Storage
-  //     const tripsWithImages = await Promise.all(
-  //       trips.map(async (trip) => {
-  //         const imageUrl = await getDownloadURL(ref(storage, trip.image));
-  //         return { ...trip, image: imageUrl };
-  //       })
-  //     );
+      // Fetch download URLs for images from Firebase Storage
+      const tripsWithImages = await Promise.all(
+        trips.map(async (trip) => {
+          const imageUrl = await getDownloadURL(ref(storage, trip.image));
+          return { ...trip, image: imageUrl };
+        })
+      );
 
-  //     setTripsData(tripsWithImages);
-  //   } catch (error) {
-  //     console.error("Error fetching trips:", error);
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>Error fetching document</p>
-  //         </div>
-  //       ),
-  //     });
-  //   } finally {
-  //     setIsFetching(false);
-  //   }
-  // };
+      setTripsData(tripsWithImages);
+    } catch (error) {
+      console.error("Error fetching trips:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error fetching document</p>
+          </div>
+        ),
+      });
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -107,115 +107,115 @@ const TripsPage = () => {
     }
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (
-  //     formData.city === "" ||
-  //     formData.description === "" ||
-  //     formData.duration === "" ||
-  //     formData.name === "" ||
-  //     formData.price === "" ||
-  //     imageFile === null
-  //   ) {
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <MdErrorOutline size={20} />
-  //           <p>Fill all the fields</p>
-  //         </div>
-  //       ),
-  //       variant: "destructive",
-  //       className: "bg-black text-white",
-  //     });
-  //     return;
-  //   }
-  //   try {
-  //     setIsLoading(true);
-  //     let imageUrl = formData.image;
-  //     if (imageFile) {
-  //       const storageRef = ref(storage, `trips/${imageFile.name}`);
-  //       await uploadBytes(storageRef, imageFile);
-  //       imageUrl = await getDownloadURL(storageRef);
-  //     }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      formData.city === "" ||
+      formData.description === "" ||
+      formData.duration === "" ||
+      formData.name === "" ||
+      formData.price === "" ||
+      imageFile === null
+    ) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Fill all the fields</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+      return;
+    }
+    try {
+      setIsLoading(true);
+      let imageUrl = formData.image;
+      if (imageFile) {
+        const storageRef = ref(storage, `trips/${imageFile.name}`);
+        await uploadBytes(storageRef, imageFile);
+        imageUrl = await getDownloadURL(storageRef);
+      }
 
-  //     const docRef = await addDoc(collection(firestore, "trips"), {
-  //       city: formData.city,
-  //       description: formData.description,
-  //       duration: formData.duration,
-  //       name: formData.name,
-  //       price: formData.price,
-  //       image: imageUrl,
-  //     });
+      const docRef = await addDoc(collection(firestore, "trips"), {
+        city: formData.city,
+        description: formData.description,
+        duration: formData.duration,
+        name: formData.name,
+        price: formData.price,
+        image: imageUrl,
+      });
 
-  //     setTripsData((prevData) => [
-  //       ...prevData,
-  //       { id: docRef.id, ...formData, image: imageUrl },
-  //     ]);
+      setTripsData((prevData) => [
+        ...prevData,
+        { id: docRef.id, ...formData, image: imageUrl },
+      ]);
 
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>New Trip Added</p>
-  //         </div>
-  //       ),
-  //       variant: "destructive",
-  //       className: "bg-black text-white",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error adding trip:", error);
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>Error adding document</p>
-  //         </div>
-  //       ),
-  //     });
-  //   } finally {
-  //     setFormData({
-  //       city: "",
-  //       description: "",
-  //       duration: "",
-  //       name: "",
-  //       price: "",
-  //       image: "",
-  //     });
-  //     setImageFile(null);
-  //     setIsLoading(false);
-  //   }
-  // };
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>New Trip Added</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+    } catch (error) {
+      console.error("Error adding trip:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error adding document</p>
+          </div>
+        ),
+      });
+    } finally {
+      setFormData({
+        city: "",
+        description: "",
+        duration: "",
+        name: "",
+        price: "",
+        image: "",
+      });
+      setImageFile(null);
+      setIsLoading(false);
+    }
+  };
 
-  // const handleDelete = async () => {
-  //   if (!deleteTripId) return;
-  //   try {
-  //     await deleteDoc(doc(firestore, "trips", deleteTripId));
-  //     setTripsData(tripsData.filter((trip) => trip.id !== deleteTripId));
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>Trip Removed</p>
-  //         </div>
-  //       ),
-  //       variant: "destructive",
-  //       className: "bg-black text-white",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error deleting trip:", error);
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>Error deleting trip</p>
-  //         </div>
-  //       ),
-  //     });
-  //   } finally {
-  //     setShowConfirmDialog(false);
-  //     setDeleteTripId(null);
-  //   }
-  // };
+  const handleDelete = async () => {
+    if (!deleteTripId) return;
+    try {
+      await deleteDoc(doc(firestore, "trips", deleteTripId));
+      setTripsData(tripsData.filter((trip) => trip.id !== deleteTripId));
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Trip Removed</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+    } catch (error) {
+      console.error("Error deleting trip:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error deleting trip</p>
+          </div>
+        ),
+      });
+    } finally {
+      setShowConfirmDialog(false);
+      setDeleteTripId(null);
+    }
+  };
 
   const openConfirmDialog = (id: string) => {
     setDeleteTripId(id);
@@ -250,63 +250,63 @@ const TripsPage = () => {
     setEditModalOpen(false);
   };
 
-  // const handleUpdate = async () => {
-  //   try {
-  //     let imageUrl = formData.image;
-  //     if (imageFile) {
-  //       const storageRef = ref(storage, `trips/${imageFile.name}`);
-  //       await uploadBytes(storageRef, imageFile);
-  //       imageUrl = await getDownloadURL(storageRef);
-  //     }
+  const handleUpdate = async () => {
+    try {
+      let imageUrl = formData.image;
+      if (imageFile) {
+        const storageRef = ref(storage, `trips/${imageFile.name}`);
+        await uploadBytes(storageRef, imageFile);
+        imageUrl = await getDownloadURL(storageRef);
+      }
 
-  //     await updateDoc(doc(firestore, "trips", editTripId!), {
-  //       city: formData.city,
-  //       description: formData.description,
-  //       duration: formData.duration,
-  //       name: formData.name,
-  //       price: formData.price,
-  //       image: imageUrl,
-  //     });
+      await updateDoc(doc(firestore, "trips", editTripId!), {
+        city: formData.city,
+        description: formData.description,
+        duration: formData.duration,
+        name: formData.name,
+        price: formData.price,
+        image: imageUrl,
+      });
 
-  //     // Update local state with updated data
-  //     setTripsData((prevData) =>
-  //       prevData.map((item) =>
-  //         item.id === editTripId
-  //           ? {
-  //               id: item.id,
-  //               city: formData.city,
-  //               description: formData.description,
-  //               duration: formData.duration,
-  //               name: formData.name,
-  //               price: formData.price,
-  //               image: imageUrl,
-  //             }
-  //           : item
-  //       )
-  //     );
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>Trip Updated</p>
-  //         </div>
-  //       ),
-  //       variant: "destructive",
-  //       className: "bg-black text-white",
-  //     });
-  //     closeEditModal();
-  //   } catch (error) {
-  //     console.error("Error updating trip:", error);
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <SiTicktick size={20} />
-  //           <p>Error updating document</p>
-  //         </div>
-  //       ),
-  //     });
-  //   }
-  // };
+      // Update local state with updated data
+      setTripsData((prevData) =>
+        prevData.map((item) =>
+          item.id === editTripId
+            ? {
+                id: item.id,
+                city: formData.city,
+                description: formData.description,
+                duration: formData.duration,
+                name: formData.name,
+                price: formData.price,
+                image: imageUrl,
+              }
+            : item
+        )
+      );
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Trip Updated</p>
+          </div>
+        ),
+        variant: "destructive",
+        className: "bg-black text-white",
+      });
+      closeEditModal();
+    } catch (error) {
+      console.error("Error updating trip:", error);
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Error updating document</p>
+          </div>
+        ),
+      });
+    }
+  };
 
   const truncateText = (text: string) => {
     if (text.length <= 100) return text;
@@ -321,7 +321,7 @@ const TripsPage = () => {
         <div className="container mx-auto p-4">
           {/* Form to add new trip */}
           <form
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
             className="mb-4 border px-10 pt-6 pb-3 rounded-lg"
             encType="multipart/form-data"
           >
@@ -572,7 +572,7 @@ const TripsPage = () => {
                   </div>
                   <div className="flex justify-end">
                     <button
-                      // onClick={handleUpdate}
+                      onClick={handleUpdate}
                       className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-200"
                     >
                       Update
@@ -593,8 +593,7 @@ const TripsPage = () => {
           {showConfirmDialog && (
             <ConfirmDialog
               isOpen={showConfirmDialog}
-              // onConfirm={handleDelete}
-              onConfirm={() => {}}
+              onConfirm={handleDelete}
               onCancel={() => setShowConfirmDialog(false)}
               message="Are you sure you want to delete this trip?"
             />
