@@ -10,12 +10,17 @@ import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase/firebase-cofig";
+import { SiTicktick } from "react-icons/si";
+import { MdErrorOutline } from "react-icons/md";
+import { useToast } from "@/components/ui/use-toast";
+import { ImSpinner2 } from "react-icons/im";
 
 const HeroPage = () => {
   const [imageUrl, setImageUrl] = useState<string | null>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const imgRef = useRef<HTMLInputElement | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchImageUrl = async () => {
@@ -36,6 +41,15 @@ const HeroPage = () => {
   const handleUpload = async () => {
     if (!selectedFile) {
       alert("No file selected");
+      toast({
+        description: (
+          <div className="flex items-center gap-2 ">
+            <MdErrorOutline size={20} />
+            <p>Image not found!</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
       return;
     }
 
@@ -51,10 +65,26 @@ const HeroPage = () => {
       setPreviewUrl(null);
       setSelectedFile(null);
 
-      alert("Image uploaded successfully");
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <SiTicktick size={20} />
+            <p>Hero Image Updated</p>
+          </div>
+        ),
+        className: "bg-black text-white font-bold",
+      });
     } catch (error) {
       console.error("Error uploading image: ", error);
-      alert("Error uploading image");
+      toast({
+        description: (
+          <div className="flex items-center gap-2 font-bold">
+            <SiTicktick size={20} />
+            <p>Error updating image</p>
+          </div>
+        ),
+        variant: "destructive",
+      });
     }
   };
 
@@ -65,11 +95,19 @@ const HeroPage = () => {
         <PageTitle title="Hero" />
         <div className="flex flex-col gap-10 items-center justify-center">
           {previewUrl ? (
-            <img src={previewUrl} alt="Preview" className="max-w-4xl h-auto" />
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="max-w-4xl max-h-svh"
+            />
           ) : imageUrl ? (
-            <img src={imageUrl} alt="Hero" className="max-w-4xl h-auto" />
+            <img src={imageUrl} alt="Hero" className="max-w-4xl max-h-svh" />
           ) : (
-            <p>Loading image...</p>
+            <ImSpinner2
+              height={30}
+              width={30}
+              className="animate-spin self-center text-center mt-4"
+            />
           )}
           <Input
             type="file"
@@ -77,22 +115,24 @@ const HeroPage = () => {
             ref={imgRef}
             onChange={(e) => handleFileChange(e)}
           />
-          <Button
-            className="text-white font-bold gap-2"
-            onClick={() => imgRef.current?.click()} // Optional chaining used here
-          >
-            <MdOutlinePhotoSizeSelectActual size={20} />
-            Change Image
-          </Button>
-          {previewUrl && (
+          <div className="flex items-center gap-5">
             <Button
               className="text-white font-bold gap-2"
-              onClick={handleUpload}
+              onClick={() => imgRef.current?.click()} // Optional chaining used here
             >
-              <GiConfirmed size={20} />
-              Confirm
+              <MdOutlinePhotoSizeSelectActual size={20} />
+              Change Image
             </Button>
-          )}
+            {previewUrl && (
+              <Button
+                className="text-white font-bold gap-2"
+                onClick={handleUpload}
+              >
+                <GiConfirmed size={20} />
+                Confirm
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

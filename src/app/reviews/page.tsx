@@ -88,8 +88,7 @@ const ReviewPage = () => {
             <p>Fill all the fields</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
       return;
     }
@@ -123,8 +122,7 @@ const ReviewPage = () => {
                 <p>Review Added</p>
               </div>
             ),
-            variant: "destructive",
-            className: "bg-green-500 text-white",
+            className: "bg-primary text-white font-bold",
           });
         }
       );
@@ -132,11 +130,12 @@ const ReviewPage = () => {
       console.error("Error adding review:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error adding review</p>
           </div>
         ),
+        variant: "destructive",
       });
     } finally {
       setFormData({ name: "", review: "", image: null });
@@ -157,18 +156,18 @@ const ReviewPage = () => {
             <p>Review Removed</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
     } catch (error) {
       console.error("Error deleting review:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error deleting review</p>
           </div>
         ),
+        variant: "destructive",
       });
     } finally {
       setShowConfirmDialog(false);

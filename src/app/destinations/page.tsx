@@ -114,11 +114,10 @@ const ContentPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Fill all the fields</p>
+            <p>All fields must be fielded</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
       return;
     }
@@ -149,18 +148,18 @@ const ContentPage = () => {
             <p>New Destination Added</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
     } catch (error) {
       console.error("Error adding document:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error adding document</p>
           </div>
         ),
+        variant: "destructive",
       });
     }
   };
@@ -181,18 +180,18 @@ const ContentPage = () => {
             <p>Destination Removed</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
     } catch (error) {
       console.error("Error deleting destination:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error deleting destination</p>
           </div>
         ),
+        variant: "destructive",
       });
     } finally {
       setShowConfirmDialog(false);
@@ -241,19 +240,19 @@ const ContentPage = () => {
             <p>Destination Updated</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
       closeEditModal();
     } catch (error) {
       console.error("Error updating document:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error updating document</p>
           </div>
         ),
+        variant: "destructive",
       });
     }
   };

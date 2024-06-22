@@ -84,11 +84,12 @@ const TripsPage = () => {
       console.error("Error fetching trips:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error fetching document</p>
           </div>
         ),
+        variant: "destructive",
       });
     } finally {
       setIsFetching(false);
@@ -124,8 +125,7 @@ const TripsPage = () => {
             <p>Fill all the fields</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
       return;
     }
@@ -159,18 +159,18 @@ const TripsPage = () => {
             <p>New Trip Added</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
     } catch (error) {
       console.error("Error adding trip:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error adding document</p>
           </div>
         ),
+        variant: "destructive",
       });
     } finally {
       setFormData({
@@ -198,18 +198,18 @@ const TripsPage = () => {
             <p>Trip Removed</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
     } catch (error) {
       console.error("Error deleting trip:", error);
       toast({
         description: (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 font-bold">
             <SiTicktick size={20} />
             <p>Error deleting trip</p>
           </div>
         ),
+        variant: "destructive",
       });
     } finally {
       setShowConfirmDialog(false);
@@ -291,8 +291,7 @@ const TripsPage = () => {
             <p>Trip Updated</p>
           </div>
         ),
-        variant: "destructive",
-        className: "bg-black text-white",
+        className: "bg-primary text-white font-bold",
       });
       closeEditModal();
     } catch (error) {
@@ -304,6 +303,7 @@ const TripsPage = () => {
             <p>Error updating document</p>
           </div>
         ),
+        variant: "destructive",
       });
     }
   };
