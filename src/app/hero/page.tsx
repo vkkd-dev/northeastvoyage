@@ -8,8 +8,8 @@ import getImageUrl from "@/hooks/getImageUrl";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-// import { storage } from "../firebase/firebase-cofig";
+// import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase/firebase-cofig";
 import { v4 as uuidv4 } from "uuid";
 
 const HeroPage = () => {
@@ -40,11 +40,10 @@ const HeroPage = () => {
       return;
     }
 
-    const storage = getStorage();
-    const currentImageRef = ref(storage, "hero/currentImage");
+    // const currentImageRef = ref(storage, "hero/currentImage");
 
     try {
-      await uploadBytes(currentImageRef, selectedFile);
+      // await uploadBytes(currentImageRef, selectedFile);
 
       const newImageUrl = await getImageUrl("hero/currentImage");
       setImageUrl(newImageUrl);
