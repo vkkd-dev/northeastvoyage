@@ -98,10 +98,14 @@ const HeroPage = () => {
             <img
               src={previewUrl}
               alt="Preview"
-              className="max-w-4xl max-h-svh"
+              className="w-svw lg:max-w-4xl max-h-svh rounded-lg"
             />
           ) : imageUrl ? (
-            <img src={imageUrl} alt="Hero" className="max-w-4xl max-h-svh" />
+            <img
+              src={imageUrl}
+              alt="Hero"
+              className="w-svw lg:max-w-4xl max-h-svh rounded-lg"
+            />
           ) : (
             <ImSpinner2
               height={30}
