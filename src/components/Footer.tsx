@@ -3,7 +3,7 @@ import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 function Footer() {
   return (
     <div className="bg-[#65a78e] pb-[3rem] h-[30rem] mt-[10rem]">
-      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] bottom-[2rem] pt-[4rem] pb-[1rem] bg-white shadow-lg rounded-2xl border-slate-100 border-[0.5px]">
+      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] bottom-[2rem] pt-[4rem] pb-[1rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[80%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-xl font-bold">Our Vision</h1>

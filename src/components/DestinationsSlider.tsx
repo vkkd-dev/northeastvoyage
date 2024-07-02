@@ -65,7 +65,7 @@ function DestinationsSlider() {
     <div className="flex flex-col space-y-10">
       <Carousel
         additionalTransfrom={0}
-        arrows={false}
+        arrows={true}
         autoPlay={false}
         autoPlaySpeed={5000}
         centerMode={false}

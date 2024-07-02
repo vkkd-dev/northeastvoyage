@@ -2,9 +2,9 @@ import ReviewSlider from "./ReviewSlider";
 
 function Reviews() {
   return (
-    <div className="pt-[2rem] pb-[4rem] padding-container">
-      <h1 className="heading">Reviews</h1>
-      <div className="mt-[4rem] w-[80%] mx-auto">
+    <div className="py-[5rem] padding-container">
+      <h1 className="heading text-center font-bold">REVIEWS</h1>
+      <div className="mt-[2rem] w-[90%] mx-auto border-[#0DB295] border-solid border-2 rounded-3xl">
         <ReviewSlider />
       </div>
     </div>

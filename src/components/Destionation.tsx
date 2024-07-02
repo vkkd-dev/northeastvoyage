@@ -111,43 +111,43 @@ const Destination: React.FC = () => {
 
   return (
     <>
-      <div className="hidden sm:block">
-        <Carousel
-          additionalTransfrom={0}
-          arrows={false}
-          autoPlay={false}
-          autoPlaySpeed={5000}
-          centerMode={false}
-          infinite={true}
-          responsive={responsive}
-          itemClass="item"
-          customTransition="all 0.5s"
-          transitionDuration={500}
-          containerClass="carousel-container"
-        >
-          {destinationData.map((destination, index) => (
-            <div
-              key={index}
-              className="m-1 cursor-pointer"
-              onClick={() => handleNavigation(destination)}
-            >
-              <div className="relative w-24 h-24 mx-auto rounded-full overflow-hidden">
-                <Image
-                  src={destination.img}
-                  alt={destination.alt}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-full"
-                />
-              </div>
-              <h1 className="destination-h1 text-center mt-2">
-                {destination.alt}
-              </h1>
+      {/* <div className="hidden sm:block"> */}
+      <Carousel
+        additionalTransfrom={0}
+        arrows={false}
+        autoPlay={false}
+        autoPlaySpeed={5000}
+        centerMode={false}
+        infinite={true}
+        responsive={responsive}
+        itemClass="item"
+        customTransition="all 0.5s"
+        transitionDuration={500}
+        containerClass="carousel-container"
+      >
+        {destinationData.map((destination, index) => (
+          <div
+            key={index}
+            className="m-1 cursor-pointer"
+            onClick={() => handleNavigation(destination)}
+          >
+            <div className="relative w-20 h-20 lg:w-24 lg:h-24 mx-auto rounded-full overflow-hidden">
+              <Image
+                src={destination.img}
+                alt={destination.alt}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full"
+              />
             </div>
-          ))}
-        </Carousel>
-      </div>
-      <div className="block sm:hidden mt-4">{renderMobileView()}</div>
+            <h1 className="destination-h1 text-center mt-2">
+              {destination.alt}
+            </h1>
+          </div>
+        ))}
+      </Carousel>
+      {/* </div> */}
+      {/* <div className="block sm:hidden mt-4">{renderMobileView()}</div> */}
     </>
   );
 };

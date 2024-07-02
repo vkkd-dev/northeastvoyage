@@ -73,7 +73,7 @@ function ReviewSlider() {
           <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center text-[18px] text-black">
             {review.name}
           </h1>
-          <p className="text-center">{review.review}</p>
+          <p className="text-center px-10">{review.review}</p>
         </div>
       ))}
     </Carousel>
