@@ -12,7 +12,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { firestore, storage } from "../firebase/firebase-cofig";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { useToast } from "@/components/ui/use-toast";
@@ -26,6 +25,7 @@ import Image from "next/image";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
+import { firestore, storage } from "@/app/firebase/firebase-cofig";
 
 interface Trip {
   id: string;
@@ -182,6 +182,7 @@ const TripsPage = () => {
         image: "",
       });
       setImageFile(null);
+      setPreviewImage(null);
       setIsLoading(false);
     }
   };
@@ -328,13 +329,13 @@ const TripsPage = () => {
             <div className="flex flex-col gap-4 mb-4">
               <h1 className="text-lg font-semibold">Add New Trip</h1>
 
-              {/* City Input */}
+              {/* Name Input */}
               <input
                 type="text"
-                placeholder="City"
-                value={formData.city}
+                placeholder="Name"
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
@@ -361,13 +362,13 @@ const TripsPage = () => {
                 className="px-2 py-1 border border-gray-300 rounded"
               />
 
-              {/* Name Input */}
+              {/* City Input */}
               <input
                 type="text"
-                placeholder="Name"
-                value={formData.name}
+                placeholder="City"
+                value={formData.city}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setFormData({ ...formData, city: e.target.value })
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />

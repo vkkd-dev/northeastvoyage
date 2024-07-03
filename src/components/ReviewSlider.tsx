@@ -1,5 +1,4 @@
 import Carousel from "react-multi-carousel";
-import ClientReview from "./ClientReview";
 import "react-multi-carousel/lib/styles.css";
 import { useEffect, useState } from "react";
 import { DocumentData, collection, getDocs } from "firebase/firestore";
@@ -16,7 +15,7 @@ interface Review {
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1300 },
-    items: 3,
+    items: 4,
     slideToSlide: 1,
   },
   tablet: {

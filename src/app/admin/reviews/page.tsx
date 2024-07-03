@@ -12,7 +12,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { firestore, storage } from "../firebase/firebase-cofig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { IoIosRemoveCircle } from "react-icons/io";
@@ -24,6 +23,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
+import { firestore, storage } from "@/app/firebase/firebase-cofig";
 
 interface Review {
   id: string;

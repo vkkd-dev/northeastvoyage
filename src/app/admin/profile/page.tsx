@@ -22,7 +22,7 @@ const ProfilePage = () => {
       <div className="flex flex-col gap-5 w-full p-8">
         <PageTitle title="Profile" />
         <div className="flex flex-col gap-4 items-center justify-center h-full">
-          <h1 className="text-black">Coming soon</h1>
+          <h1 className="text-black text-lg">Welcome Admin</h1>
           <Button
             onClick={handleLogout}
             className="self-center text-white font-semibold"

@@ -10,6 +10,7 @@ import {
   Plane,
   Map,
   GalleryThumbnails,
+  MessageSquareDot,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -65,34 +66,40 @@ const SideNavbar = () => {
           },
           {
             title: "Hero",
-            href: "/hero",
+            href: "/admin/hero",
             icon: GalleryThumbnails,
             variant: "ghost",
           },
           {
             title: "Destinations",
-            href: "/destinations",
+            href: "/admin/destinations",
             icon: Map,
             variant: "ghost",
           },
           {
             title: "Trips",
-            href: "/trips",
+            href: "/admin/trips",
             icon: Plane,
             variant: "ghost",
           },
           {
             title: "Reviews",
-            href: "/reviews",
+            href: "/admin/reviews",
             icon: Star,
             variant: "ghost",
           },
           {
-            title: "Profile",
-            href: "/profile",
-            icon: CircleUserRound,
+            title: "Queries",
+            href: "/admin/queries",
+            icon: MessageSquareDot,
             variant: "ghost",
           },
+          // {
+          //   title: "Profile",
+          //   href: "/admin/profile",
+          //   icon: CircleUserRound,
+          //   variant: "ghost",
+          // },
         ]}
       />
     </div>

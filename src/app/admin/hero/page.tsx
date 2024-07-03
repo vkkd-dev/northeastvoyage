@@ -9,11 +9,11 @@ import { useEffect, useRef, useState } from "react";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
 import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../firebase/firebase-cofig";
 import { SiTicktick } from "react-icons/si";
 import { MdErrorOutline } from "react-icons/md";
 import { useToast } from "@/components/ui/use-toast";
 import { ImSpinner2 } from "react-icons/im";
+import { storage } from "@/app/firebase/firebase-cofig";
 
 const HeroPage = () => {
   const [imageUrl, setImageUrl] = useState<string | null>("");

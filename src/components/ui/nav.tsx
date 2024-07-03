@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -10,8 +10,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useUser } from "@/context/AdminContext";
 
 interface NavProps {
   isCollapsed: boolean;
@@ -26,6 +27,8 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const pathName = usePathname();
+  const { setIsAdminLoggedIn } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     // Use useEffect to run client-side code after component mounts
@@ -35,6 +38,12 @@ export function Nav({ links, isCollapsed }: NavProps) {
       // Example: Add event listeners or manipulate DOM elements
     }
   }, []); // Empty dependency array ensures this runs once after mount
+
+  const handleLogout = () => {
+    setIsAdminLoggedIn(false);
+    router.replace("/admin");
+    localStorage.removeItem("isLogin");
+  };
 
   return (
     <TooltipProvider>
@@ -104,6 +113,16 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 )}
               </Link>
             )
+          )}
+          {isCollapsed ? (
+            <div className="p-2">
+              <LogOut size={20} onClick={handleLogout} />
+            </div>
+          ) : (
+            <div className="flex items-center p-3 gap-2">
+              <LogOut size={20} onClick={handleLogout} />
+              <span className="text-black font-bold text-sm">Log out</span>
+            </div>
           )}
         </nav>
       </div>

@@ -11,7 +11,6 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { firestore, storage } from "../firebase/firebase-cofig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useToast } from "@/components/ui/use-toast";
 import { SiTicktick } from "react-icons/si";
@@ -23,6 +22,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import { Input } from "@/components/ui/input";
+import { firestore, storage } from "@/app/firebase/firebase-cofig";
 
 interface Destination {
   id: string;

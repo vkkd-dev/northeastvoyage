@@ -5,12 +5,12 @@ import "react-multi-carousel/lib/styles.css";
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1300 },
-    items: 1,
+    items: 4,
     slideToSlide: 1,
   },
   tablet: {
     breakpoint: { max: 1300, min: 764 },
-    items: 1,
+    items: 2,
     slideToSlide: 1,
   },
   mobile: {
@@ -32,6 +32,48 @@ function WhyUsSlider() {
       responsive={responsive}
       itemClass="item"
     >
+      <div className="flex flex-col items-center py-20  gap-4">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="font-bold">Trusted Reviews</h1>
+        <p className="text-center px-10">
+          Read honest reviews from fellow travelers to ensure you make the best
+          choices for your journey.
+        </p>
+      </div>
+      <div className="flex flex-col items-center py-20  gap-4">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="font-bold">Trusted Reviews</h1>
+        <p className="text-center px-10">
+          Read honest reviews from fellow travelers to ensure you make the best
+          choices for your journey.
+        </p>
+      </div>
+      <div className="flex flex-col items-center py-20  gap-4">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="font-bold">Trusted Reviews</h1>
+        <p className="text-center px-10">
+          Read honest reviews from fellow travelers to ensure you make the best
+          choices for your journey.
+        </p>
+      </div>
       <div className="flex flex-col items-center py-20  gap-4">
         <Image
           width={150}
