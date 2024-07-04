@@ -1,9 +1,12 @@
+import Image from "next/image";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useEffect, useState } from "react";
 import { DocumentData, collection, getDocs } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
-import Image from "next/image";
+import { FiChevronLeft } from "react-icons/fi";
+import { BiChevronRight } from "react-icons/bi";
+import { Button } from "./ui/button";
 
 interface Review {
   id: string;
@@ -30,8 +33,49 @@ const responsive = {
   },
 };
 
+const ButtonGroup = ({ next, previous, ...rest }: any) => {
+  const {
+    carouselState: { currentSlide, totalItems, slidesToShow },
+  } = rest;
+
+  return (
+    <div
+      className="carousel-button-group"
+      style={{
+        position: "absolute",
+        top: "50%",
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-between",
+        transform: "translateY(-50%)",
+      }}
+    >
+      <Button className="rounded-full" size={"icon"} onClick={() => previous()}>
+        <FiChevronLeft color="#fff" size={30} />
+      </Button>
+      <Button className="rounded-full" size={"icon"} onClick={() => next()}>
+        <BiChevronRight color="#fff" size={30} />
+      </Button>
+    </div>
+  );
+};
+
 function ReviewSlider() {
   const [reviewsData, setReviewsData] = useState<Review[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Set initial value based on current window size
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -50,8 +94,9 @@ function ReviewSlider() {
   return (
     <Carousel
       additionalTransfrom={0}
-      arrows={true}
-      autoPlay={true}
+      arrows={false}
+      customButtonGroup={isMobile ? <ButtonGroup /> : <></>}
+      autoPlay={isMobile}
       autoPlaySpeed={5000}
       centerMode={false}
       infinite={true}
@@ -59,7 +104,10 @@ function ReviewSlider() {
       itemClass="item"
     >
       {reviewsData.map((review, index) => (
-        <div key={index} className="p-4">
+        <div
+          key={index}
+          className="m-4 p-4 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+        >
           <div>
             <Image
               width={100}
