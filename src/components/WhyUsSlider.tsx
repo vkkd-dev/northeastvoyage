@@ -82,7 +82,7 @@ function WhyUsSlider() {
       {[1, 2, 3, 4].map((_, i) => (
         <div
           key={i}
-          className="m-4 p-4 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+          className="m-4 p-8 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
         >
           <Image
             width={150}
