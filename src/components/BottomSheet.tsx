@@ -5,18 +5,16 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import Image from "next/image";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Icons } from "./ui/icons";
 import { SiTicktick } from "react-icons/si";
 import { MdErrorOutline } from "react-icons/md";
 import { doc, setDoc } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
+import Image from "next/image";
 
 interface BottomSheetProps {
   isOpen: boolean;
