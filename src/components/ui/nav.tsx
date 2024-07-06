@@ -119,9 +119,9 @@ export function Nav({ links, isCollapsed }: NavProps) {
               <LogOut size={20} onClick={handleLogout} />
             </div>
           ) : (
-            <div className="flex items-center p-3 gap-2 cursor-pointer">
+            <div className="flex items-center m-1 p-2 gap-2 cursor-pointer rounded-lg">
               <LogOut size={20} onClick={handleLogout} />
-              <span className="text-black font-bold text-sm">Log out</span>
+              <h1 className="text-black font-bold text-sm">Log out</h1>
             </div>
           )}
         </nav>

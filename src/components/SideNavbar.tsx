@@ -94,12 +94,6 @@ const SideNavbar = () => {
             icon: MessageSquareDot,
             variant: "ghost",
           },
-          // {
-          //   title: "Profile",
-          //   href: "/admin/profile",
-          //   icon: CircleUserRound,
-          //   variant: "ghost",
-          // },
         ]}
       />
     </div>

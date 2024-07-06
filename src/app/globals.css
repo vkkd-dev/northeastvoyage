@@ -86,6 +86,10 @@
     @apply px-3 lg:px-20;
   }
 
+  .review-container {
+    @apply px-3 lg:px-10;
+  }
+
   .nav-links {
     @apply relative text-black font-bold cursor-pointer text-[15px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center uppercase hidden;
   }

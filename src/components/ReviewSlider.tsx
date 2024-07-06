@@ -106,7 +106,7 @@ function ReviewSlider() {
       {reviewsData.map((review, index) => (
         <div
           key={index}
-          className="m-4 p-8 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+          className="w-[330px] h-[290px] m-3 p-3 mx-auto flex flex-col items-center justify-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
         >
           <div>
             <Image
@@ -120,7 +120,11 @@ function ReviewSlider() {
           <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center text-[18px] text-black">
             {review.name}
           </h1>
-          <p className="text-center">{review.review}</p>
+          <p className="text-center">
+            {review.review.length > 140
+              ? review.review.slice(0, 140) + "..."
+              : review.review}
+          </p>
         </div>
       ))}
     </Carousel>
