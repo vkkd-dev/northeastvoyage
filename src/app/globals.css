@@ -91,7 +91,7 @@
   }
 
   .nav-links {
-    @apply relative text-black font-bold cursor-pointer text-[15px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center uppercase hidden;
+    @apply relative text-black font-bold cursor-pointer text-[16px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center tracking-wider flex hidden;
   }
 
   .nav-links-mobile {
@@ -99,7 +99,7 @@
   }
 
   .heading {
-    @apply text-[#333] text-[20px] sm:text-[30px] md:text-[30px] font-bold capitalize;
+    @apply text-[#333] text-[20px] sm:text-[30px] md:text-[26px] font-bold capitalize tracking-wider;
   }
 
   .destination-h1 {

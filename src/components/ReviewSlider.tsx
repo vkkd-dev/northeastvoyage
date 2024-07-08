@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
 import { useEffect, useState } from "react";
 import { DocumentData, collection, getDocs } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
 import { FiChevronLeft } from "react-icons/fi";
 import { BiChevronRight } from "react-icons/bi";
 import { Button } from "./ui/button";
+import "react-multi-carousel/lib/styles.css";
+import { Skeleton } from "./ui/skeleton";
 
 interface Review {
   id: string;
@@ -63,6 +64,7 @@ const ButtonGroup = ({ next, previous, ...rest }: any) => {
 function ReviewSlider() {
   const [reviewsData, setReviewsData] = useState<Review[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,55 +81,83 @@ function ReviewSlider() {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const reviewsCollection = collection(firestore, "reviews");
-      const reviewsSnapshot = await getDocs(reviewsCollection);
-      const reviewsList = reviewsSnapshot.docs.map((doc: DocumentData) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Review[];
-      setReviewsData(reviewsList);
+      setIsLoading(true);
+      try {
+        const reviewsCollection = collection(firestore, "reviews");
+        const reviewsSnapshot = await getDocs(reviewsCollection);
+        const reviewsList = reviewsSnapshot.docs.map((doc: DocumentData) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Review[];
+        setReviewsData(reviewsList);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchReviews();
   }, []);
 
   return (
-    <Carousel
-      additionalTransfrom={0}
-      arrows={false}
-      customButtonGroup={isMobile ? <ButtonGroup /> : <></>}
-      autoPlay={isMobile}
-      autoPlaySpeed={5000}
-      centerMode={false}
-      infinite={true}
-      responsive={responsive}
-      itemClass="item"
-    >
-      {reviewsData.map((review, index) => (
-        <div
-          key={index}
-          className="w-[330px] h-[290px] m-3 p-3 mx-auto flex flex-col items-center justify-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
-        >
-          <div>
-            <Image
-              width={100}
-              height={100}
-              alt={review.name}
-              src={review.image}
-              className="rounded-full mx-auto"
-            />
-          </div>
-          <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center text-[18px] text-black">
-            {review.name}
-          </h1>
-          <p className="text-center">
-            {review.review.length > 140
-              ? review.review.slice(0, 140) + "..."
-              : review.review}
-          </p>
+    <div>
+      {isLoading && (
+        <div className="flex items-center justify-evenly p-5">
+          {[1, 2, 3, 4].slice(0, isMobile ? 1 : 4).map((_, i) => (
+            <div key={i} className="flex flex-col items-center gap-5">
+              <Skeleton className="h-40 w-40 lg:h-32 lg:w-32 rounded-full" />
+              <Skeleton className="h-3 w-[150px] lg:w-[150px]" />
+              <Skeleton className="h-3 w-[150px] lg:w-[150px]" />
+              <Skeleton className="h-3 w-[300px] lg:w-[200px]" />
+            </div>
+          ))}
         </div>
-      ))}
-    </Carousel>
+      )}
+
+      {!isLoading && reviewsData.length === 0 && (
+        <h1 className="text-center py-5">No Available Destinations</h1>
+      )}
+
+      {!isLoading && reviewsData.length > 0 && (
+        <Carousel
+          additionalTransfrom={0}
+          arrows={false}
+          customButtonGroup={isMobile ? <ButtonGroup /> : <></>}
+          autoPlay={isMobile}
+          autoPlaySpeed={5000}
+          centerMode={false}
+          infinite={true}
+          responsive={responsive}
+          itemClass="item"
+        >
+          {reviewsData.map((review, index) => (
+            <div
+              key={index}
+              className="w-[330px] h-[290px] m-3 p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+            >
+              <div>
+                <Image
+                  width={100}
+                  height={100}
+                  alt={review.name}
+                  src={review.image}
+                  className="rounded-full mx-auto"
+                />
+              </div>
+              <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center text-[18px] text-black">
+                {review.name}
+              </h1>
+              <p className="text-center">
+                {review.review.length > 140
+                  ? review.review.slice(0, 140) + "..."
+                  : review.review}
+              </p>
+            </div>
+          ))}
+        </Carousel>
+      )}
+    </div>
   );
 }
 

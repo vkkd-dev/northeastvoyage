@@ -28,10 +28,10 @@ function TripCard({ trip }: TripCardProps) {
 
   return (
     <div
-      className="cursor-pointer bg-white rounded-lg overflow-hidden"
+      className="cursor-pointer bg-white rounded-xl overflow-hidden"
       onClick={handleNavigation}
     >
-      <div className="relative overflow-hidden w-full h-80">
+      <div className="relative overflow-hidden w-full h-64 lg:h-96">
         <Image
           src={trip.image}
           alt={trip.name}
@@ -42,16 +42,16 @@ function TripCard({ trip }: TripCardProps) {
         <h1 className="text-white absolute text-xs lg:text-base top-5 right-0 bg-accent p-2">
           ₹{trip.price}/per person
         </h1>
-        <h1 className="text-white text-sm lg:text-lg absolute bottom-28 left-2 lg:left-5 font-bold">
+        <h1 className="text-white text-sm lg:text-3xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">
           {trip.name}
         </h1>
-        <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-5 left-2 lg:left-5 font-bold">
-          <FaLocationDot />
-          {trip.duration}
-        </h1>
-        <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-14 left-2 lg:left-5 font-bold">
+        <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-10 lg:bottom-12 left-3 lg:left-5 font-bold">
           <FaClock />
           {trip.city}
+        </h1>
+        <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-4 lg:bottom-5 left-3 lg:left-5 font-bold">
+          <FaLocationDot />
+          {trip.duration}
         </h1>
       </div>
     </div>

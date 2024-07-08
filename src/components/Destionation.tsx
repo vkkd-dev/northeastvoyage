@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
+import { Skeleton } from "./ui/skeleton";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { useRouter } from "next/navigation";
 
 interface Destination {
   id: string;
@@ -34,9 +35,12 @@ const responsive = {
 const Destination: React.FC = () => {
   const router = useRouter();
   const [destinationData, setDestinationData] = useState<Destination[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     const fetchDestinations = async () => {
+      setIsLoading(true);
       try {
         const querySnapshot = await getDocs(
           collection(firestore, "destinations")
@@ -49,17 +53,28 @@ const Destination: React.FC = () => {
         setDestinationData(destinations);
       } catch (error) {
         console.error("Error fetching destinations:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchDestinations();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 1024);
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const handleNavigation = (destination: Destination) => {
-    // const query = new URLSearchParams({
-    //   trip: JSON.stringify(destination),
-    // }).toString();
-    // router.push(`/about?${query}`);
     router.push(`/about/${destination.id}`);
   };
 
@@ -111,41 +126,59 @@ const Destination: React.FC = () => {
 
   return (
     <>
-      {/* <div className="hidden sm:block"> */}
-      <Carousel
-        additionalTransfrom={0}
-        arrows={false}
-        autoPlay={false}
-        autoPlaySpeed={5000}
-        centerMode={false}
-        infinite={true}
-        responsive={responsive}
-        itemClass="item"
-        customTransition="all 0.5s"
-        transitionDuration={500}
-        containerClass="carousel-container"
-      >
-        {destinationData.map((destination, index) => (
-          <div
-            key={index}
-            className="m-1 cursor-pointer"
-            onClick={() => handleNavigation(destination)}
-          >
-            <div className="relative w-20 h-20 lg:w-24 lg:h-24 mx-auto rounded-full overflow-hidden">
-              <Image
-                src={destination.img}
-                alt={destination.alt}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-full"
-              />
+      {isLoading && (
+        <div className="flex items-center justify-evenly pt-2 pb-5">
+          {[1, 2, 3, 4, 5, 6, 7, 8]
+            .slice(0, isMobileView ? 4 : 8)
+            .map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-4">
+                <Skeleton className="h-20 w-20 lg:h-28 lg:w-28 rounded-full" />
+                <Skeleton className="h-4 w-[75px] lg:w-[100px]" />
+              </div>
+            ))}
+        </div>
+      )}
+
+      {!isLoading && destinationData.length === 0 && (
+        <h1 className="text-center py-5">No Available Destinations</h1>
+      )}
+
+      {!isLoading && destinationData.length > 0 && (
+        <Carousel
+          additionalTransfrom={0}
+          arrows={false}
+          autoPlay={false}
+          autoPlaySpeed={5000}
+          centerMode={false}
+          infinite={true}
+          responsive={responsive}
+          itemClass="item"
+          customTransition="all 0.5s"
+          transitionDuration={500}
+          containerClass="carousel-container"
+        >
+          {destinationData.map((destination, index) => (
+            <div
+              key={index}
+              className="m-1 cursor-pointer"
+              onClick={() => handleNavigation(destination)}
+            >
+              <div className="relative w-20 h-20 lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden">
+                <Image
+                  src={destination.img}
+                  alt={destination.alt}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              </div>
+              <h1 className="destination-h1 text-center mt-2 text-lg font-light tracking-wider">
+                {destination.alt}
+              </h1>
             </div>
-            <h1 className="destination-h1 text-center mt-2">
-              {destination.alt}
-            </h1>
-          </div>
-        ))}
-      </Carousel>
+          ))}
+        </Carousel>
+      )}
       {/* </div> */}
       {/* <div className="block sm:hidden mt-4">{renderMobileView()}</div> */}
     </>
