@@ -29,12 +29,13 @@ import { firestore, storage } from "@/app/firebase/firebase-cofig";
 
 interface Trip {
   id: string;
-  city: string;
-  description: string;
-  duration: string;
   name: string;
+  city: string;
   price: string;
+  duration: string;
   image: string;
+  description: string;
+  overview: string;
 }
 
 const TripsPage = () => {
@@ -45,6 +46,7 @@ const TripsPage = () => {
     duration: "",
     name: "",
     price: "",
+    overview: "",
     image: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -116,6 +118,7 @@ const TripsPage = () => {
       formData.duration === "" ||
       formData.name === "" ||
       formData.price === "" ||
+      formData.overview === "" ||
       imageFile === null
     ) {
       toast({
@@ -144,6 +147,7 @@ const TripsPage = () => {
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
+        overview: formData.overview,
         image: imageUrl,
       });
 
@@ -179,6 +183,7 @@ const TripsPage = () => {
         duration: "",
         name: "",
         price: "",
+        overview: "",
         image: "",
       });
       setImageFile(null);
@@ -231,6 +236,7 @@ const TripsPage = () => {
       duration: trip.duration,
       name: trip.name,
       price: trip.price,
+      overview: trip.overview,
       image: trip.image,
     });
     setPreviewImage(trip.image); // Set initial preview image
@@ -245,6 +251,7 @@ const TripsPage = () => {
       duration: "",
       name: "",
       price: "",
+      overview: "",
       image: "",
     });
     setPreviewImage(null);
@@ -266,6 +273,7 @@ const TripsPage = () => {
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
+        overview: formData.overview,
         image: imageUrl,
       });
 
@@ -280,6 +288,7 @@ const TripsPage = () => {
                 duration: formData.duration,
                 name: formData.name,
                 price: formData.price,
+                overview: formData.overview,
                 image: imageUrl,
               }
             : item
@@ -382,6 +391,17 @@ const TripsPage = () => {
                   setFormData({ ...formData, price: e.target.value })
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
+              />
+
+              {/* Overview Textarea */}
+              <textarea
+                placeholder="Overview"
+                value={formData.overview}
+                onChange={(e) =>
+                  setFormData({ ...formData, overview: e.target.value })
+                }
+                className="px-2 py-1 border border-gray-300 rounded"
+                rows={4}
               />
 
               {/* Image Input */}
@@ -548,6 +568,24 @@ const TripsPage = () => {
                         setFormData({ ...formData, price: e.target.value })
                       }
                       className="px-2 py-1 border border-gray-300 rounded"
+                    />
+                  </div>
+
+                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="description" className="font-semibold">
+                      Overview
+                    </Label>
+                    <textarea
+                      placeholder="Description"
+                      value={formData.overview}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          overview: e.target.value,
+                        })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                      rows={4}
                     />
                   </div>
 

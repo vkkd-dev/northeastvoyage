@@ -1,9 +1,21 @@
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
+import { BiSolidPhoneCall } from "react-icons/bi";
 
-function Footer() {
+function TripFooter({ price }: any) {
+  const handleCall = () => {
+    window.location.href = "tel:+918099451325";
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(price);
+  };
+
   return (
-    <div className="bg-secondary pb-[3rem] h-[30rem] mt-[10rem]">
-      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] bottom-[2rem] pt-[4rem] pb-[1rem] bg-white rounded-2xl border-2 border-[#0DB295]">
+    <div className="flex flex-col justify-end bg-secondary h-[41rem] lg:h-[47rem] mt-[10rem]">
+      <div className="absolute top-[255%] lg:top-[305%] left-[50%] translate-x-[-50%] w-[90%] pt-[4rem] pb-[1rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[80%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
@@ -91,8 +103,23 @@ function Footer() {
           </div>
         </div>
       </div>
+      <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-14 rounded-ss-3xl rounded-se-3xl">
+        <div className="flex flex-col gap-1">
+          <span className="tracking-wider font-bold text-sm">Start From</span>
+          <div className="text-2xl font-extrabold">
+            {formatPrice(parseInt(price))}
+          </div>
+        </div>
+        <div
+          className="flex items-center gap-1 bg-secondary self-center px-5 py-3 rounded-full text-white font-bold cursor-pointer"
+          onClick={handleCall}
+        >
+          <BiSolidPhoneCall size={20} />
+          Call Now
+        </div>
+      </div>
     </div>
   );
 }
 
-export default Footer;
+export default TripFooter;

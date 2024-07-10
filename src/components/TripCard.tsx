@@ -42,7 +42,7 @@ function TripCard({ trip }: TripCardProps) {
         <h1 className="text-white absolute text-xs lg:text-base top-5 right-0 bg-accent p-2">
           ₹{trip.price}/per person
         </h1>
-        <h1 className="text-white text-sm lg:text-3xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">
+        <h1 className="text-white text-sm lg:text-2xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">
           {trip.name}
         </h1>
         <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-10 lg:bottom-12 left-3 lg:left-5 font-bold">

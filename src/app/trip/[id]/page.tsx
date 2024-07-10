@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
@@ -7,10 +13,12 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
-import { LuDownload } from "react-icons/lu";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore } from "@/app/firebase/firebase-cofig";
 import { useParams } from "next/navigation";
+import { LuDownload } from "react-icons/lu";
+import TripFooter from "@/components/TripFooter";
+import InclusionCard from "@/components/InclusionCard";
 
 interface Trip {
   id: string;
@@ -20,6 +28,8 @@ interface Trip {
   duration: string;
   image: string;
   description: string;
+  overview: string;
+  inclusion: string[];
 }
 
 const TripPage = () => {
@@ -54,6 +64,7 @@ const TripPage = () => {
       };
 
       fetchTripData();
+      console.log("tripData", tripData);
     }
   }, [id]);
 
@@ -93,17 +104,17 @@ const TripPage = () => {
   }
 
   return (
-    <div>
+    <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="flex flex-col h-[75vh] lg:h-[90vh]">
+      <div className="flex flex-col h-[30vh] lg:h-[90vh]">
         <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
-          <div className="absolute z-20 top-[75%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-[#FFD600] rounded-full py-2 px-4 text-white text-center">
+          {/* <div className="absolute z-20 top-[75%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-[#FFD600] rounded-full py-2 px-4 text-white text-center">
             <div className="flex items-center justify-center gap-1 cursor-pointer">
               <LuDownload className="text-xl" />
               Download Itinerary
             </div>
-          </div>
+          </div> */}
           <img
             src={tripData.image}
             alt={tripData.name}
@@ -112,17 +123,64 @@ const TripPage = () => {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 lg:p-10">
         <h2 className="text-2xl font-bold">{tripData.name}</h2>
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex flex-col gap-2 mt-4">
+          <h2>Details</h2>
           <p className="text-sm flex items-center gap-1">
-            <FaLocationDot />
+            <FaLocationDot className="text-secondary" />
             {tripData.city}
           </p>
           <p className="text-sm flex items-center gap-1">
-            <IoTime />
+            <IoTime className="text-secondary" />
             {tripData.duration}
           </p>
+        </div>
+        <div className="flex flex-col gap-3 mt-4">
+          <h2 className="font-extrabold text-xl">Inclusion</h2>
+          <div className="flex gap-2">
+            {tripData.inclusion.map((inclusion, index) => (
+              <InclusionCard key={index} inclusion={inclusion} />
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col py-6 gap-2">
+          <h2 className="font-extrabold text-xl">Overview</h2>
+          <p>{tripData.overview}</p>
+          <span className="text-secondary font-bold">Show More</span>
+        </div>
+        <div className="flex flex-col gap-2">
+          <h2 className="font-extrabold text-xl">Itinerary</h2>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="font-bold text-sm">
+                Day 1 - Arrive at Base Camp in Manali
+              </AccordionTrigger>
+              <AccordionContent>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                voluptatum earum error optio magnam. Incidunt, ipsam soluta?
+                Tempore, veniam quos!
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="font-bold text-sm">
+                Day 2 - Arrive at Base Camp in Manali
+              </AccordionTrigger>
+              <AccordionContent>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Tempore commodi, voluptatum dignissimos minima culpa architecto?
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="font-bold text-sm">
+                Day 3 - Arrive at Base Camp in Manali
+              </AccordionTrigger>
+              <AccordionContent>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
+                velit.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
         <h1 className="mt-10 font-semibold text-2xl">Similar Trips</h1>
         {isTripsLoading && (
@@ -145,7 +203,9 @@ const TripPage = () => {
           </div>
         )}
       </div>
-    </div>
+
+      <TripFooter price={tripData.price} />
+    </>
   );
 };
 

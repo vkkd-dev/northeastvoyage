@@ -107,7 +107,7 @@ const Cover = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-gray-800" />
 
         <div className="absolute z-20 w-full h-full top-5 lg:top-16 left-5 lg:left-36 lg:space-y-4">
-          <h1 className="font-extrabold text-white text-xl lg:text-6xl">
+          <h1 className="font-extrabold text-white text-xl lg:text-5xl">
             Dreaming of your next Adventure
           </h1>
           <p className="text-white lg:text-4xl font-light"> Hits us up!</p>
