@@ -23,7 +23,7 @@ const AboutUs = () => {
             destinations of Northeast India. Our mission is to provide you with
             an unforgettable travel experience by offering curated trips that
             showcase the natural beauty, rich culture, and unique heritage of
-            this enchanting region. Whether you're seeking adventure,
+            this enchanting region. Whether you&apos;re seeking adventure,
             relaxation, or cultural immersion, Northeast Voyage has something
             for every traveler.
           </p>
@@ -44,13 +44,12 @@ const AboutUs = () => {
             Our mission is to provide exceptional travel experiences that go
             beyond the ordinary. We aim to connect travelers with the hidden
             gems of Northeast India, offering authentic and immersive
-            experiences that highlight the region's rich culture, stunning
+            experiences that highlight the region&apos;s rich culture, stunning
             landscapes, and warm hospitality. We believe in sustainable tourism
             that benefits local communities and preserves the natural
             environment for future generations.
           </p>
-          {/* <br></br> */}
-          {/* <h2>Why Choose Us:</h2>
+          {/* <h2>Why Choose Us</h2>
           <p>
             At Northeast Voyage, we pride ourselves on our deep knowledge of the
             region and our commitment to personalized service. Here are a few
@@ -78,12 +77,11 @@ const AboutUs = () => {
               memorable travel experience.
             </li>
             <li>
-              <strong>Customer Satisfaction:</strong> Our travelers' happiness
-              is our top priority. We are dedicated to providing exceptional
-              customer service and support throughout your journey.
+              <strong>Customer Satisfaction:</strong> Our travelers&apos;
+              happiness is our top priority. We are dedicated to providing
+              exceptional customer service and support throughout your journey.
             </li>
-          </ul> */}
-          {/* <br></br>
+          </ul>
           <h2>Our Services</h2>
           <p>
             Northeast Voyage offers a range of services to cater to different
@@ -123,6 +121,7 @@ const AboutUs = () => {
             Northeast Voyage is committed to providing you with the best
             possible travel experience.
           </p> */}
+          <br></br>
           <p>
             Join us on a journey to discover the hidden gems of Northeast India.
             Let Northeast Voyage be your trusted partner in creating

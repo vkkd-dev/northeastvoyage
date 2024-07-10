@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore } from "@/app/firebase/firebase-cofig";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 // import { useSearchParams } from "next/navigation";
 
 interface Destination {
@@ -102,13 +103,21 @@ const AboutPage = () => {
     <div>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="flex flex-col h-[50vh]">
+      <div className="flex flex-col h-[55vh]">
         <div className="relative w-full h-full lg:h-full overflow-hidden">
-          <img
+          <Image
+            src={tripData.img}
+            alt={tripData.alt}
+            layout="fill"
+            objectFit="cover"
+            // objectPosition="center"
+            priority
+          />
+          {/* <img
             src={tripData.img}
             alt={tripData.alt}
             className="absolute top-0 left-0 w-full h-full object-top lg:object-cover z-0"
-          />
+          /> */}
         </div>
       </div>
 
