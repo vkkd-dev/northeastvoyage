@@ -19,6 +19,7 @@ import { useParams } from "next/navigation";
 import { LuDownload } from "react-icons/lu";
 import TripFooter from "@/components/TripFooter";
 import InclusionCard from "@/components/InclusionCard";
+import Image from "next/image";
 
 interface Trip {
   id: string;
@@ -107,7 +108,7 @@ const TripPage = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="flex flex-col h-[30vh] lg:h-[90vh]">
+      <div className="flex flex-col h-[33vh] lg:h-[66vh]">
         <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
           {/* <div className="absolute z-20 top-[75%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-[#FFD600] rounded-full py-2 px-4 text-white text-center">
             <div className="flex items-center justify-center gap-1 cursor-pointer">
@@ -115,10 +116,17 @@ const TripPage = () => {
               Download Itinerary
             </div>
           </div> */}
-          <img
+          {/* <img
             src={tripData.image}
             alt={tripData.name}
             className="absolute top-0 left-0 w-full h-full object-cover z-0"
+          /> */}
+          <Image
+            src={tripData.image}
+            alt={tripData.name}
+            layout="fill"
+            objectFit="cover"
+            priority
           />
         </div>
       </div>
@@ -139,7 +147,7 @@ const TripPage = () => {
         <div className="flex flex-col gap-3 mt-4">
           <h2 className="font-extrabold text-xl">Inclusion</h2>
           <div className="flex gap-2">
-            {tripData.inclusion.map((inclusion, index) => (
+            {tripData?.inclusion?.map((inclusion, index) => (
               <InclusionCard key={index} inclusion={inclusion} />
             ))}
           </div>

@@ -17,12 +17,12 @@ const ContactUs = () => {
       <div className="max-container padding-container h-[100vh] py-[1rem] lg:py-[4rem]">
         <h1 className="heading text-center font-bold">Contact Us</h1>
         <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[18rem] tracking-wider text-justify leading-relaxed">
-          <p>We'd love to hear from you!</p>
+          <p>We&apos;d love to hear from you!</p>
           <br></br>
           <p>
             If you have any questions, suggestions, or need assistance, please
-            don't hesitate to reach out to us. Our dedicated team is here to
-            help you plan your perfect trip to Northeast India.
+            don&apos;t hesitate to reach out to us. Our dedicated team is here
+            to help you plan your perfect trip to Northeast India.
           </p>
           <br></br>
           <p>
@@ -38,8 +38,8 @@ const ContactUs = () => {
           </p>
           <br></br>
           <p>
-            Alternatively, you can fill out the form on our website, and we'll
-            get back to you as soon as possible.
+            Alternatively, you can fill out the form on our website, and
+            we&apos;ll get back to you as soon as possible.
           </p>
         </div>
       </div>

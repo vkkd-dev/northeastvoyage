@@ -61,42 +61,42 @@ const TripsPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    const fetchTrips = async () => {
+      setIsFetching(true);
+      try {
+        const querySnapshot = await getDocs(collection(firestore, "trips"));
+        const trips = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Trip[];
+
+        // Fetch download URLs for images from Firebase Storage
+        const tripsWithImages = await Promise.all(
+          trips.map(async (trip) => {
+            const imageUrl = await getDownloadURL(ref(storage, trip.image));
+            return { ...trip, image: imageUrl };
+          })
+        );
+
+        setTripsData(tripsWithImages);
+      } catch (error) {
+        console.error("Error fetching trips:", error);
+        toast({
+          description: (
+            <div className="flex items-center gap-2 font-bold">
+              <SiTicktick size={20} />
+              <p>Error fetching document</p>
+            </div>
+          ),
+          variant: "destructive",
+        });
+      } finally {
+        setIsFetching(false);
+      }
+    };
+    
     fetchTrips();
   }, []);
-
-  const fetchTrips = async () => {
-    setIsFetching(true);
-    try {
-      const querySnapshot = await getDocs(collection(firestore, "trips"));
-      const trips = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Trip[];
-
-      // Fetch download URLs for images from Firebase Storage
-      const tripsWithImages = await Promise.all(
-        trips.map(async (trip) => {
-          const imageUrl = await getDownloadURL(ref(storage, trip.image));
-          return { ...trip, image: imageUrl };
-        })
-      );
-
-      setTripsData(tripsWithImages);
-    } catch (error) {
-      console.error("Error fetching trips:", error);
-      toast({
-        description: (
-          <div className="flex items-center gap-2 font-bold">
-            <SiTicktick size={20} />
-            <p>Error fetching document</p>
-          </div>
-        ),
-        variant: "destructive",
-      });
-    } finally {
-      setIsFetching(false);
-    }
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
