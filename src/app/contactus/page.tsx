@@ -3,7 +3,7 @@
 import { useState } from "react";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
-import PageFooter from "@/components/PageFooter";
+import Footer from "@/components/Footer";
 
 const ContactUs = () => {
   const [nav, setNav] = useState(false);
@@ -14,7 +14,7 @@ const ContactUs = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container h-[100vh] py-[1rem] lg:py-[4rem]">
+      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[1rem] lg:py-[4rem]">
         <h1 className="heading text-center font-bold">Contact Us</h1>
         <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[18rem] tracking-wider text-justify leading-relaxed">
           <p>We&apos;d love to hear from you!</p>
@@ -26,15 +26,15 @@ const ContactUs = () => {
           </p>
           <br></br>
           <p>
-            <strong>Phone:</strong> [Your Contact Number]
+            <strong>Phone:</strong> [Contact Number]
           </p>
           <br></br>
           <p>
-            <strong>Email:</strong> [Your Contact Email]
+            <strong>Email:</strong> [Contact Email]
           </p>
           <br></br>
           <p>
-            <strong>Address:</strong> [Your Address]
+            <strong>Address:</strong> [Address]
           </p>
           <br></br>
           <p>
@@ -43,7 +43,7 @@ const ContactUs = () => {
           </p>
         </div>
       </div>
-      <PageFooter />
+      <Footer />
     </>
   );
 };

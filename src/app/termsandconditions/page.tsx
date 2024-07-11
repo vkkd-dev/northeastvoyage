@@ -3,7 +3,7 @@
 import { useState } from "react";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
-import PageFooter from "@/components/PageFooter";
+import Footer from "@/components/Footer";
 
 const TermsAndConditions = () => {
   const [nav, setNav] = useState(false);
@@ -14,7 +14,7 @@ const TermsAndConditions = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container h-[100vh] py-[1rem] lg:py-[4rem]">
+      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[1rem] lg:py-[4rem]">
         <h1 className="heading text-center font-bold">Terms and Conditions</h1>
         <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[6rem] tracking-wider text-justify leading-relaxed">
           <p>Welcome to Northeast Voyage!</p>
@@ -58,7 +58,7 @@ const TermsAndConditions = () => {
           </p>
         </div>
       </div>
-      <PageFooter />
+      <Footer />
     </>
   );
 };

@@ -1,10 +1,10 @@
 "use client";
 import Cover from "@/components/Cover";
 import Destinations from "@/components/Destinations";
-import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import Reviews from "@/components/Reviews";
 import UpcomingTrip from "@/components/UpcomingTrip";
 import WhyUs from "@/components/WhyUs";

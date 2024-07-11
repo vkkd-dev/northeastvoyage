@@ -3,7 +3,7 @@
 import { useState } from "react";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
-import PageFooter from "@/components/PageFooter";
+import Footer from "@/components/Footer";
 
 const PrivacyPolicy = () => {
   const [nav, setNav] = useState(false);
@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container h-[100vh] py-[1rem] lg:py-[4rem]">
+      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[1rem] lg:py-[4rem]">
         <h1 className="heading text-center font-bold">Privacy Policy</h1>
         <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[6rem] tracking-wider text-justify leading-relaxed">
           <p>Your privacy is important to us at Northeast Voyage.</p>
@@ -59,7 +59,7 @@ const PrivacyPolicy = () => {
           <p>By using our website, you consent to our Privacy Policy.</p>
         </div>
       </div>
-      <PageFooter />
+      <Footer />
     </>
   );
 };

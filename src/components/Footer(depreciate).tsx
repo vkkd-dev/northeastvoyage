@@ -1,10 +1,10 @@
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 
-function PageFooter() {
+function Footer() {
   return (
-    <div className="flex flex-col justify-end bg-secondary h-[38rem]">
-      <div className="absolute top-[100%] left-[50%] translate-x-[-50%] w-[90%] pt-[4rem] pb-[1rem] bg-white rounded-2xl border-2 border-[#0DB295]">
-        <div className="w-[80%] mx-auto items-center">
+    <div className="bg-secondary pb-[3rem] h-[38rem] lg:h-[35rem] mt-[10rem]">
+      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] bottom-[2rem] pt-[4rem] pb-[1rem] bg-white rounded-2xl border-2 border-[#0DB295]">
+        <div className="w-[75%] lg:w-[85%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
             <p className="tracking-wide">
@@ -95,4 +95,4 @@ function PageFooter() {
   );
 }
 
-export default PageFooter;
+export default Footer;
