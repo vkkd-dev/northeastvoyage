@@ -3,7 +3,7 @@ import ReviewSlider from "./ReviewSlider";
 
 function Reviews() {
   return (
-    <div className="py-[6rem] max-container review-container">
+    <div className="py-[6rem] max-container padding-container">
       <h1 className="heading text-center font-bold">REVIEWS</h1>
       <Image
         width={120}

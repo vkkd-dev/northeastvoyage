@@ -14,49 +14,36 @@ const CancellationPolicy = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[1rem] lg:py-[4rem]">
-        <h1 className="heading text-center font-bold">Cancellation Policy</h1>
-        <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[13rem] tracking-wider text-justify leading-relaxed">
-          <p>At Northeast Voyage, we understand that plans can change.</p>
-          <p>
-            Our cancellation policy is designed to be fair and transparent,
-            ensuring clarity for both our travelers and our team.
-          </p>
-          <br></br>
-          <h2>Cancellation by Traveler:</h2>
-          <p>
-            If you need to cancel your trip, please notify us as soon as
-            possible. Cancellations made:
-          </p>
-          <ul>
+      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh] lg:pt-[10vh]">
+        <h1 className="page-heading">
+          CANCELLATION POLICY
+        </h1>
+        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
+          <h2 className="underline font-bold text-lg">
+            NO REFUND SHALL BE MADE WITH RESPECT TO THE INITIAL BOOKING AMOUNT
+            FOR ANY OF THE CANCELLATIONS. HOWEVER,
+          </h2>
+          <ul className="m-5 space-y-2">
             <li>
-              <strong>More than 30 days</strong> before the trip start date will
-              receive a full refund.
+              ● Cancel your trip before 30 days, 75% refund of total amount.
             </li>
             <li>
-              <strong>15-30 days</strong> before the trip start date will
-              receive a 50% refund.
+              ● Cancel your trip before 15-30 days, 50% refund of total amount.
             </li>
             <li>
-              <strong>Less than 15 days</strong> before the trip start date will
-              not be eligible for a refund.
+              ● Cancel your trip before 10-15 days, 25% refund of total amount.
             </li>
+            <li>
+              ● Cancel your trip before 7-10 days, 10% refund of total amount.
+            </li>
+            <li>● No refund within 7 days.</li>
+            <li>● The process of refund will take around 7-10 days</li>
           </ul>
-          <br></br>
-          <h2>Cancellation by Northeast Voyage:</h2>
-          <p>
-            In the unlikely event that we need to cancel a trip, we will offer
-            you a full refund or an alternative trip of equal value.
-          </p>
-          <br></br>
-          <h2>Refund Process:</h2>
-          <p>
-            Refunds will be processed within 10-15 business days to the original
-            payment method used at the time of booking.
-          </p>
-          <p>
-            We strive to ensure your satisfaction and will work with you to
-            address any concerns related to cancellations and refunds.
+          <p className="font-bold text-lg">
+            In the case of unforeseen weather conditions or government
+            restrictions, certain activities may be cancelled and in such cases,
+            the operator will try his best to provide an alternate feasible
+            activity. However, no refund will be provided for the same
           </p>
         </div>
       </div>

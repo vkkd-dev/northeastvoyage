@@ -83,11 +83,7 @@
   }
 
   .padding-container {
-    @apply px-3 lg:px-20;
-  }
-
-  .review-container {
-    @apply px-3 lg:px-10;
+    @apply px-3 lg:px-32;
   }
 
   .nav-links {
@@ -100,6 +96,10 @@
 
   .heading {
     @apply text-[#333] text-[20px] sm:text-[30px] md:text-[26px] font-bold capitalize tracking-wider;
+  }
+
+  .page-heading {
+    @apply text-[#333] text-[25px] lg:text-[40px] capitalize font-extrabold tracking-wider text-center;
   }
 
   .destination-h1 {

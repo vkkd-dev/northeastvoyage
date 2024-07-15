@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { Nav } from "./ui/nav";
 import {
   LayoutDashboard,
-  CircleUserRound,
   ChevronRight,
   Star,
   Plane,
   Map,
   GalleryThumbnails,
   MessageSquareDot,
+  Book,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -66,32 +66,38 @@ const SideNavbar = () => {
           },
           {
             title: "Hero",
-            href: "/admin/hero",
+            href: "/hero",
             icon: GalleryThumbnails,
             variant: "ghost",
           },
           {
             title: "Destinations",
-            href: "/admin/destinations",
+            href: "/destinations",
             icon: Map,
             variant: "ghost",
           },
           {
             title: "Trips",
-            href: "/admin/trips",
+            href: "/trips",
             icon: Plane,
             variant: "ghost",
           },
           {
             title: "Reviews",
-            href: "/admin/reviews",
+            href: "/reviews",
             icon: Star,
             variant: "ghost",
           },
           {
             title: "Queries",
-            href: "/admin/queries",
+            href: "/queries",
             icon: MessageSquareDot,
+            variant: "ghost",
+          },
+          {
+            title: "Contact Form",
+            href: "/contact",
+            icon: Book,
             variant: "ghost",
           },
         ]}

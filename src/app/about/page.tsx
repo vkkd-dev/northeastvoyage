@@ -7,9 +7,8 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore } from "@/app/firebase/firebase-cofig";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-// import { useSearchParams } from "next/navigation";
 
 interface Destination {
   id: string;
@@ -29,7 +28,8 @@ interface Trip {
 }
 
 const AboutPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const [tripData, setTripData] = useState<Destination | null>(null);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [nav, setNav] = useState(false);

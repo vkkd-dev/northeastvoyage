@@ -19,8 +19,8 @@ function Navbar({ nav, openNav }: Props) {
   };
 
   return (
-    <div className="w-[100%] bg-white">
-      <div className="flex w-[90%] lg:w-[80%] mx-auto items-center justify-between h-[10vh]">
+    <div className="w-[100%] bg-white fixed z-50 shadow-lg">
+      <div className="flex w-[90%] lg:w-[85%] mx-auto items-center justify-between h-[10vh]">
         <div className="flex items-center">
           <div className="relative cursor-pointer">
             <a
@@ -121,7 +121,7 @@ function Navbar({ nav, openNav }: Props) {
           </div>
           <div className="flex flex-col">
             <span className="text-sm">Call Us</span>
-            <h1 className="text-base font-bold hover:tracking-wide">
+            <h1 className="text-base font-bold">
               +91 8099451325
             </h1>
           </div>

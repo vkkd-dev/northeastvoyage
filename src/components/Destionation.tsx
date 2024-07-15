@@ -18,17 +18,17 @@ const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1300 },
     items: 8,
-    slideToSlide: 1,
+    slideToSlide: 4,
   },
   tablet: {
     breakpoint: { max: 1300, min: 764 },
     items: 6,
-    slideToSlide: 1,
+    slideToSlide: 4,
   },
   mobile: {
     breakpoint: { max: 764, min: 0 },
     items: 4,
-    slideToSlide: 1,
+    slideToSlide: 4,
   },
 };
 
@@ -75,7 +75,8 @@ const Destination: React.FC = () => {
   }, []);
 
   const handleNavigation = (destination: Destination) => {
-    router.push(`/about/${destination.id}`);
+    // router.push(`/about/${destination.id}`);
+    router.push(`/about?id=${destination.id}`);
   };
 
   const renderMobileView = () => {
@@ -172,7 +173,7 @@ const Destination: React.FC = () => {
                   className="rounded-full"
                 />
               </div>
-              <h1 className="destination-h1 text-center mt-2 text-lg font-light tracking-wider">
+              <h1 className="destination-h1 text-black text-center mt-2 text-base lg:text-lg font-light tracking-wider">
                 {destination.alt}
               </h1>
             </div>

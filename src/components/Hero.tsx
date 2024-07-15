@@ -41,7 +41,7 @@ function Hero() {
   }
 
   return (
-    <div className="relative w-full h-[30vh] lg:h-[90vh]">
+    <div className="relative w-full h-[30vh] lg:h-[50vh] mt-[10vh]">
       <div className="absolute top-0 left-0 w-full h-full opacity-50"></div>
       <div
         id="hero"

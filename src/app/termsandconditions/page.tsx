@@ -14,49 +14,67 @@ const TermsAndConditions = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[1rem] lg:py-[4rem]">
-        <h1 className="heading text-center font-bold">Terms and Conditions</h1>
-        <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[6rem] tracking-wider text-justify leading-relaxed">
-          <p>Welcome to Northeast Voyage!</p>
-          <p>
-            By accessing or using our website, you agree to comply with and be
-            bound by the following terms and conditions. Please read them
-            carefully.
-          </p>
-          <br></br>
-          <h2>Use of Website:</h2>
-          <p>
-            You may use our website for lawful purposes only and in accordance
-            with these Terms and Conditions.
-          </p>
-          <br></br>
-          <h2>Intellectual Property:</h2>
-          <p>
-            All content on this website, including text, graphics, logos, and
-            images, is the property of Northeast Voyage and is protected by
-            applicable intellectual property laws.
-          </p>
-          <br></br>
-          <h2>User Accounts:</h2>
-          <p>
-            If you create an account on our website, you are responsible for
-            maintaining the confidentiality of your account information and for
-            all activities that occur under your account.
-          </p>
-          <br></br>
-          <h2>Bookings and Payments:</h2>
-          <p>
-            All bookings made through our website are subject to availability
-            and confirmation. Payments must be made in accordance with the
-            payment terms provided.
-          </p>
-          <br></br>
-          <h2>Cancellations and Refunds:</h2>
-          <p>
-            Our Cancellation Policy outlines the terms for cancellations and
-            refunds.
-          </p>
-        </div>
+      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
+        <h1 className="page-heading">TERMS & CONDITIONS</h1>
+        <ul className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed list-disc list-inside space-y-2">
+          <li>For bookings, 50% of the total amount is due in advance.</li>
+          <li>
+            Full Payment of the trip cost must be completed before the trip
+            begins. Pending Payments may eventually lead to the cancellation of
+            the trip.
+          </li>
+          <li>
+            We are not responsible in case of any lost or misplaced or damage of
+            your luggages/belongings.
+          </li>
+          <li>
+            There would be no refund for the roadblocks and due to natural
+            disasters. The alternate accommodation cost due to the same should
+            be bear by the person directly.
+          </li>
+          <li>No changes in the date of travel once booked.</li>
+          <li>
+            All tourists are advised to take comprehensive Insurance on their
+            own.
+          </li>
+          <li>The IDs shall all be verified before boarding.</li>
+          <li>
+            No refunds shall be made towards any inclusion(s) not availed by the
+            Client.
+          </li>
+          <li>
+            Drinking & Smoking are strictly prohibited along the tour due to
+            health & safety concerns.
+          </li>
+          <li>
+            Northeast Voyage shall not be responsible for any delays or
+            alterations in the program or indirectly incurred expenses in cases
+            such as Natural Hazards, accidents, breakdown of machinery, weather
+            conditions, landslides, political closure, or any untoward
+            incidents.
+          </li>
+          <li>
+            The organizers reserve the rights to evict any camper anytime
+            without any refund if his/her actions violates any camp rules or
+            incase of any misbehavior with other co-travelers.
+          </li>
+          <li>
+            Northeast Voyage is not responsible for your whereabouts or safety
+            if you are outside the camping premises. Any Loss to the camping
+            materials such as tents, pillows, mattress or any property belonging
+            to the campsite will is subject to full payment of Product MRP.
+          </li>
+          <li>
+            Northeast Voyage is not responsible for any delay in reaching the
+            destination due to traffic, sightseeing/activities of the day may
+            get cancelled if we don&apos;t reach the destination on time.
+          </li>
+          <li>
+            Trip organizer/coordinator has complete right to change the
+            itinerary as per on the spot condition. Please cooperate with us in
+            keeping the environment clean and safe
+          </li>
+        </ul>
       </div>
       <Footer />
     </>

@@ -1,13 +1,14 @@
 "use client";
 import Cover from "@/components/Cover";
 import Destinations from "@/components/Destinations";
+import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import Reviews from "@/components/Reviews";
 import UpcomingTrip from "@/components/UpcomingTrip";
 import WhyUs from "@/components/WhyUs";
+import Image from "next/image";
 import { useState } from "react";
 
 function HomePage() {
@@ -17,6 +18,13 @@ function HomePage() {
 
   return (
     <div className="relative overflow-x-hidden">
+      <Image
+        width={75}
+        height={75}
+        src={"/whatsapp.png"}
+        alt="whatsapp"
+        className="fixed right-2 lg:right-10 top-[85vh] z-50 cursor-pointer"
+      />
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <Hero />

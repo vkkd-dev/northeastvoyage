@@ -15,8 +15,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore } from "@/app/firebase/firebase-cofig";
-import { useParams } from "next/navigation";
-import { LuDownload } from "react-icons/lu";
+import { useSearchParams } from "next/navigation";
 import TripFooter from "@/components/TripFooter";
 import InclusionCard from "@/components/InclusionCard";
 import Image from "next/image";
@@ -34,7 +33,9 @@ interface Trip {
 }
 
 const TripPage = () => {
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const [tripData, setTripData] = useState<Trip | null>(null);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [nav, setNav] = useState(false);
@@ -110,17 +111,6 @@ const TripPage = () => {
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="flex flex-col h-[33vh] lg:h-[66vh]">
         <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
-          {/* <div className="absolute z-20 top-[75%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-[#FFD600] rounded-full py-2 px-4 text-white text-center">
-            <div className="flex items-center justify-center gap-1 cursor-pointer">
-              <LuDownload className="text-xl" />
-              Download Itinerary
-            </div>
-          </div> */}
-          {/* <img
-            src={tripData.image}
-            alt={tripData.name}
-            className="absolute top-0 left-0 w-full h-full object-cover z-0"
-          /> */}
           <Image
             src={tripData.image}
             alt={tripData.name}

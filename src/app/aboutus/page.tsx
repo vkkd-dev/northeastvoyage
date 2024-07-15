@@ -14,10 +14,9 @@ const AboutUs = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[1rem] lg:py-[4rem]">
-        <h1 className="heading text-center font-bold">About Us</h1>
-        <div className="py-[1rem] lg:py-[3rem] px-[1rem] lg:px-[4rem] tracking-wider text-justify leading-relaxed">
-          <br></br>
+      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
+        <h1 className="page-heading">ABOUT US</h1>
+        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
           <p>Welcome to Northeast Voyage!</p>
           <br></br>
           <p>

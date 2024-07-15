@@ -42,7 +42,7 @@ function UpcomingTrip() {
   }, []);
 
   return (
-    <div className="padding-container">
+    <div className="padding-container mt-[1rem] lg:mt-[3rem]">
       <div className="flex gap-2">
         <Image
           width={20}

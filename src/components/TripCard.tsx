@@ -23,12 +23,13 @@ function TripCard({ trip }: TripCardProps) {
   const router = useRouter();
 
   const handleNavigation = () => {
-    router.push(`/trip/${trip.id}`);
+    // router.push(`/trip/${trip.id}`);
+    router.push(`/trip?id=${trip.id}`);
   };
 
   return (
     <div
-      className="cursor-pointer bg-white rounded-xl overflow-hidden"
+      className="cursor-pointer bg-white rounded-2xl overflow-hidden"
       onClick={handleNavigation}
     >
       <div className="relative overflow-hidden w-full h-64 lg:h-96">
@@ -39,7 +40,7 @@ function TripCard({ trip }: TripCardProps) {
           fill
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-        <h1 className="text-white absolute text-xs lg:text-base top-5 right-0 bg-accent p-2">
+        <h1 className="text-white absolute text-xs lg:text-base font-semibold top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-sm">
           ₹{trip.price}/per person
         </h1>
         <h1 className="text-white text-sm lg:text-2xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">

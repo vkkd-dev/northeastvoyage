@@ -97,7 +97,7 @@ const Cover = () => {
   };
 
   return (
-    <div className="relative w-full h-[20vh] lg:h-[55vh]">
+    <div className="relative w-full h-[25vh] lg:h-[55vh]">
       <div className="absolute top-0 left-0 w-full h-full opacity-50"></div>
       <div
         id="hero"
@@ -114,7 +114,7 @@ const Cover = () => {
         </div>
         <Button
           onClick={openSheet}
-          className="absolute z-50 bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white px-8 py-7 tracking-widest cursor-pointer"
+          className="absolute z-50 bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white lg:px-8 lg:py-7 tracking-widest cursor-pointer"
         >
           Connect Now
         </Button>

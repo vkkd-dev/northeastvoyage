@@ -134,7 +134,7 @@ function ReviewSlider() {
           {reviewsData.map((review, index) => (
             <div
               key={index}
-              className="w-[330px] h-[290px] m-3 p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+              className="w-[280px] h-[270px] m-3 p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
             >
               <div>
                 <Image
@@ -145,12 +145,44 @@ function ReviewSlider() {
                   className="rounded-full mx-auto"
                 />
               </div>
-              <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center text-[18px] text-black">
+              <h1 className="mt-[0.5rem] font-bold text-center text-[16px] text-black">
                 {review.name}
               </h1>
-              <p className="text-center">
-                {review.review.length > 140
-                  ? review.review.slice(0, 140) + "..."
+              <div className="flex mx-auto items-center justify-center my-1">
+                <Image
+                  width={20}
+                  height={20}
+                  src={"/review_star.svg"}
+                  alt="star"
+                />
+                <Image
+                  width={20}
+                  height={20}
+                  src={"/review_star.svg"}
+                  alt="star"
+                />
+                <Image
+                  width={20}
+                  height={20}
+                  src={"/review_star.svg"}
+                  alt="star"
+                />
+                <Image
+                  width={20}
+                  height={20}
+                  src={"/review_star.svg"}
+                  alt="star"
+                />
+                <Image
+                  width={20}
+                  height={20}
+                  src={"/review_star.svg"}
+                  alt="star"
+                />
+              </div>
+              <p className="text-center text-sm w-[90%] mx-auto">
+                {review.review.length > 125
+                  ? review.review.slice(0, 125) + "..."
                   : review.review}
               </p>
             </div>

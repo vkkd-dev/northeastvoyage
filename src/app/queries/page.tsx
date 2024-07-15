@@ -41,10 +41,12 @@ const ConnectPage = () => {
               key={query.id}
               className="w-full bg-gray-100 p-4 rounded-md shadow-md"
             >
-              <p className="font-bold">Name: {query.name}</p>
-              <p>Email: {query.email}</p>
-              <p>Phone: {query.phone}</p>
-              <p>Timestamp: {new Date(query.timestamp).toLocaleString()}</p>
+              <p className="font-bold my-1">{query.name}</p>
+              <div className="flex flex-col gap-1 p-2">
+                <p>Email: {query.email}</p>
+                <p>Phone: {query.phone}</p>
+                <p>Timestamp: {new Date(query.timestamp).toLocaleString()}</p>
+              </div>
             </div>
           ))}
         </div>

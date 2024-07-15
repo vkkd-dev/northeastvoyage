@@ -28,6 +28,7 @@ const config = {
         primary: "#65A78E",
         accent: "#E39E18",
         secondary: "#0DB295",
+        title: "#990000",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -96,7 +96,7 @@ const TripsPage = () => {
     };
     
     fetchTrips();
-  }, []);
+  }, [toast]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
