@@ -173,13 +173,6 @@ export default function AdminPage() {
   );
 }
 
-export async function getStaticProps() {
-  // Fetch any data needed for this page
-  return {
-    props: {}, // will be passed to the page component as props
-  };
-}
-
 export async function getStaticPaths() {
   // Define all possible dynamic paths
   return {
