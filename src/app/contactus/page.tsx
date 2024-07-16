@@ -133,7 +133,7 @@ const ContactUs = () => {
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
         <h1 className="page-heading">CONTACT US</h1>
-        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
+        <div className="py-[1rem] lg:py-[3rem] w-[95%] lg:w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
           <p>We&apos;d love to hear from you!</p>
           <br></br>
           <p>
@@ -158,7 +158,7 @@ const ContactUs = () => {
             Alternatively, you can fill out the form on our website, and
             we&apos;ll get back to you as soon as possible.
           </p>
-          <div className="bg-white rounded-lg border-2 border-secondary mt-10 p-10 w-[100%] lg:w-[85%] mx-auto">
+          <div className="bg-white rounded-lg border-2 border-secondary mt-10 p-4 lg:p-10 w-[100%] lg:w-[85%] mx-auto">
             <h2 className="text-xl font-bold text-secondary mb-5">
               Get In Touch
             </h2>
@@ -214,7 +214,7 @@ const ContactUs = () => {
                 <div className="grid gap-3 mt-2">
                   <Label>Number of people interested for the trip?</Label>
                   <RadioGroup
-                    className="border-2 border-gray-100 rounded-lg p-3 space-y-3"
+                    className="border-2 border-gray-100 rounded-lg p-3 space-y-3 text-start"
                     value={inputs.people}
                     onValueChange={(value) =>
                       handleRadioChange("people", value)
@@ -238,12 +238,12 @@ const ContactUs = () => {
                       <Label htmlFor="r3">2-4 Pax</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="5-7 Pax" id="r3" />
-                      <Label htmlFor="r3">5-7 Pax</Label>
+                      <RadioGroupItem value="5-7 Pax" id="r4" />
+                      <Label htmlFor="r4">5-7 Pax</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="7+ Pax" id="r3" />
-                      <Label htmlFor="r3">7+ Pax</Label>
+                      <RadioGroupItem value="7+ Pax" id="r5" />
+                      <Label htmlFor="r5">7+ Pax</Label>
                     </div>
                   </RadioGroup>
                 </div>

@@ -65,7 +65,7 @@ const bookingsData: BookingProps[] = [
   },
 ];
 
-const AdminPage = () => {
+export default function AdminPage() {
   const { isAdminLoggedIn, isLoading } = useUser();
 
   return (
@@ -171,6 +171,22 @@ const AdminPage = () => {
       )}
     </div>
   );
-};
+}
 
-export default AdminPage;
+export async function getStaticProps() {
+  // Fetch any data needed for this page
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}
+
+export async function getStaticPaths() {
+  // Define all possible dynamic paths
+  return {
+    paths: [
+      // Define paths you want to be statically generated
+      { params: { slug: "admin" } },
+    ],
+    fallback: false, // can also be true or 'blocking'
+  };
+}

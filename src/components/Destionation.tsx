@@ -18,17 +18,14 @@ const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1300 },
     items: 8,
-    slideToSlide: 4,
   },
   tablet: {
     breakpoint: { max: 1300, min: 764 },
     items: 6,
-    slideToSlide: 4,
   },
   mobile: {
     breakpoint: { max: 764, min: 0 },
     items: 4,
-    slideToSlide: 4,
   },
 };
 
@@ -146,15 +143,15 @@ const Destination: React.FC = () => {
 
       {!isLoading && destinationData.length > 0 && (
         <Carousel
-          additionalTransfrom={0}
+          // additionalTransfrom={0}
+          swipeable={true}
           arrows={false}
           autoPlay={false}
-          autoPlaySpeed={5000}
           centerMode={false}
           infinite={true}
           responsive={responsive}
           itemClass="item"
-          customTransition="all 0.5s"
+          customTransition="all .5"
           transitionDuration={500}
           containerClass="carousel-container"
         >
