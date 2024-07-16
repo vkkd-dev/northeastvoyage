@@ -23,7 +23,7 @@ function HomePage() {
         height={75}
         src={"/whatsapp.png"}
         alt="whatsapp"
-        className="fixed right-2 lg:right-10 top-[85vh] z-50 cursor-pointer"
+        className="fixed right-3 lg:right-16 top-[80vh] z-50 cursor-pointer"
       />
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />

@@ -114,7 +114,7 @@ const Cover = () => {
         </div>
         <Button
           onClick={openSheet}
-          className="absolute z-50 bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white lg:px-8 lg:py-7 tracking-widest cursor-pointer"
+          className="absolute bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white lg:px-8 lg:py-7 tracking-widest cursor-pointer"
         >
           Connect Now
         </Button>
