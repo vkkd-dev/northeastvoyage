@@ -172,14 +172,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
-export async function getStaticPaths() {
-  // Define all possible dynamic paths
-  return {
-    paths: [
-      // Define paths you want to be statically generated
-      { params: { slug: "admin" } },
-    ],
-    fallback: false, // can also be true or 'blocking'
-  };
-}
