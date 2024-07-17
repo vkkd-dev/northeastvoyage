@@ -84,9 +84,9 @@ function Footer() {
               <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
                 <div
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/")}
+                  onClick={() => handleNavigation("/admin")}
                 >
-                  Home
+                  Admin
                 </div>
                 <div
                   className="cursor-pointer self-start tracking-wider"

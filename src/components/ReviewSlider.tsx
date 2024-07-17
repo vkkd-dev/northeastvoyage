@@ -134,7 +134,7 @@ function ReviewSlider() {
           {reviewsData.map((review, index) => (
             <div
               key={index}
-              className="w-[280px] h-[270px] m-3 p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+              className="w-[320px] lg:w-[300px] h-[270px] p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
             >
               <div>
                 <Image

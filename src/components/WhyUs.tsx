@@ -3,7 +3,7 @@ import WhyUsSlider from "./WhyUsSlider";
 
 function WhyUs() {
   return (
-    <div className="py-[7rem] padding-container">
+    <div className="padding-container top-margin">
       <h1 className="heading text-center">WHY US</h1>
       <Image
         width={120}

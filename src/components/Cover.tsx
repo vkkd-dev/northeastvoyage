@@ -97,7 +97,7 @@ const Cover = () => {
   };
 
   return (
-    <div className="relative w-full h-[25vh] lg:h-[55vh]">
+    <div className="relative w-full h-[25vh] lg:h-[55vh] top-margin">
       <div className="absolute top-0 left-0 w-full h-full opacity-50"></div>
       <div
         id="hero"

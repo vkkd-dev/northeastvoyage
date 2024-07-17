@@ -27,6 +27,10 @@ function TripCard({ trip }: TripCardProps) {
     router.push(`/trip?id=${trip.id}`);
   };
 
+  const formatCurrency = (amount: string) => {
+    return `₹${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+  };
+
   return (
     <div
       className="cursor-pointer bg-white rounded-2xl overflow-hidden"
@@ -41,7 +45,7 @@ function TripCard({ trip }: TripCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
         <h1 className="text-white absolute text-xs lg:text-base font-semibold top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-sm">
-          ₹{trip.price}/per person
+          {formatCurrency(trip.price)}/per person
         </h1>
         <h1 className="text-white text-sm lg:text-2xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">
           {trip.name}

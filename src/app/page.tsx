@@ -10,6 +10,8 @@ import UpcomingTrip from "@/components/UpcomingTrip";
 import WhyUs from "@/components/WhyUs";
 import Image from "next/image";
 import { useState } from "react";
+import TrekkingTrips from "../components/TrekkingTrips";
+import SummerTrips from "../components/SummerTrips";
 
 function HomePage() {
   const [nav, setNav] = useState(false);
@@ -31,7 +33,9 @@ function HomePage() {
       <Destinations />
       <UpcomingTrip />
       <Reviews />
+      <TrekkingTrips />
       <Cover />
+      <SummerTrips />
       <WhyUs />
       <Footer />
     </div>
