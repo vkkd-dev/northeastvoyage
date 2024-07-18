@@ -327,7 +327,7 @@ const TripsPage = () => {
     <div className={"min-h-screen w-full bg-white text-black flex "}>
       <SideNavbar />
       <div className="flex flex-col gap-5 w-full p-8">
-        <PageTitle title="Trips" />
+        <PageTitle title="Trips - Main" />
         <div className="container mx-auto p-4">
           {/* Form to add new trip */}
           <form

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
@@ -26,8 +27,13 @@ function Footer() {
         <div className="w-[85%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
-            <p className="tracking-wider">
-              {isDesktop || showFullText
+            <p className="tracking-wider hidden lg:flex">
+              <span onClick={toggleText}>{text}</span>
+            </p>
+            <p className="tracking-wider lg:hidden ">
+              <span onClick={toggleText}>{text.substring(0, 260)}...</span>
+            </p>
+            {/* {isDesktop || showFullText
                 ? text
                 : `${text.substring(0, 205)}...`}
               {!isDesktop && (
@@ -37,8 +43,7 @@ function Footer() {
                 >
                   {showFullText ? " Show less" : " Show more"}
                 </span>
-              )}
-            </p>
+              )} */}
           </div>
           <div className="space-y-3 mt-7">
             <h1 className="text-xl font-bold tracking-wider">
@@ -56,56 +61,87 @@ function Footer() {
             </a>
             <div className="justify-between grid grid-cols-2 mb-10 lg:mb-[5rem]">
               <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
-                <div
+                <Link
+                  href={"/"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/")}
                 >
+                  {/* <div
+                    className="cursor-pointer self-start tracking-wider"
+                    onClick={() => handleNavigation("/")}
+                  > */}
                   Home
-                </div>
-                <div
+                  {/* </div> */}
+                </Link>
+                <Link
+                  href={"/aboutus"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/aboutus")}
                 >
+                  {/* <div
+                    className="cursor-pointer self-start tracking-wider"
+                    onClick={() => handleNavigation("/aboutus")}
+                  > */}
                   About Us
-                </div>
-                <div
+                  {/* </div> */}
+                </Link>
+                <Link
+                  href={"/"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/")}
                 >
+                  {/* <div
+                    className="cursor-pointer self-start tracking-wider"
+                    onClick={() => handleNavigation("/")}
+                  > */}
                   Linktree
-                </div>
-                <div
+                  {/* </div> */}
+                </Link>
+                <Link
+                  href={"/cancellationpolicy"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/cancellationpolicy")}
                 >
+                  {/* <div onClick={() => handleNavigation("/cancellationpolicy")}> */}
                   Cancellation policy
-                </div>
+                  {/* </div> */}
+                </Link>
               </div>
               <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
-                <div
-                  className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/admin")}
-                >
+                <Link href={"/admin"}>
+                  {/* <div
+                    className="cursor-pointer self-start tracking-wider"
+                    onClick={() => handleNavigation("/admin")}
+                  > */}
                   Admin
-                </div>
-                <div
+                  {/* </div> */}
+                </Link>
+                <Link
+                  href={"/contactus"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/contactus")}
                 >
+                  {/* <div onClick={() => handleNavigation("/contactus")}> */}
                   Contact Us
-                </div>
-                <div
+                  {/* </div> */}
+                </Link>
+                <Link
+                  href={"/privacypolicy"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/privacypolicy")}
                 >
+                  {/* <div
+                    className="cursor-pointer self-start tracking-wider"
+                    onClick={() => handleNavigation("/privacypolicy")}
+                  > */}
                   Privacy Policy
-                </div>
-                <div
+                  {/* </div> */}
+                </Link>
+                <Link
+                  href={"/termsandconditions"}
                   className="cursor-pointer self-start tracking-wider"
-                  onClick={() => handleNavigation("/termsandconditions")}
                 >
+                  {/* <div
+                    className="cursor-pointer self-start tracking-wider"
+                    onClick={() => handleNavigation("/termsandconditions")}
+                  > */}
                   Terms & Conditions
-                </div>
+                  {/* </div> */}
+                </Link>
               </div>
             </div>
             <a

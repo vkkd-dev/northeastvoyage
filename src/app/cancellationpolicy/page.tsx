@@ -18,8 +18,8 @@ const CancellationPolicy = () => {
         <h1 className="page-heading">
           CANCELLATION POLICY
         </h1>
-        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
-          <h2 className="underline font-bold text-lg">
+        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider leading-relaxed">
+          <h2 className="font-bold text-lg">
             NO REFUND SHALL BE MADE WITH RESPECT TO THE INITIAL BOOKING AMOUNT
             FOR ANY OF THE CANCELLATIONS. HOWEVER,
           </h2>

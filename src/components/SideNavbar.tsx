@@ -79,19 +79,19 @@ const SideNavbar = () => {
             variant: "ghost",
           },
           {
-            title: "Trips",
+            title: "Trips - Main",
             href: "/admin/trips",
             icon: Plane,
             variant: "ghost",
           },
           {
-            title: "Trekking Trips",
+            title: "Trips - Sub 1",
             href: "/admin/trekkingtrips",
             icon: Bike,
             variant: "ghost",
           },
           {
-            title: "Summer Trips",
+            title: "Trips - Sub 2",
             href: "/admin/summertrips",
             icon: Ship,
             variant: "ghost",

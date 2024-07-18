@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,10 +18,11 @@ interface Trip {
 function SummerTrips() {
   const [selectedTrips, setSelectedTrips] = useState<Trip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const fetchSelectedTrips = async () => {
-      const trekkingTripsCollection = collection(firestore, "summer_trips");
+      const trekkingTripsCollection = collection(firestore, "trips_sub2");
       const querySnapshot = await getDocs(trekkingTripsCollection);
       const fetchedTrips: Trip[] = [];
       querySnapshot.forEach((doc) => {
@@ -34,6 +35,17 @@ function SummerTrips() {
     fetchSelectedTrips();
   }, []);
 
+  useEffect(() => {
+    const fetchTitle = async () => {
+      const titleDoc = await getDoc(doc(firestore, "trips_sub2", "trip_title"));
+      if (titleDoc.exists()) {
+        setTitle(titleDoc.data().title);
+      }
+    };
+
+    fetchTitle();
+  }, []);
+
   return (
     <div className="padding-container top-margin">
       <div className="flex gap-2">
@@ -44,11 +56,11 @@ function SummerTrips() {
           alt="star"
           className="hidden lg:flex"
         />
-        <h1 className="heading">Summer Trips</h1>
+        <h1 className="heading">{title || "Trips"}</h1>
       </div>
 
       {!isLoading && selectedTrips.length === 0 && (
-        <h1 className="text-center pt-20 pb-5">No Summer Trips</h1>
+        <h1 className="text-center pt-20 pb-5">No Trips</h1>
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-[1rem] lg:gap-[3rem] items-center mx-auto mt-[1rem]">
