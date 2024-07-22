@@ -159,8 +159,8 @@ const TripPage = () => {
         </div>
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-xl mb-2">Inclusions</h2>
-          {tripData.inclusions.map((inclusion) => (
-            <div className="flex gap-4">
+          {tripData.inclusions.map((inclusion, index) => (
+            <div className="flex gap-4" key={index}>
               <Image
                 width={20}
                 height={20}
@@ -173,8 +173,8 @@ const TripPage = () => {
         </div>
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-xl mb-2">Exclusions</h2>
-          {tripData.exclusions.map((exclusion) => (
-            <div className="flex gap-4">
+          {tripData.exclusions.map((exclusion, index) => (
+            <div className="flex gap-4" key={index}>
               <Image
                 width={20}
                 height={20}
