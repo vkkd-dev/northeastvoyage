@@ -42,15 +42,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 
 interface Trip {
   id: string;
@@ -707,40 +698,10 @@ const TripsPage = () => {
 
                     {selectedType === "public" && (
                       <div>
-                        <h2 className="font-bold text-lg mb-2">
-                          Upcoming Dates
+                        <h2 className="font-bold text-lg my-2">
+                          Upcoming Dates...
                         </h2>
                       </div>
-
-                      // <div>
-
-                      //   <Popover>
-                      //     <PopoverTrigger asChild>
-                      //       <Button
-                      //         variant={"outline"}
-                      //         className={cn(
-                      //           "w-[280px] justify-start text-left font-normal",
-                      //           !date && "text-muted-foreground"
-                      //         )}
-                      //       >
-                      //         <CalendarIcon className="mr-2 h-4 w-4" />
-                      //         {date ? (
-                      //           format(date, "PPP")
-                      //         ) : (
-                      //           <span>Pick a date</span>
-                      //         )}
-                      //       </Button>
-                      //     </PopoverTrigger>
-                      //     <PopoverContent className="w-auto p-0">
-                      //       <Calendar
-                      //         mode="single"
-                      //         selected={date}
-                      //         onSelect={setDate}
-                      //         className="rounded-md border"
-                      //       />
-                      //     </PopoverContent>
-                      //   </Popover>
-                      // </div>
                     )}
                     {selectedType === "customize" && (
                       <div>
