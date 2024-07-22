@@ -14,8 +14,8 @@ function TripFooter({ price }: any) {
   };
 
   return (
-    <div className="flex flex-col justify-end bg-secondary h-[41rem] lg:h-[47rem] mt-[10rem]">
-      <div className="absolute top-[255%] lg:top-[305%] left-[50%] translate-x-[-50%] w-[90%] pt-[4rem] pb-[1rem] bg-white rounded-2xl border-2 border-[#0DB295]">
+    <div className="flex flex-col justify-end bg-secondary h-[45rem] lg:h-[47rem] mt-[10rem]">
+      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[4rem] pb-[1rem] mb-[9rem] lg:mb-[14rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[80%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
@@ -103,7 +103,7 @@ function TripFooter({ price }: any) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-14 rounded-ss-3xl rounded-se-3xl">
+      <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-10 rounded-ss-3xl rounded-se-3xl">
         <div className="flex flex-col gap-1">
           <span className="tracking-wider font-bold text-sm">Start From</span>
           <div className="text-2xl font-extrabold">

@@ -29,7 +29,11 @@ interface Trip {
   image: string;
   description: string;
   overview: string;
-  inclusion: string[];
+  inclusions: string[];
+  exclusions: string[];
+  faqs: any;
+  priceList: any;
+  selectedDates: any;
 }
 
 const TripPage = () => {
@@ -120,7 +124,13 @@ const TripPage = () => {
           />
         </div>
       </div>
-
+      <Image
+        width={75}
+        height={75}
+        src={"/whatsapp.png"}
+        alt="whatsapp"
+        className="fixed right-3 lg:right-16 bottom-16 z-50 cursor-pointer"
+      />
       <div className="p-5 lg:p-10">
         <h2 className="text-2xl font-bold">{tripData.name}</h2>
         <div className="flex flex-col gap-2 mt-4">
@@ -134,52 +144,86 @@ const TripPage = () => {
             {tripData.duration}
           </p>
         </div>
-        <div className="flex flex-col gap-3 mt-4">
+        {/* <div className="flex flex-col gap-3 mt-4">
           <h2 className="font-extrabold text-xl">Inclusion</h2>
           <div className="flex gap-2">
             {tripData?.inclusion?.map((inclusion, index) => (
               <InclusionCard key={index} inclusion={inclusion} />
             ))}
           </div>
-        </div>
-        <div className="flex flex-col py-6 gap-2">
+        </div> */}
+        <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-xl">Overview</h2>
           <p>{tripData.overview}</p>
           <span className="text-secondary font-bold">Show More</span>
         </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-extrabold text-xl">Itinerary</h2>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="font-bold text-sm">
-                Day 1 - Arrive at Base Camp in Manali
-              </AccordionTrigger>
-              <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-                voluptatum earum error optio magnam. Incidunt, ipsam soluta?
-                Tempore, veniam quos!
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="font-bold text-sm">
-                Day 2 - Arrive at Base Camp in Manali
-              </AccordionTrigger>
-              <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Tempore commodi, voluptatum dignissimos minima culpa architecto?
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="font-bold text-sm">
-                Day 3 - Arrive at Base Camp in Manali
-              </AccordionTrigger>
-              <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-                velit.
-              </AccordionContent>
-            </AccordionItem>
+        <div className="flex flex-col pt-6 gap-2">
+          <h2 className="font-extrabold text-xl mb-2">Inclusions</h2>
+          {tripData.inclusions.map((inclusion) => (
+            <div className="flex gap-4">
+              <Image
+                width={20}
+                height={20}
+                src={"/tick-circle-solid.svg"}
+                alt="tick"
+              />
+              <p>{inclusion}</p>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col pt-6 gap-2">
+          <h2 className="font-extrabold text-xl mb-2">Exclusions</h2>
+          {tripData.exclusions.map((exclusion) => (
+            <div className="flex gap-4">
+              <Image
+                width={20}
+                height={20}
+                src={"/cross-circle-solid.svg"}
+                alt="tick"
+              />
+              <p>{exclusion}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8">
+          <h2 className="font-bold text-lg mb-4">Price List</h2>
+          <table className="min-w-full border-collapse">
+            <thead>
+              <tr className="text-center">
+                <th className="border p-2">No. of people</th>
+                <th className="border p-2">Standard Hotel/Homestay</th>
+                <th className="border p-2">Deluxe Hotel</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tripData.priceList.map((priceItem: any, index: any) => (
+                <tr key={index} className="text-center">
+                  <td className="border p-2">{priceItem.people}</td>
+                  <td className="border p-2">{priceItem.standard}</td>
+                  <td className="border p-2">{priceItem.deluxe}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="font-bold text-lg">FAQs</h2>
+          <Accordion type="single" collapsible>
+            {tripData.faqs.map((faq: any, index: any) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="font-bold">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p>{faq.answer}</p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
           </Accordion>
         </div>
+
         <h1 className="mt-10 font-semibold text-2xl">Similar Trips</h1>
         {isTripsLoading && (
           <div className="flex justify-center items-center mt-4">

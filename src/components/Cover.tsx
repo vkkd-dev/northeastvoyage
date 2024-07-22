@@ -116,7 +116,7 @@ const Cover = () => {
           onClick={openSheet}
           className="absolute bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white lg:px-8 lg:py-7 tracking-widest cursor-pointer"
         >
-          Connect Now
+          Enquiry Now
         </Button>
         {isDesktop ? (
           <Dialog open={isOpen} onOpenChange={closeSheet}>

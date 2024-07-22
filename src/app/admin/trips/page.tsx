@@ -13,12 +13,13 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { IoIosRemoveCircle } from "react-icons/io";
 import { useToast } from "@/components/ui/use-toast";
 import { SiTicktick } from "react-icons/si";
 import { LuClock10 } from "react-icons/lu";
 import { MdErrorOutline } from "react-icons/md";
 import { RiPriceTag3Line } from "react-icons/ri";
+import { IoMdAddCircle } from "react-icons/io";
+import { IoIosRemoveCircle } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -26,6 +27,30 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore, storage } from "@/app/firebase/firebase-cofig";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface Trip {
   id: string;
@@ -36,6 +61,11 @@ interface Trip {
   image: string;
   description: string;
   overview: string;
+  inclusions: string[];
+  exclusions: string[];
+  faqs: any;
+  priceList: any;
+  selectedDates: any;
 }
 
 const TripsPage = () => {
@@ -48,7 +78,21 @@ const TripsPage = () => {
     price: "",
     overview: "",
     image: "",
+    inclusions: [""],
+    exclusions: [""],
+    faqs: [{ question: "", answer: "" }],
+    priceList: [
+      { people: "2 people", standard: "", deluxe: "" },
+      { people: "3 people", standard: "", deluxe: "" },
+      { people: "4 people(dzire)", standard: "", deluxe: "" },
+      { people: "4 people(innova)", standard: "", deluxe: "" },
+      { people: "5 people", standard: "", deluxe: "" },
+      { people: "6 people", standard: "", deluxe: "" },
+    ],
+    selectedDates: [],
   });
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editTripId, setEditTripId] = useState<string | null>(null);
@@ -94,7 +138,7 @@ const TripsPage = () => {
         setIsFetching(false);
       }
     };
-    
+
     fetchTrips();
   }, [toast]);
 
@@ -110,6 +154,92 @@ const TripsPage = () => {
     }
   };
 
+  const handleInclusionChange = (index: number, value: string) => {
+    const newInclusions = [...formData.inclusions];
+    newInclusions[index] = value;
+    setFormData({ ...formData, inclusions: newInclusions });
+  };
+
+  const handleExclusionsChange = (index: number, value: string) => {
+    const newExclusions = [...formData.exclusions];
+    newExclusions[index] = value;
+    setFormData({ ...formData, exclusions: newExclusions });
+  };
+
+  const handleFAQsChange = (
+    index: number,
+    field: "question" | "answer",
+    value: string
+  ) => {
+    const newFAQs = [...formData.faqs];
+    newFAQs[index][field] = value;
+    setFormData({ ...formData, faqs: newFAQs });
+  };
+
+  const handlePriceChange = (
+    index: number,
+    type: "standard" | "deluxe",
+    value: string
+  ) => {
+    const newPriceList = [...formData.priceList];
+    newPriceList[index][type] = value;
+    setFormData({ ...formData, priceList: newPriceList });
+  };
+
+  const addInclusion = () => {
+    const lastInclusion = formData.inclusions[formData.inclusions.length - 1];
+    if (lastInclusion.trim() !== "") {
+      setFormData({ ...formData, inclusions: [...formData.inclusions, ""] });
+    } else {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please fill the current inclusion before adding a new one.</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+    }
+  };
+
+  const addExclusions = () => {
+    const lastExclusions = formData.exclusions[formData.exclusions.length - 1];
+    if (lastExclusions.trim() !== "") {
+      setFormData({ ...formData, exclusions: [...formData.exclusions, ""] });
+    } else {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please fill the current exclusions before adding a new one.</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+    }
+  };
+
+  const addFAQs = () => {
+    const lastFAQ = formData.faqs[formData.faqs.length - 1];
+    if (lastFAQ.question.trim() !== "" && lastFAQ.answer.trim() !== "") {
+      setFormData({
+        ...formData,
+        faqs: [...formData.faqs, { question: "", answer: "" }],
+      });
+    } else {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please fill the current FAQ before adding a new one.</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -119,7 +249,8 @@ const TripsPage = () => {
       formData.name === "" ||
       formData.price === "" ||
       formData.overview === "" ||
-      imageFile === null
+      imageFile === null ||
+      formData.inclusions.some((inclusion) => inclusion.trim() === "")
     ) {
       toast({
         description: (
@@ -148,6 +279,12 @@ const TripsPage = () => {
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
+        inclusions: formData.inclusions,
+        exclusions: formData.exclusions,
+        faqs: formData.faqs,
+        priceList: formData.priceList,
+        selectedDates: formData.selectedDates,
+        tripType: selectedType,
         image: imageUrl,
       });
 
@@ -185,6 +322,18 @@ const TripsPage = () => {
         price: "",
         overview: "",
         image: "",
+        inclusions: [""],
+        exclusions: [""],
+        faqs: [{ question: "", answer: "" }],
+        priceList: [
+          { people: "2 people", standard: "", deluxe: "" },
+          { people: "3 people", standard: "", deluxe: "" },
+          { people: "4 people(dzire)", standard: "", deluxe: "" },
+          { people: "4 people(innova)", standard: "", deluxe: "" },
+          { people: "5 people", standard: "", deluxe: "" },
+          { people: "6 people", standard: "", deluxe: "" },
+        ],
+        selectedDates: [],
       });
       setImageFile(null);
       setPreviewImage(null);
@@ -238,6 +387,18 @@ const TripsPage = () => {
       price: trip.price,
       overview: trip.overview,
       image: trip.image,
+      inclusions: [],
+      exclusions: [],
+      faqs: [{ question: "", answer: "" }],
+      priceList: [
+        { people: "2 people", standard: "", deluxe: "" },
+        { people: "3 people", standard: "", deluxe: "" },
+        { people: "4 people(dzire)", standard: "", deluxe: "" },
+        { people: "4 people(innova)", standard: "", deluxe: "" },
+        { people: "5 people", standard: "", deluxe: "" },
+        { people: "6 people", standard: "", deluxe: "" },
+      ],
+      selectedDates: [],
     });
     setPreviewImage(trip.image); // Set initial preview image
     setEditModalOpen(true);
@@ -253,6 +414,18 @@ const TripsPage = () => {
       price: "",
       overview: "",
       image: "",
+      inclusions: [],
+      exclusions: [],
+      faqs: [{ question: "", answer: "" }],
+      priceList: [
+        { people: "2 people", standard: "", deluxe: "" },
+        { people: "3 people", standard: "", deluxe: "" },
+        { people: "4 people(dzire)", standard: "", deluxe: "" },
+        { people: "4 people(innova)", standard: "", deluxe: "" },
+        { people: "5 people", standard: "", deluxe: "" },
+        { people: "6 people", standard: "", deluxe: "" },
+      ],
+      selectedDates: [],
     });
     setPreviewImage(null);
     setEditModalOpen(false);
@@ -274,6 +447,11 @@ const TripsPage = () => {
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
+        inclusions: formData.inclusions,
+        exclusions: formData.exclusions,
+        faqs: formData.faqs,
+        priceList: formData.priceList,
+        selectedDates: formData.selectedDates,
         image: imageUrl,
       });
 
@@ -290,6 +468,11 @@ const TripsPage = () => {
                 price: formData.price,
                 overview: formData.overview,
                 image: imageUrl,
+                inclusions: formData.inclusions,
+                exclusions: formData.exclusions,
+                faqs: formData.faqs,
+                priceList: formData.priceList,
+                selectedDates: formData.selectedDates,
               }
             : item
         )
@@ -332,101 +515,298 @@ const TripsPage = () => {
           {/* Form to add new trip */}
           <form
             onSubmit={handleSubmit}
-            className="mb-4 border px-10 pt-6 pb-3 rounded-lg"
+            className="mb-4 border px-10 py-3 rounded-lg"
             encType="multipart/form-data"
           >
-            <div className="flex flex-col gap-4 mb-4">
-              <h1 className="text-lg font-semibold">Add New Trip</h1>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="font-semibold text-lg">
+                  Add New Trip
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-4 mb-4 p-2">
+                    {/* <h1 className="text-lg font-semibold">Add New Trip</h1> */}
 
-              {/* Name Input */}
-              <input
-                type="text"
-                placeholder="Name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="px-2 py-1 border border-gray-300 rounded"
-              />
+                    {/* Name Input */}
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                    />
 
-              {/* Description Textarea */}
-              <textarea
-                placeholder="Description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                className="px-2 py-1 border border-gray-300 rounded"
-                rows={4}
-              />
+                    {/* Description Textarea */}
+                    <textarea
+                      placeholder="Description"
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value,
+                        })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                      rows={4}
+                    />
 
-              {/* Duration Input */}
-              <input
-                type="text"
-                placeholder="Duration"
-                value={formData.duration}
-                onChange={(e) =>
-                  setFormData({ ...formData, duration: e.target.value })
-                }
-                className="px-2 py-1 border border-gray-300 rounded"
-              />
+                    {/* Duration Input */}
+                    <input
+                      type="text"
+                      placeholder="Duration"
+                      value={formData.duration}
+                      onChange={(e) =>
+                        setFormData({ ...formData, duration: e.target.value })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                    />
 
-              {/* City Input */}
-              <input
-                type="text"
-                placeholder="City"
-                value={formData.city}
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                className="px-2 py-1 border border-gray-300 rounded"
-              />
+                    {/* City Input */}
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={formData.city}
+                      onChange={(e) =>
+                        setFormData({ ...formData, city: e.target.value })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                    />
 
-              {/* Price Input */}
-              <input
-                type="number"
-                placeholder="Price"
-                value={formData.price}
-                onChange={(e) =>
-                  setFormData({ ...formData, price: e.target.value })
-                }
-                className="px-2 py-1 border border-gray-300 rounded"
-              />
+                    {/* Price Input */}
+                    <input
+                      type="number"
+                      placeholder="Price"
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({ ...formData, price: e.target.value })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                    />
 
-              {/* Overview Textarea */}
-              <textarea
-                placeholder="Overview"
-                value={formData.overview}
-                onChange={(e) =>
-                  setFormData({ ...formData, overview: e.target.value })
-                }
-                className="px-2 py-1 border border-gray-300 rounded"
-                rows={4}
-              />
+                    {/* Overview Textarea */}
+                    <textarea
+                      placeholder="Overview"
+                      value={formData.overview}
+                      onChange={(e) =>
+                        setFormData({ ...formData, overview: e.target.value })
+                      }
+                      className="px-2 py-1 border border-gray-300 rounded"
+                      rows={4}
+                    />
 
-              {/* Image Input */}
-              <div className="flex gap-2 items-center">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="py-1 rounded"
-                />
-                {imageFile && (
-                  <span className="text-sm text-gray-500">
-                    {imageFile.name}
-                  </span>
-                )}
-              </div>
+                    {/* Image Input */}
+                    <div className="items-center space-x-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="py-1 rounded"
+                      />
+                      {imageFile && (
+                        <span className="text-sm text-gray-500">
+                          {imageFile.name}
+                        </span>
+                      )}
+                    </div>
 
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-1 self-start rounded hover:bg-blue-600 transition duration-200"
-              >
-                Add Trip
-              </Button>
-            </div>
+                    <div>
+                      <h2 className="font-bold text-lg">Inclusions</h2>
+                      {formData.inclusions.map((inclusion, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 mt-2"
+                        >
+                          <Input
+                            type="text"
+                            placeholder={`Item ${index + 1}`}
+                            value={inclusion}
+                            onChange={(e) =>
+                              handleInclusionChange(index, e.target.value)
+                            }
+                          />
+                        </div>
+                      ))}
+                      <IoMdAddCircle
+                        size={30}
+                        onClick={addInclusion}
+                        className="cursor-pointer m-2"
+                      />
+                    </div>
+
+                    <div>
+                      <h2 className="font-bold text-lg">Exclusions</h2>
+                      {formData.exclusions.map((exclusion, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 mt-2"
+                        >
+                          <Input
+                            type="text"
+                            placeholder={`Item ${index + 1}`}
+                            value={exclusion}
+                            onChange={(e) =>
+                              handleExclusionsChange(index, e.target.value)
+                            }
+                          />
+                        </div>
+                      ))}
+                      <IoMdAddCircle
+                        size={30}
+                        onClick={addExclusions}
+                        className="cursor-pointer m-2"
+                      />
+                    </div>
+
+                    <div>
+                      <h2 className="font-bold text-lg">FAQs</h2>
+                      {formData.faqs.map((faq, index) => (
+                        <div key={index} className="flex flex-col gap-1 mt-5">
+                          <Input
+                            type="text"
+                            placeholder={`Question ${index + 1}`}
+                            value={faq.question}
+                            onChange={(e) =>
+                              handleFAQsChange(
+                                index,
+                                "question",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <Input
+                            type="text"
+                            placeholder={`Answer ${index + 1}`}
+                            value={faq.answer}
+                            onChange={(e) =>
+                              handleFAQsChange(index, "answer", e.target.value)
+                            }
+                          />
+                        </div>
+                      ))}
+                      <IoMdAddCircle
+                        size={30}
+                        onClick={addFAQs}
+                        className="cursor-pointer m-2"
+                      />
+                    </div>
+
+                    <Select onValueChange={setSelectedType}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Trip Types</SelectLabel>
+                          <SelectItem value="public">Public</SelectItem>
+                          <SelectItem value="customize">Customize</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    {selectedType === "public" && (
+                      <div>
+                        <h2 className="font-bold text-lg mb-2">
+                          Upcoming Dates
+                        </h2>
+                      </div>
+
+                      // <div>
+
+                      //   <Popover>
+                      //     <PopoverTrigger asChild>
+                      //       <Button
+                      //         variant={"outline"}
+                      //         className={cn(
+                      //           "w-[280px] justify-start text-left font-normal",
+                      //           !date && "text-muted-foreground"
+                      //         )}
+                      //       >
+                      //         <CalendarIcon className="mr-2 h-4 w-4" />
+                      //         {date ? (
+                      //           format(date, "PPP")
+                      //         ) : (
+                      //           <span>Pick a date</span>
+                      //         )}
+                      //       </Button>
+                      //     </PopoverTrigger>
+                      //     <PopoverContent className="w-auto p-0">
+                      //       <Calendar
+                      //         mode="single"
+                      //         selected={date}
+                      //         onSelect={setDate}
+                      //         className="rounded-md border"
+                      //       />
+                      //     </PopoverContent>
+                      //   </Popover>
+                      // </div>
+                    )}
+                    {selectedType === "customize" && (
+                      <div>
+                        {/* <h2 className="font-bold text-lg">Price List</h2> */}
+                        <table className="min-w-full border-collapse">
+                          <thead>
+                            <tr>
+                              <th className="border p-2">No. of people</th>
+                              <th className="border p-2">
+                                Standard Hotel/Homestay
+                              </th>
+                              <th className="border p-2">Deluxe Hotel</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {formData.priceList.map((priceItem, index) => (
+                              <tr key={index}>
+                                <td className="border p-2">
+                                  {priceItem.people}
+                                </td>
+                                <td className="border p-2">
+                                  <Input
+                                    type="number"
+                                    placeholder="Standard Price"
+                                    value={priceItem.standard}
+                                    onChange={(e) =>
+                                      handlePriceChange(
+                                        index,
+                                        "standard",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </td>
+                                <td className="border p-2">
+                                  <Input
+                                    type="number"
+                                    placeholder="Deluxe Price"
+                                    value={priceItem.deluxe}
+                                    onChange={(e) =>
+                                      handlePriceChange(
+                                        index,
+                                        "deluxe",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <Button
+                      type="submit"
+                      className="bg-blue-500 text-white px-4 py-1 self-start rounded hover:bg-blue-600 transition duration-200"
+                    >
+                      Add Trip
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </form>
 
           {isFetching && (
