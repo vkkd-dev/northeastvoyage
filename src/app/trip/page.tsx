@@ -9,7 +9,13 @@ import {
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
@@ -19,6 +25,7 @@ import { useSearchParams } from "next/navigation";
 import TripFooter from "@/components/TripFooter";
 import InclusionCard from "@/components/InclusionCard";
 import Image from "next/image";
+import { format } from "date-fns";
 
 interface Trip {
   id: string;
@@ -29,11 +36,14 @@ interface Trip {
   image: string;
   description: string;
   overview: string;
+  inclusion: any;
+  itinerary: any;
   inclusions: string[];
   exclusions: string[];
   faqs: any;
   priceList: any;
   selectedDates: any;
+  tripType: string;
 }
 
 const TripPage = () => {
@@ -70,7 +80,6 @@ const TripPage = () => {
       };
 
       fetchTripData();
-      console.log("tripData", tripData);
     }
   }, [id]);
 
@@ -109,8 +118,35 @@ const TripPage = () => {
     );
   }
 
+  const renderDates = () => {
+    return (
+      <div className="flex overflow-x-auto gap-2">
+        {tripData.selectedDates.map((timestamp: any) => {
+          const date = timestamp.toDate();
+          const monthName = format(date, "MMM"); // Short month name
+          const day = format(date, "d");
+
+          return (
+            <div
+              key={date.getTime()}
+              className="flex flex-col items-center gap-1 bg-primary rounded-lg py-1 text-sm text-center w-16"
+            >
+              <span className="text-md font-semibold text-white">
+                {monthName}
+              </span>
+              <span className="text-lg font-extrabold bg-white w-14 rounded-ee-md rounded-es-md">
+                {day}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <>
+      {console.log("tripData", tripData)}
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="flex flex-col h-[33vh] lg:h-[66vh]">
@@ -147,7 +183,7 @@ const TripPage = () => {
         {/* <div className="flex flex-col gap-3 mt-4">
           <h2 className="font-extrabold text-xl">Inclusion</h2>
           <div className="flex gap-2">
-            {tripData?.inclusion?.map((inclusion, index) => (
+            {tripData?.inclusion?.map((inclusion: any, index: any) => (
               <InclusionCard key={index} inclusion={inclusion} />
             ))}
           </div>
@@ -157,6 +193,39 @@ const TripPage = () => {
           <p>{tripData.overview}</p>
           <span className="text-secondary font-bold">Show More</span>
         </div>
+
+        <div className="pt-6">
+          <h2 className="font-extrabold text-xl">Itinerary</h2>
+          <Accordion type="single" collapsible>
+            {tripData.itinerary.map((item: any, index: any) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="font-bold text-start">
+                  <div className="flex items-center gap-5">
+                    <div className="flex flex-col items-center bg-primary text-white py-1 px-3 rounded-lg">
+                      <span className="text-xs">{index + 1}</span>
+                      <span className="text-xs">Day</span>
+                    </div>
+                    {item.title}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="space-y-3">
+                  {item.items.map((detail: any, i: any) => (
+                    <div className="flex gap-4" key={i}>
+                      <Image
+                        width={20}
+                        height={20}
+                        src={"/tick-circle-solid.svg"}
+                        alt="tick"
+                      />
+                      <div>{detail}</div>
+                    </div>
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-xl mb-2">Inclusions</h2>
           {tripData.inclusions.map((inclusion, index) => (
@@ -186,34 +255,43 @@ const TripPage = () => {
           ))}
         </div>
 
-        <div className="mt-8">
-          <h2 className="font-bold text-lg mb-4">Price List</h2>
-          <table className="min-w-full border-collapse">
-            <thead>
-              <tr className="text-center">
-                <th className="border p-2">No. of people</th>
-                <th className="border p-2">Standard Hotel/Homestay</th>
-                <th className="border p-2">Deluxe Hotel</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tripData.priceList.map((priceItem: any, index: any) => (
-                <tr key={index} className="text-center">
-                  <td className="border p-2">{priceItem.people}</td>
-                  <td className="border p-2">{priceItem.standard}</td>
-                  <td className="border p-2">{priceItem.deluxe}</td>
+        {tripData.tripType === "customize" && (
+          <div className="mt-8">
+            <h2 className="font-bold text-lg mb-4">Price List</h2>
+            <table className="min-w-full border-collapse">
+              <thead>
+                <tr className="text-center">
+                  <th className="border p-2">No. of people</th>
+                  <th className="border p-2">Standard Hotel/Homestay</th>
+                  <th className="border p-2">Deluxe Hotel</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {tripData.priceList.map((priceItem: any, index: any) => (
+                  <tr key={index} className="text-center">
+                    <td className="border p-2">{priceItem.people}</td>
+                    <td className="border p-2">{priceItem.standard}</td>
+                    <td className="border p-2">{priceItem.deluxe}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-        <div className="mt-8">
+        {tripData.tripType === "public" && (
+          <div className="mt-10">
+            <h2 className="text-2xl font-bold mb-6">Upcoming Dates</h2>
+            {renderDates()}
+          </div>
+        )}
+
+        <div className="mt-10">
           <h2 className="font-bold text-lg">FAQs</h2>
           <Accordion type="single" collapsible>
             {tripData.faqs.map((faq: any, index: any) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="font-bold">
+                <AccordionTrigger className="font-bold text-start">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent>

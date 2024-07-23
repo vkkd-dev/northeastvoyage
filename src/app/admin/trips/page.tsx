@@ -22,8 +22,6 @@ import { IoMdAddCircle } from "react-icons/io";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore, storage } from "@/app/firebase/firebase-cofig";
@@ -42,6 +40,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import {
+  format,
+  isAfter,
+  isBefore,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
+  getMonth,
+} from "date-fns";
 
 interface Trip {
   id: string;
@@ -52,6 +64,8 @@ interface Trip {
   image: string;
   description: string;
   overview: string;
+  inclusion: any;
+  itinerary: any;
   inclusions: string[];
   exclusions: string[];
   faqs: any;
@@ -69,6 +83,8 @@ const TripsPage = () => {
     price: "",
     overview: "",
     image: "",
+    inclusion: [""],
+    itinerary: [{ title: "", items: [""] }],
     inclusions: [""],
     exclusions: [""],
     faqs: [{ question: "", answer: "" }],
@@ -80,10 +96,9 @@ const TripsPage = () => {
       { people: "5 people", standard: "", deluxe: "" },
       { people: "6 people", standard: "", deluxe: "" },
     ],
-    selectedDates: [],
+    selectedDates: [] as Date[],
   });
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editTripId, setEditTripId] = useState<string | null>(null);
@@ -146,6 +161,12 @@ const TripsPage = () => {
   };
 
   const handleInclusionChange = (index: number, value: string) => {
+    const newInclusion = [...formData.inclusion];
+    newInclusion[index] = value;
+    setFormData({ ...formData, inclusion: newInclusion });
+  };
+
+  const handleInclusionsChange = (index: number, value: string) => {
     const newInclusions = [...formData.inclusions];
     newInclusions[index] = value;
     setFormData({ ...formData, inclusions: newInclusions });
@@ -177,9 +198,89 @@ const TripsPage = () => {
     setFormData({ ...formData, priceList: newPriceList });
   };
 
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      setFormData((prevFormData) => {
+        const isDateSelected = prevFormData.selectedDates.some(
+          (d) => d.getTime() === date.getTime()
+        );
+        // Add date if not already selected, otherwise remove it
+        const newDates = isDateSelected
+          ? prevFormData.selectedDates.filter(
+              (d) => d.getTime() !== date.getTime()
+            )
+          : [...prevFormData.selectedDates, date];
+
+        return { ...prevFormData, selectedDates: newDates };
+      });
+    }
+  };
+
+  const addItineraryItem = (index: number) => {
+    const lastItem =
+      formData.itinerary[index].items[
+        formData.itinerary[index].items.length - 1
+      ];
+    if (lastItem.trim() !== "") {
+      const newItinerary = [...formData.itinerary];
+      newItinerary[index].items.push("");
+      setFormData({ ...formData, itinerary: newItinerary });
+    } else {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please fill the current item before adding a new one.</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+    }
+  };
+
+  const addItinerarySection = () => {
+    const lastSection = formData.itinerary[formData.itinerary.length - 1];
+    if (
+      lastSection.title.trim() !== "" &&
+      lastSection.items.every((item) => item.trim() !== "")
+    ) {
+      setFormData({
+        ...formData,
+        itinerary: [...formData.itinerary, { title: "", items: [""] }],
+      });
+    } else {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please fill the current section before adding a new one.</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+    }
+  };
+
   const addInclusion = () => {
-    const lastInclusion = formData.inclusions[formData.inclusions.length - 1];
+    const lastInclusion = formData.inclusion[formData.inclusion.length - 1];
     if (lastInclusion.trim() !== "") {
+      setFormData({ ...formData, inclusion: [...formData.inclusion, ""] });
+    } else {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please fill the current inclusion before adding a new one.</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+    }
+  };
+
+  const addInclusions = () => {
+    const lastInclusions = formData.inclusions[formData.inclusions.length - 1];
+    if (lastInclusions.trim() !== "") {
       setFormData({ ...formData, inclusions: [...formData.inclusions, ""] });
     } else {
       toast({
@@ -241,6 +342,7 @@ const TripsPage = () => {
       formData.price === "" ||
       formData.overview === "" ||
       imageFile === null ||
+      selectedType === null ||
       formData.inclusions.some((inclusion) => inclusion.trim() === "")
     ) {
       toast({
@@ -263,21 +365,29 @@ const TripsPage = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
-      const docRef = await addDoc(collection(firestore, "trips"), {
+      const tripData: any = {
         city: formData.city,
         description: formData.description,
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
+        inclusion: formData.inclusion,
+        itinerary: formData.itinerary,
         inclusions: formData.inclusions,
         exclusions: formData.exclusions,
         faqs: formData.faqs,
-        priceList: formData.priceList,
-        selectedDates: formData.selectedDates,
-        tripType: selectedType,
         image: imageUrl,
-      });
+        tripType: selectedType,
+      };
+
+      if (selectedType === "public") {
+        tripData.selectedDates = formData.selectedDates;
+      } else if (selectedType === "customize") {
+        tripData.priceList = formData.priceList;
+      }
+
+      const docRef = await addDoc(collection(firestore, "trips"), tripData);
 
       setTripsData((prevData) => [
         ...prevData,
@@ -313,6 +423,8 @@ const TripsPage = () => {
         price: "",
         overview: "",
         image: "",
+        inclusion: [],
+        itinerary: [{ title: "", items: [""] }],
         inclusions: [""],
         exclusions: [""],
         faqs: [{ question: "", answer: "" }],
@@ -363,6 +475,21 @@ const TripsPage = () => {
     }
   };
 
+  const handleItineraryChange = (
+    index: number,
+    field: "title" | "item",
+    value: string,
+    itemIndex?: number
+  ) => {
+    const newItinerary = [...formData.itinerary];
+    if (field === "title") {
+      newItinerary[index].title = value;
+    } else if (field === "item" && itemIndex !== undefined) {
+      newItinerary[index].items[itemIndex] = value;
+    }
+    setFormData({ ...formData, itinerary: newItinerary });
+  };
+
   const openConfirmDialog = (id: string) => {
     setDeleteTripId(id);
     setShowConfirmDialog(true);
@@ -378,6 +505,8 @@ const TripsPage = () => {
       price: trip.price,
       overview: trip.overview,
       image: trip.image,
+      inclusion: [],
+      itinerary: [{ title: "", items: [""] }],
       inclusions: [],
       exclusions: [],
       faqs: [{ question: "", answer: "" }],
@@ -405,6 +534,8 @@ const TripsPage = () => {
       price: "",
       overview: "",
       image: "",
+      inclusion: [],
+      itinerary: [{ title: "", items: [""] }],
       inclusions: [],
       exclusions: [],
       faqs: [{ question: "", answer: "" }],
@@ -458,12 +589,14 @@ const TripsPage = () => {
                 name: formData.name,
                 price: formData.price,
                 overview: formData.overview,
-                image: imageUrl,
+                inclusion: formData.inclusion,
+                itinerary: formData.itinerary,
                 inclusions: formData.inclusions,
                 exclusions: formData.exclusions,
                 faqs: formData.faqs,
                 priceList: formData.priceList,
                 selectedDates: formData.selectedDates,
+                image: imageUrl,
               }
             : item
         )
@@ -497,6 +630,45 @@ const TripsPage = () => {
     return text.slice(0, 100) + "...";
   };
 
+  const groupDatesByMonth = (dates: Date[]) => {
+    const months = new Map<number, Date[]>();
+    dates.forEach((date) => {
+      const month = getMonth(date);
+      if (!months.has(month)) {
+        months.set(month, []);
+      }
+      months.get(month)?.push(date);
+    });
+    return months;
+  };
+
+  const renderDates = () => {
+    const datesByMonth = groupDatesByMonth(formData.selectedDates);
+    const monthNames = Array.from(datesByMonth.keys()).sort((a, b) => a - b);
+
+    return (
+      <div className="flex flex-col mt-4 gap-3">
+        {monthNames.map((monthIndex) => (
+          <div key={monthIndex} className="flex flex-col gap-1">
+            <div className="font-bold">
+              {format(new Date(today.getFullYear(), monthIndex), "MMM")}
+            </div>
+            {datesByMonth.get(monthIndex)?.map((date) => (
+              <div key={date.getTime()}>{format(date, "d")}</div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Current date and constraints
+  const today = new Date();
+  const startOfCurrentYear = startOfYear(today);
+  const endOfCurrentYear = endOfYear(today);
+  const startOfCurrentMonth = startOfMonth(today);
+  const endOfCurrentMonth = endOfMonth(today);
+
   return (
     <div className={"min-h-screen w-full bg-white text-black flex "}>
       <SideNavbar />
@@ -506,7 +678,7 @@ const TripsPage = () => {
           {/* Form to add new trip */}
           <form
             onSubmit={handleSubmit}
-            className="mb-4 border px-10 py-3 rounded-lg"
+            className="mb-4 border px-5 lg:px-10 py-3 rounded-lg"
             encType="multipart/form-data"
           >
             <Accordion type="single" collapsible>
@@ -602,9 +774,9 @@ const TripsPage = () => {
                       )}
                     </div>
 
-                    <div>
-                      <h2 className="font-bold text-lg">Inclusions</h2>
-                      {formData.inclusions.map((inclusion, index) => (
+                    <div className="mt-6">
+                      <h2 className="font-bold text-lg">Inclusion</h2>
+                      {formData.inclusion.map((inclusion, index) => (
                         <div
                           key={index}
                           className="flex items-center gap-2 mt-2"
@@ -622,6 +794,85 @@ const TripsPage = () => {
                       <IoMdAddCircle
                         size={30}
                         onClick={addInclusion}
+                        className="cursor-pointer m-2"
+                      />
+                    </div>
+
+                    <div className="mt-6">
+                      <h2 className="font-bold text-lg">Itinerary</h2>
+                      {formData.itinerary.map((section, sectionIndex) => (
+                        <div
+                          key={sectionIndex}
+                          className="flex flex-col gap-1 mt-5"
+                        >
+                          <Input
+                            type="text"
+                            placeholder={`Title ${sectionIndex + 1}`}
+                            value={section.title}
+                            onChange={(e) =>
+                              handleItineraryChange(
+                                sectionIndex,
+                                "title",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <div className="mx-10">
+                            {section.items.map((item, itemIndex) => (
+                              <div
+                                key={itemIndex}
+                                className="flex items-center gap-2 mt-2"
+                              >
+                                <Input
+                                  type="text"
+                                  placeholder={`Item ${itemIndex + 1}`}
+                                  value={item}
+                                  onChange={(e) =>
+                                    handleItineraryChange(
+                                      sectionIndex,
+                                      "item",
+                                      e.target.value,
+                                      itemIndex
+                                    )
+                                  }
+                                />
+                              </div>
+                            ))}
+                            <IoMdAddCircle
+                              size={30}
+                              onClick={() => addItineraryItem(sectionIndex)}
+                              className="cursor-pointer m-2"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      <IoMdAddCircle
+                        size={30}
+                        onClick={addItinerarySection}
+                        className="cursor-pointer m-2"
+                      />
+                    </div>
+
+                    <div>
+                      <h2 className="font-bold text-lg">Inclusions</h2>
+                      {formData.inclusions.map((inclusion, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 mt-2"
+                        >
+                          <Input
+                            type="text"
+                            placeholder={`Item ${index + 1}`}
+                            value={inclusion}
+                            onChange={(e) =>
+                              handleInclusionsChange(index, e.target.value)
+                            }
+                          />
+                        </div>
+                      ))}
+                      <IoMdAddCircle
+                        size={30}
+                        onClick={addInclusions}
                         className="cursor-pointer m-2"
                       />
                     </div>
@@ -699,10 +950,52 @@ const TripsPage = () => {
                     {selectedType === "public" && (
                       <div>
                         <h2 className="font-bold text-lg my-2">
-                          Upcoming Dates...
+                          Upcoming Dates
                         </h2>
+                        <div className="mt-6">
+                          <h2 className="font-bold text-lg">Select Dates</h2>
+                          <DatePicker
+                            selected={null} // No single date selected
+                            onChange={handleDateChange}
+                            inline
+                            dateFormat="yyyy-MM-dd"
+                            showMonthDropdown
+                            showYearDropdown
+                            dropdownMode="select"
+                            highlightDates={formData.selectedDates.map(
+                              (date) => new Date(date)
+                            )}
+                            filterDate={(date: Date) =>
+                              // Disable dates before today and outside the current year
+                              isAfter(date, today) ||
+                              (isAfter(date, startOfCurrentYear) &&
+                                isBefore(date, endOfCurrentYear))
+                            }
+                            minDate={today}
+                            maxDate={endOfCurrentYear}
+                            excludeDates={[
+                              // Disable previous months and dates
+                              ...Array.from(
+                                { length: startOfCurrentMonth.getDate() - 1 },
+                                (_, i) =>
+                                  new Date(
+                                    today.getFullYear(),
+                                    today.getMonth(),
+                                    i + 1
+                                  )
+                              ),
+                            ]}
+                          />
+                          <div className="mt-4">
+                            <h3 className="font-bold text-md">
+                              Selected Dates
+                            </h3>
+                            {renderDates()}
+                          </div>
+                        </div>
                       </div>
                     )}
+
                     {selectedType === "customize" && (
                       <div>
                         {/* <h2 className="font-bold text-lg">Price List</h2> */}

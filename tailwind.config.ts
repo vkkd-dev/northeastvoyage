@@ -18,7 +18,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        primary: ["Lato"],
+        // primary: ["Lato"],
+        "Poppins-Regular": ["Poppins", "sans-serif"],
       },
       backgroundImage: {
         hero: "url('/bg-img.png')",
