@@ -12,6 +12,15 @@ interface Trip {
   duration: string;
   image: string;
   description: string;
+  overview: string;
+  inclusion: any;
+  itinerary: any;
+  inclusions: string[];
+  exclusions: string[];
+  faqs: any;
+  priceList: any;
+  selectedDates: any;
+  tripType: string;
 }
 
 // Define the props for the TripCard component
@@ -44,8 +53,10 @@ function TripCard({ trip }: TripCardProps) {
           fill
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-        <h1 className="text-white absolute text-xs lg:text-base font-semibold top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-sm">
-          {formatCurrency(trip?.price)}/per person
+        <h1 className="text-white absolute text-xs lg:text-base font-medium top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-sm">
+          {trip.tripType === "public" &&
+            `${formatCurrency(trip?.price)} /per person`}
+          {trip.tripType === "customize" && `Customised`}
         </h1>
         <h1 className="text-white text-sm lg:text-2xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">
           {trip?.name}

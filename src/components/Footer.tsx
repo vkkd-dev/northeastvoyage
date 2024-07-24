@@ -9,16 +9,11 @@ import { useMediaQuery } from "react-responsive";
 function Footer() {
   const [showFullText, setShowFullText] = useState(false);
   const isDesktop = useMediaQuery({ minWidth: 1024 });
-  const router = useRouter();
 
   const text = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India. We aspire to champion eco-friendly practices and support local communities, ensuring that our operations benefit the environment and the people who call Northeast India home. We aim to set the standard for excellence in the travel industry through our constant commitment to quality, safety, and personalized service.`;
 
   const toggleText = () => {
     setShowFullText(!showFullText);
-  };
-
-  const handleNavigation = (route: any) => {
-    router.push(route);
   };
 
   return (

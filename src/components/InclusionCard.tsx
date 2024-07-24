@@ -4,7 +4,7 @@ import { FaCarSide } from "react-icons/fa";
 
 const InclusionCard = ({ inclusion }: any) => {
   return (
-    <div className="flex items-center gap-1 border-secondary border-2 border-solid pt-1 pb-2 px-4 rounded-full text-center">
+    <div className="flex items-center gap-1 border-secondary border-2 border-solid py-1 px-2 rounded-full text-center">
       {inclusion === "Meals" && <GiMeal className="text-secondary" size={20} />}
       {inclusion === "Stays" && (
         <FaHotel className="text-secondary" size={18} />
