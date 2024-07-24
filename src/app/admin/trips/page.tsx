@@ -84,7 +84,7 @@ const TripsPage = () => {
     overview: "",
     image: "",
     // inclusion: [""],
-    itinerary: [{ title: "", items: [""] }],
+    itinerary: [{ title: "", items: [""], images: [""] }],
     inclusions: [""],
     exclusions: [""],
     faqs: [{ question: "", answer: "" }],
@@ -157,6 +157,28 @@ const TripsPage = () => {
         setPreviewImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFilesChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    itineraryIndex: number
+  ) => {
+    const files = e.target.files;
+    if (files) {
+      const uploadedImageUrls = await Promise.all(
+        Array.from(files).map(async (file) => {
+          const storageRef = ref(storage, `itinerary/${file.name}`);
+          await uploadBytes(storageRef, file);
+          return await getDownloadURL(storageRef);
+        })
+      );
+
+      setFormData((prevFormData) => {
+        const updatedItinerary = [...prevFormData.itinerary];
+        updatedItinerary[itineraryIndex].images = uploadedImageUrls;
+        return { ...prevFormData, itinerary: updatedItinerary };
+      });
     }
   };
 
@@ -246,7 +268,10 @@ const TripsPage = () => {
     ) {
       setFormData({
         ...formData,
-        itinerary: [...formData.itinerary, { title: "", items: [""] }],
+        itinerary: [
+          ...formData.itinerary,
+          { title: "", items: [""], images: [""] },
+        ],
       });
     } else {
       toast({
@@ -424,7 +449,7 @@ const TripsPage = () => {
         overview: "",
         image: "",
         // inclusion: [],
-        itinerary: [{ title: "", items: [""] }],
+        itinerary: [{ title: "", items: [""], images: [""] }],
         inclusions: [""],
         exclusions: [""],
         faqs: [{ question: "", answer: "" }],
@@ -506,7 +531,7 @@ const TripsPage = () => {
       overview: trip.overview,
       image: trip.image,
       // inclusion: [],
-      itinerary: [{ title: "", items: [""] }],
+      itinerary: [{ title: "", items: [""], images: [""] }],
       inclusions: [],
       exclusions: [],
       faqs: [{ question: "", answer: "" }],
@@ -535,7 +560,7 @@ const TripsPage = () => {
       overview: "",
       image: "",
       // inclusion: [],
-      itinerary: [{ title: "", items: [""] }],
+      itinerary: [{ title: "", items: [""], images: [""] }],
       inclusions: [],
       exclusions: [],
       faqs: [{ question: "", answer: "" }],
@@ -817,6 +842,22 @@ const TripsPage = () => {
                               )
                             }
                           />
+                          <input
+                            type="file"
+                            multiple
+                            onChange={(e) => handleFilesChange(e, sectionIndex)}
+                          />
+                          <div className="flex gap-2 rounded-sm">
+                            {section.images.map((image, imgIndex) => (
+                              <Image
+                                width={150}
+                                height={150}
+                                key={imgIndex}
+                                src={image}
+                                alt={`itinerary image ${imgIndex + 1}`}
+                              />
+                            ))}
+                          </div>
                           <div className="mx-10">
                             {section.items.map((item, itemIndex) => (
                               <div

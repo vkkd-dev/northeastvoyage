@@ -250,6 +250,20 @@ const TripPage = () => {
                       <div>{detail}</div>
                     </div>
                   ))}
+                  {item.images && (
+                    <div className="flex gap-5 py-5">
+                      {item.images?.map((image: any, imgIndex: any) => (
+                        <Image
+                          width={150}
+                          height={150}
+                          key={imgIndex}
+                          src={image}
+                          alt={`itinerary image ${imgIndex + 1}`}
+                          className="rounded-xl"
+                        />
+                      ))}
+                    </div>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             ))}
