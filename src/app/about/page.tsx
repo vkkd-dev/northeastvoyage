@@ -25,6 +25,15 @@ interface Trip {
   duration: string;
   image: string;
   description: string;
+  overview: string;
+  inclusion: any;
+  itinerary: any;
+  inclusions: string[];
+  exclusions: string[];
+  faqs: any;
+  priceList: any;
+  selectedDates: any;
+  tripType: string;
 }
 
 const AboutPage = () => {
