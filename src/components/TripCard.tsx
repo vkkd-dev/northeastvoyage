@@ -1,27 +1,8 @@
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaClock } from "react-icons/fa6";
 import { FaLocationDot } from "react-icons/fa6";
-
-// Define the TypeScript interface for the trip object
-interface Trip {
-  id: string;
-  name: string;
-  city: string;
-  price: string;
-  duration: string;
-  image: string;
-  description: string;
-  overview: string;
-  inclusion: any;
-  itinerary: any;
-  inclusions: string[];
-  exclusions: string[];
-  faqs: any;
-  priceList: any;
-  selectedDates: any;
-  tripType: string;
-}
+import { Trip } from "./UpcomingTrip";
+import Image from "next/image";
 
 // Define the props for the TripCard component
 interface TripCardProps {

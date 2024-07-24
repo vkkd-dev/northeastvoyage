@@ -1,19 +1,10 @@
 import { useEffect, useState } from "react";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
-import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Trip } from "./UpcomingTrip";
 import TripCard from "@/components/TripCard";
-
-interface Trip {
-  id: string;
-  name: string;
-  city: string;
-  price: string;
-  duration: string;
-  image: string;
-  description: string;
-}
+import Image from "next/image";
 
 function SummerTrips() {
   const [selectedTrips, setSelectedTrips] = useState<Trip[]>([]);

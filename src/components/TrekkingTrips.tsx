@@ -4,16 +4,7 @@ import { firestore } from "@/app/firebase/firebase-cofig";
 import Image from "next/image";
 import TripCard from "@/components/TripCard";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface Trip {
-  id: string;
-  name: string;
-  city: string;
-  price: string;
-  duration: string;
-  image: string;
-  description: string;
-}
+import { Trip } from "./UpcomingTrip";
 
 const TrekkingTrips = () => {
   const [selectedTrips, setSelectedTrips] = useState<Trip[]>([]);

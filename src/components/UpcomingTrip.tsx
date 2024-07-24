@@ -5,7 +5,7 @@ import { firestore } from "@/app/firebase/firebase-cofig";
 import Image from "next/image";
 import { Skeleton } from "./ui/skeleton";
 
-interface Trip {
+export interface Trip {
   id: string;
   name: string;
   city: string;
