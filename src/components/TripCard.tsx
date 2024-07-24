@@ -34,7 +34,7 @@ function TripCard({ trip }: TripCardProps) {
           fill
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-        <h1 className="text-white absolute text-xs lg:text-base font-medium top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-sm">
+        <h1 className="text-white absolute text-xs lg:text-base font-medium top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-bl-sm rounded-tl-sm">
           {trip.tripType === "public" &&
             `${formatCurrency(trip?.price)} /per person`}
           {trip.tripType === "customize" && `Customised`}

@@ -9,12 +9,7 @@ import {
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
@@ -23,6 +18,7 @@ import { firestore } from "@/app/firebase/firebase-cofig";
 import { useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { useMediaQuery } from "react-responsive";
+import { IoCheckmarkCircle } from "react-icons/io5";
 import TripFooter from "@/components/TripFooter";
 import InclusionCard from "@/components/InclusionCard";
 import Image from "next/image";
@@ -46,6 +42,8 @@ interface Trip {
   tripType: string;
 }
 
+const inclusion = ["Meals", "Stays", "Transportation"];
+
 const TripPage = () => {
   // const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
@@ -59,6 +57,7 @@ const TripPage = () => {
   const [isTripsLoading, setIsTripsLoading] = useState(true);
   const [showFullText, setShowFullText] = useState(false);
   const isDesktop = useMediaQuery({ minWidth: 1024 });
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Default to current month
 
   useEffect(() => {
     if (id) {
@@ -120,28 +119,37 @@ const TripPage = () => {
     );
   }
 
+  const handleMonthChange = (event: any) => {
+    setSelectedMonth(parseInt(event.target.value));
+  };
+
   const renderDates = () => {
     return (
       <div className="flex overflow-x-auto gap-2">
-        {tripData.selectedDates.map((timestamp: any) => {
-          const date = timestamp.toDate();
-          const monthName = format(date, "MMM"); // Short month name
-          const day = format(date, "d");
+        {tripData.selectedDates
+          .filter((timestamp: any) => {
+            const date = timestamp.toDate();
+            return date.getMonth() + 1 === selectedMonth;
+          })
+          .map((timestamp: any) => {
+            const date = timestamp.toDate();
+            const monthName = format(date, "MMM"); // Short month name
+            const day = format(date, "d");
 
-          return (
-            <div
-              key={date.getTime()}
-              className="flex flex-col items-center gap-1 bg-primary rounded-lg py-1 text-sm text-center w-12 lg:w-16"
-            >
-              <span className="text-md font-semibold text-white">
-                {monthName}
-              </span>
-              <span className="text-lg font-extrabold bg-white w-10 lg:w-14 rounded-ee-md rounded-es-md">
-                {day}
-              </span>
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={date.getTime()}
+                className="flex flex-col items-center gap-1 bg-primary rounded-lg py-1 text-sm text-center w-12 lg:w-16"
+              >
+                <span className="text-md font-semibold text-white">
+                  {monthName}
+                </span>
+                <span className="text-lg font-extrabold bg-white w-10 lg:w-14 rounded-ee-md rounded-es-md">
+                  {day}
+                </span>
+              </div>
+            );
+          })}
       </div>
     );
   };
@@ -179,7 +187,7 @@ const TripPage = () => {
         className="fixed right-3 lg:right-16 bottom-16 z-50 cursor-pointer"
         onClick={handleWhatsapp}
       />
-      <div className="p-5 lg:p-10">
+      <div className="p-5 lg:px-32 lg:mt-4">
         <h2 className="text-2xl font-bold">{tripData.name}</h2>
         <div className="flex flex-col gap-2 mt-4">
           <h2>Details</h2>
@@ -195,7 +203,7 @@ const TripPage = () => {
         <div className="flex flex-col gap-3 mt-4">
           <h2 className="text-md">Inclusion</h2>
           <div className="flex gap-2">
-            {tripData?.inclusion?.map((inclusion: any, index: any) => (
+            {inclusion.map((inclusion: any, index: any) => (
               <InclusionCard key={index} inclusion={inclusion} />
             ))}
           </div>
@@ -221,22 +229,24 @@ const TripPage = () => {
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="font-bold text-start">
                   <div className="flex items-center gap-5">
-                    <div className="flex flex-col items-center bg-primary text-white py-1 px-3 rounded-lg">
+                    <div className="flex flex-col items-center bg-[#0DB295] text-white py-1 px-3 rounded-lg">
                       <span className="text-xs">{index + 1}</span>
                       <span className="text-xs">Day</span>
                     </div>
                     {item.title}
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="space-y-3">
+                <AccordionContent className="space-y-3 mt-3">
                   {item.items?.map((detail: any, i: any) => (
                     <div className="flex gap-4" key={i}>
-                      <Image
-                        width={20}
-                        height={20}
-                        src={"/tick-circle-solid.svg"}
-                        alt="tick"
-                      />
+                      <div className="flex-shrink-0 w-5 h-5">
+                        <Image
+                          width={20}
+                          height={20}
+                          src={"/tick-circle-solid.svg"}
+                          alt="tick"
+                        />
+                      </div>
                       <div>{detail}</div>
                     </div>
                   ))}
@@ -249,27 +259,34 @@ const TripPage = () => {
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-xl mb-2">Inclusions</h2>
           {tripData.inclusions?.map((inclusion, index) => (
-            <div className="flex gap-4" key={index}>
-              <Image
-                width={20}
-                height={20}
-                src={"/tick-circle-solid.svg"}
-                alt="tick"
-              />
+            <div className="flex gap-2 items-start" key={index}>
+              <div className="flex-shrink-0 w-5 h-5">
+                <Image
+                  width={16}
+                  height={16}
+                  src={"/tick-circle-solid.svg"}
+                  alt="tick"
+                  className="mt-1"
+                />
+              </div>
               <p>{inclusion}</p>
             </div>
           ))}
         </div>
+
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-xl mb-2">Exclusions</h2>
           {tripData.exclusions?.map((exclusion, index) => (
-            <div className="flex gap-4" key={index}>
-              <Image
-                width={20}
-                height={20}
-                src={"/cross-circle-solid.svg"}
-                alt="tick"
-              />
+            <div className="flex gap-2" key={index}>
+              <div className="flex-shrink-0 w-5 h-5">
+                <Image
+                  width={16}
+                  height={16}
+                  src={"/cross-circle-solid.svg"}
+                  alt="tick"
+                  className="mt-1"
+                />
+              </div>
               <p>{exclusion}</p>
             </div>
           ))}
@@ -302,6 +319,17 @@ const TripPage = () => {
         {tripData.tripType === "public" && (
           <div className="mt-10">
             <h2 className="text-2xl font-bold mb-6">Upcoming Dates</h2>
+            <select
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              className="mb-6 p-2 border rounded bg-primary text-white font-semibold"
+            >
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {format(new Date(2020, i, 1), "MMMM")}
+                </option>
+              ))}
+            </select>
             {renderDates()}
           </div>
         )}

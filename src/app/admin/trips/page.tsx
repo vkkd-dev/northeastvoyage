@@ -64,7 +64,7 @@ interface Trip {
   image: string;
   description: string;
   overview: string;
-  inclusion: any;
+  // inclusion: string[];
   itinerary: any;
   inclusions: string[];
   exclusions: string[];
@@ -83,7 +83,7 @@ const TripsPage = () => {
     price: "",
     overview: "",
     image: "",
-    inclusion: [""],
+    // inclusion: [""],
     itinerary: [{ title: "", items: [""] }],
     inclusions: [""],
     exclusions: [""],
@@ -160,11 +160,11 @@ const TripsPage = () => {
     }
   };
 
-  const handleInclusionChange = (index: number, value: string) => {
-    const newInclusion = [...formData.inclusion];
-    newInclusion[index] = value;
-    setFormData({ ...formData, inclusion: newInclusion });
-  };
+  // const handleInclusionChange = (index: number, value: string) => {
+  //   const newInclusion = [...formData.inclusion];
+  //   newInclusion[index] = value;
+  //   setFormData({ ...formData, inclusion: newInclusion });
+  // };
 
   const handleInclusionsChange = (index: number, value: string) => {
     const newInclusions = [...formData.inclusions];
@@ -261,22 +261,22 @@ const TripsPage = () => {
     }
   };
 
-  const addInclusion = () => {
-    const lastInclusion = formData.inclusion[formData.inclusion.length - 1];
-    if (lastInclusion.trim() !== "") {
-      setFormData({ ...formData, inclusion: [...formData.inclusion, ""] });
-    } else {
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <MdErrorOutline size={20} />
-            <p>Please fill the current inclusion before adding a new one.</p>
-          </div>
-        ),
-        className: "bg-primary text-white font-bold",
-      });
-    }
-  };
+  // const addInclusion = () => {
+  //   const lastInclusion = formData.inclusion[formData.inclusion.length - 1];
+  //   if (lastInclusion.trim() !== "") {
+  //     setFormData({ ...formData, inclusion: [...formData.inclusion, ""] });
+  //   } else {
+  //     toast({
+  //       description: (
+  //         <div className="flex items-center gap-2">
+  //           <MdErrorOutline size={20} />
+  //           <p>Please fill the current inclusion before adding a new one.</p>
+  //         </div>
+  //       ),
+  //       className: "bg-primary text-white font-bold",
+  //     });
+  //   }
+  // };
 
   const addInclusions = () => {
     const lastInclusions = formData.inclusions[formData.inclusions.length - 1];
@@ -372,7 +372,7 @@ const TripsPage = () => {
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
-        inclusion: formData.inclusion,
+        // inclusion: formData.inclusion,
         itinerary: formData.itinerary,
         inclusions: formData.inclusions,
         exclusions: formData.exclusions,
@@ -423,7 +423,7 @@ const TripsPage = () => {
         price: "",
         overview: "",
         image: "",
-        inclusion: [],
+        // inclusion: [],
         itinerary: [{ title: "", items: [""] }],
         inclusions: [""],
         exclusions: [""],
@@ -505,7 +505,7 @@ const TripsPage = () => {
       price: trip.price,
       overview: trip.overview,
       image: trip.image,
-      inclusion: [],
+      // inclusion: [],
       itinerary: [{ title: "", items: [""] }],
       inclusions: [],
       exclusions: [],
@@ -534,7 +534,7 @@ const TripsPage = () => {
       price: "",
       overview: "",
       image: "",
-      inclusion: [],
+      // inclusion: [],
       itinerary: [{ title: "", items: [""] }],
       inclusions: [],
       exclusions: [],
@@ -589,7 +589,7 @@ const TripsPage = () => {
                 name: formData.name,
                 price: formData.price,
                 overview: formData.overview,
-                inclusion: formData.inclusion,
+                // inclusion: formData.inclusion,
                 itinerary: formData.itinerary,
                 inclusions: formData.inclusions,
                 exclusions: formData.exclusions,
@@ -774,7 +774,7 @@ const TripsPage = () => {
                       )}
                     </div>
 
-                    <div className="mt-6">
+                    {/* <div className="mt-6">
                       <h2 className="font-bold text-lg">Inclusion</h2>
                       {formData.inclusion.map((inclusion, index) => (
                         <div
@@ -796,7 +796,7 @@ const TripsPage = () => {
                         onClick={addInclusion}
                         className="cursor-pointer m-2"
                       />
-                    </div>
+                    </div> */}
 
                     <div className="mt-6">
                       <h2 className="font-bold text-lg">Itinerary</h2>
