@@ -10,7 +10,7 @@ import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import { ImSpinner2 } from "react-icons/im";
@@ -51,13 +51,13 @@ const TripPage = () => {
   const [tripData, setTripData] = useState<Trip | null>(null);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [nav, setNav] = useState(false);
-  const openNavbar = () => setNav(true);
-  const closeNavbar = () => setNav(false);
+  const [selectedMonth, setSelectedMonth] = useState<number | "all">("all");
   const [isTripLoading, setIsTripLoading] = useState(true);
   const [isTripsLoading, setIsTripsLoading] = useState(true);
   const [showFullText, setShowFullText] = useState(false);
   const isDesktop = useMediaQuery({ minWidth: 1024 });
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Default to current month
+  const openNavbar = () => setNav(true);
+  const closeNavbar = () => setNav(false);
 
   useEffect(() => {
     if (id) {
@@ -107,27 +107,26 @@ const TripPage = () => {
     fetchTrips();
   }, []);
 
-  if (!tripData) {
-    return (
-      <div className="flex justify-center items-center mt-4">
-        <ImSpinner2
-          height={24}
-          width={24}
-          className="animate-spin self-center text-center mt-4"
-        />
-      </div>
-    );
-  }
-
-  const handleMonthChange = (event: any) => {
-    setSelectedMonth(parseInt(event.target.value));
+  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setSelectedMonth(value === "all" ? "all" : parseInt(value));
   };
+
+  const uniqueMonths = useMemo(() => {
+    const monthsSet = new Set<number>();
+    tripData?.selectedDates?.forEach((timestamp: any) => {
+      const date = timestamp.toDate();
+      monthsSet.add(date.getMonth() + 1);
+    });
+    return Array.from(monthsSet).sort((a, b) => a - b);
+  }, [tripData?.selectedDates]);
 
   const renderDates = () => {
     return (
       <div className="flex overflow-x-auto gap-2">
-        {tripData.selectedDates
+        {tripData?.selectedDates
           .filter((timestamp: any) => {
+            if (selectedMonth === "all") return true;
             const date = timestamp.toDate();
             return date.getMonth() + 1 === selectedMonth;
           })
@@ -161,6 +160,18 @@ const TripPage = () => {
   const toggleText = () => {
     setShowFullText(!showFullText);
   };
+
+  if (!tripData) {
+    return (
+      <div className="flex justify-center items-center mt-4">
+        <ImSpinner2
+          height={24}
+          width={24}
+          className="animate-spin self-center text-center mt-4"
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -251,15 +262,15 @@ const TripPage = () => {
                     </div>
                   ))}
                   {item.images && (
-                    <div className="flex gap-5 py-5">
+                    <div className="flex gap-5 py-5 overflow-x-auto">
                       {item.images?.map((image: any, imgIndex: any) => (
                         <Image
-                          width={150}
-                          height={150}
+                          width={175}
+                          height={175}
                           key={imgIndex}
                           src={image}
                           alt={`itinerary image ${imgIndex + 1}`}
-                          className="rounded-xl"
+                          className="rounded-xl flex-shrink-0"
                         />
                       ))}
                     </div>
@@ -338,9 +349,10 @@ const TripPage = () => {
               onChange={handleMonthChange}
               className="mb-6 p-2 border rounded bg-primary text-white font-semibold"
             >
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {format(new Date(2020, i, 1), "MMMM")}
+              <option value="all">All</option>
+              {uniqueMonths.map((month) => (
+                <option key={month} value={month}>
+                  {format(new Date(2020, month - 1, 1), "MMMM")}
                 </option>
               ))}
             </select>

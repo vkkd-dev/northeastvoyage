@@ -1,99 +1,11 @@
-import { memo, useCallback, useState } from "react";
 import { Button } from "./ui/button";
-import { useMediaQuery } from "react-responsive";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
-import { Input } from "./ui/input";
-import Image from "next/image";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "./ui/sheet";
-import { useToast } from "./ui/use-toast";
-import { doc, setDoc } from "firebase/firestore";
-import { SiTicktick } from "react-icons/si";
-import { MdErrorOutline } from "react-icons/md";
-import { firestore } from "@/app/firebase/firebase-cofig";
+import { useRouter } from "next/navigation";
 
 const Cover = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [inputs, setInputs] = useState({ name: "", email: "", phone: "" });
-  const { toast } = useToast();
+  const router = useRouter();
 
-  const isDesktop = useMediaQuery({ minWidth: 1024 });
-
-  const openSheet = useCallback(() => setIsOpen(true), []);
-  const closeSheet = useCallback(() => {
-    setIsOpen(false);
-    setInputs({
-      name: "",
-      email: "",
-      phone: "",
-    });
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
-  };
-
-  const getISTTimestamp = () => {
-    const currentTime = new Date();
-    const utcOffset = currentTime.getTimezoneOffset();
-    const istOffset = 330; // IST is UTC+5:30, which is 330 minutes ahead of UTC
-    const istTime = new Date(
-      currentTime.getTime() + (istOffset - utcOffset) * 60000
-    );
-    return istTime.toISOString(); // or istTime.toLocaleString() if you prefer
-  };
-
-  const onSubmit = async () => {
-    if (inputs.name === "" || inputs.email === "" || inputs.phone === "") {
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <MdErrorOutline size={20} />
-            <p>All fields must be fielded</p>
-          </div>
-        ),
-        className: "bg-primary text-white font-bold",
-      });
-      return;
-    }
-    try {
-      const timestamp = getISTTimestamp();
-      await setDoc(doc(firestore, "queries", timestamp), {
-        name: inputs.name,
-        email: inputs.email,
-        phone: inputs.phone,
-        timestamp,
-      });
-
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Response Submitted</p>
-          </div>
-        ),
-        className: "bg-primary text-white font-bold",
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      closeSheet();
-    }
+  const handleNavigate = () => {
+    router.push("getintouch");
   };
 
   return (
@@ -113,12 +25,12 @@ const Cover = () => {
           <p className="text-white lg:text-4xl font-light"> Hits us up!</p>
         </div>
         <Button
-          onClick={openSheet}
-          className="absolute bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white lg:px-8 lg:py-7 tracking-widest cursor-pointer"
+          onClick={handleNavigate}
+          className="absolute bottom-5 lg:bottom-14 left-5 lg:left-36 bg-[#0DB295] rounded-full text-xs lg:text-sm text-white lg:px-8 lg:py-7 tracking-widest z-40"
         >
           Enquiry Now
         </Button>
-        {isDesktop ? (
+        {/* {isDesktop ? (
           <Dialog open={isOpen} onOpenChange={closeSheet}>
             <DialogContent className="rounded-t-3xl z-50">
               <DialogClose onClick={closeSheet} />
@@ -262,7 +174,7 @@ const Cover = () => {
               </div>
             </SheetContent>
           </Sheet>
-        )}
+        )} */}
       </div>
     </div>
   );

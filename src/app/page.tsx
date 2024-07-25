@@ -12,6 +12,7 @@ import Image from "next/image";
 import TrekkingTrips from "../components/TrekkingTrips";
 import SummerTrips from "../components/SummerTrips";
 import { useState } from "react";
+import PopupAlert from "@/components/PopupAlert";
 
 function HomePage() {
   const [nav, setNav] = useState(false);
@@ -24,6 +25,7 @@ function HomePage() {
 
   return (
     <div className="relative overflow-x-hidden">
+      <PopupAlert />
       <Image
         width={75}
         height={75}
