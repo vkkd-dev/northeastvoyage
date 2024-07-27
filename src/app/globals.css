@@ -114,7 +114,7 @@ body {
   }
 
   .heading {
-    @apply text-[#333] text-[20px] sm:text-[30px] md:text-[26px] font-bold capitalize tracking-wider;
+    @apply text-[#333] text-lg lg:text-xl font-bold capitalize tracking-wider;
   }
 
   .page-heading {

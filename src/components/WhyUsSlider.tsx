@@ -79,27 +79,25 @@ function WhyUsSlider() {
       responsive={responsive}
       itemClass="item"
     >
-      {[1, 2, 3, 4].map((_, i) => (
-        <div
-          key={i}
-          className="m-4 p-8 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
-        >
-          <Image
-            width={150}
-            height={150}
-            alt="Why us image"
-            src="/whyus.png"
-            className="mx-auto"
-          />
-          <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
-            Trusted Reviews
-          </h1>
-          <p className="text-center">
-            Read honest reviews from fellow travelers to ensure you make the
-            best choices for your journey.
-          </p>
-        </div>
-      ))}
+      <div className="m-4 p-8 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
+          Expertise in Northeastern Destinations:
+        </h1>
+        <p className="text-center">
+          Experience: With so many years of exploring the Northeast, we bring
+          insider knowledge to craft unforgettable journeys. Local Insights: Our
+          team includes locals who understand the region, ensuring authentic
+          experiences. Exclusive Access: Gain access to hidden gems and
+          lesser-known spots that only locals frequent.
+        </p>
+      </div>
     </Carousel>
   );
 }

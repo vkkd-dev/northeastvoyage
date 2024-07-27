@@ -18,6 +18,7 @@ import { firestore } from "@/app/firebase/firebase-cofig";
 import { useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { useMediaQuery } from "react-responsive";
+import { BiSolidPhoneCall } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import TripFooter from "@/components/TripFooter";
 import InclusionCard from "@/components/InclusionCard";
@@ -138,12 +139,12 @@ const TripPage = () => {
             return (
               <div
                 key={date.getTime()}
-                className="flex flex-col items-center gap-1 bg-primary rounded-lg py-1 text-sm text-center w-12 lg:w-16"
+                className="flex flex-col items-center gap-1 bg-primary rounded-lg py-1 text-center w-12 lg:w-16"
               >
-                <span className="text-md font-semibold text-white">
+                <span className="text-sm font-semibold text-white">
                   {monthName}
                 </span>
-                <span className="text-lg font-extrabold bg-white w-10 lg:w-14 rounded-ee-md rounded-es-md">
+                <span className="text-sm font-semibold bg-white w-10 lg:w-14 rounded-ee-md rounded-es-md">
                   {day}
                 </span>
               </div>
@@ -160,6 +161,17 @@ const TripPage = () => {
   const toggleText = () => {
     setShowFullText(!showFullText);
   };
+
+  const handleCall = () => {
+    window.location.href = "tel:+918099451325";
+  };
+
+  // const formatPrice = (price: number) => {
+  //   return new Intl.NumberFormat("en-IN", {
+  //     style: "currency",
+  //     currency: "INR",
+  //   }).format(price);
+  // };
 
   if (!tripData) {
     return (
@@ -179,7 +191,7 @@ const TripPage = () => {
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
 
-      <div className="flex flex-col h-[33vh] lg:h-[66vh]">
+      <div className="flex flex-col h-[37vh] lg:h-[66vh]">
         <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
           <Image
             src={tripData.image}
@@ -195,9 +207,28 @@ const TripPage = () => {
         height={75}
         src={"/whatsapp.png"}
         alt="whatsapp"
-        className="fixed right-3 lg:right-16 bottom-16 z-50 cursor-pointer"
+        className="fixed right-3 lg:right-16 bottom-28 lg:bottom-36 z-50 cursor-pointer"
         onClick={handleWhatsapp}
       />
+
+      <div className="fixed w-full bottom-0 z-50">
+        <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-10 rounded-ss-3xl rounded-se-3xl shadow-2xl shadow-black">
+          <div className="flex flex-col gap-1">
+            <span className="tracking-wider font-bold text-sm">Start From</span>
+            <div className="text-2xl font-extrabold text-primary">
+              {/* {formatPrice(parseInt(tripData.price))} */}₹ {tripData.price}
+            </div>
+          </div>
+          <div
+            className="flex items-center gap-1 bg-secondary self-center px-5 py-3 rounded-full text-white font-bold cursor-pointer"
+            onClick={handleCall}
+          >
+            <BiSolidPhoneCall size={20} />
+            Call Now
+          </div>
+        </div>
+      </div>
+
       <div className="p-5 lg:px-32 lg:mt-4">
         <h2 className="text-2xl font-bold">{tripData.name}</h2>
         <div className="flex flex-col gap-2 mt-4">
@@ -219,14 +250,14 @@ const TripPage = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col pt-6 gap-2">
-          <h2 className="font-extrabold text-xl">Overview</h2>
+        <div className="flex flex-col pt-6">
+          <h2 className="font-extrabold text-lg lg:text-xl mb-2">Overview</h2>
           {isDesktop || showFullText
             ? tripData.overview
-            : `${tripData.overview.substring(0, 215)}...`}
+            : `${tripData.overview.substring(0, 210)}...`}
           {!isDesktop && (
-            <span onClick={toggleText} className="text-blue-500 cursor-pointer">
-              {showFullText ? " Show less" : " Show more"}
+            <span onClick={toggleText} className="text-primary cursor-pointer">
+              {showFullText ? "Read less" : "Read more"}
             </span>
           )}
           {/* <p>{tripData.overview}</p>
@@ -234,17 +265,19 @@ const TripPage = () => {
         </div>
 
         <div className="pt-6">
-          <h2 className="font-extrabold text-xl">Itinerary</h2>
+          <h2 className="font-extrabold text-lg lg:text-xl">Itinerary</h2>
           <Accordion type="single" collapsible>
             {tripData.itinerary?.map((item: any, index: any) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="font-bold text-start">
+                <AccordionTrigger className="text-start">
                   <div className="flex items-center gap-5">
-                    <div className="flex flex-col items-center bg-[#0DB295] text-white py-1 px-3 rounded-lg">
+                    <div className="flex flex-col items-center justify-center bg-[#0DB295] text-white w-11 h-11 rounded-lg">
                       <span className="text-xs">{index + 1}</span>
                       <span className="text-xs">Day</span>
                     </div>
-                    {item.title}
+                    <div className="max-w-[275px] lg:max-w-[500px]">
+                      {item.title}
+                    </div>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="space-y-3 mt-3">
@@ -282,7 +315,7 @@ const TripPage = () => {
         </div>
 
         <div className="flex flex-col pt-6 gap-2">
-          <h2 className="font-extrabold text-xl mb-2">Inclusions</h2>
+          <h2 className="font-extrabold text-lg lg:text-xl mb-2">Inclusions</h2>
           {tripData.inclusions?.map((inclusion, index) => (
             <div className="flex gap-2 items-start" key={index}>
               <div className="flex-shrink-0 w-5 h-5">
@@ -294,13 +327,13 @@ const TripPage = () => {
                   className="mt-1"
                 />
               </div>
-              <p>{inclusion}</p>
+              <p className="text-sm lg:text-base">{inclusion}</p>
             </div>
           ))}
         </div>
 
         <div className="flex flex-col pt-6 gap-2">
-          <h2 className="font-extrabold text-xl mb-2">Exclusions</h2>
+          <h2 className="font-extrabold text-lg lg:text-xl mb-2">Exclusions</h2>
           {tripData.exclusions?.map((exclusion, index) => (
             <div className="flex gap-2" key={index}>
               <div className="flex-shrink-0 w-5 h-5">
@@ -312,15 +345,15 @@ const TripPage = () => {
                   className="mt-1"
                 />
               </div>
-              <p>{exclusion}</p>
+              <p className="text-sm lg:text-base">{exclusion}</p>
             </div>
           ))}
         </div>
 
         {tripData.tripType === "customize" && (
           <div className="mt-8">
-            <h2 className="font-bold text-lg mb-4">Price List</h2>
-            <table className="min-w-full border-collapse">
+            <h2 className="font-bold text-lg lg:text-xl mb-4">Price List</h2>
+            <table className="min-w-full border-collapse border-primary text-sm">
               <thead>
                 <tr className="text-center">
                   <th className="border p-2">No. of people</th>
@@ -347,7 +380,7 @@ const TripPage = () => {
             <select
               value={selectedMonth}
               onChange={handleMonthChange}
-              className="mb-6 p-2 border rounded bg-primary text-white font-semibold"
+              className="mb-6 py-1 px-2 border rounded bg-primary text-white font-semibold"
             >
               <option value="all">All</option>
               {uniqueMonths.map((month) => (
@@ -361,11 +394,11 @@ const TripPage = () => {
         )}
 
         <div className="mt-10">
-          <h2 className="font-bold text-lg">FAQs</h2>
+          <h2 className="font-bold text-lg lg:text-xl">FAQs</h2>
           <Accordion type="single" collapsible>
             {tripData.faqs?.map((faq: any, index: any) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="font-bold text-start">
+                <AccordionTrigger className="text-start">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent>

@@ -11,22 +11,22 @@ function Footer() {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   const text = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India. We aspire to champion eco-friendly practices and support local communities, ensuring that our operations benefit the environment and the people who call Northeast India home. We aim to set the standard for excellence in the travel industry through our constant commitment to quality, safety, and personalized service.`;
-
+  const text2 = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India.`;
   const toggleText = () => {
     setShowFullText(!showFullText);
   };
 
   return (
-    <div className="flex flex-col justify-end bg-secondary h-[38rem] mt-[10rem]">
+    <div className="flex flex-col justify-end bg-secondary h-[35rem] lg:h-[38rem] mt-[10rem] lg:mt-[15rem]">
       <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[2rem] lg:mb-[4rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[85%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
-            <p className="tracking-wider hidden lg:flex">
+            <p className="tracking-wider hidden lg:flex text-text">
               <span onClick={toggleText}>{text}</span>
             </p>
-            <p className="tracking-wider lg:hidden ">
-              <span onClick={toggleText}>{text.substring(0, 260)}...</span>
+            <p className="tracking-wider lg:hidden text-text">
+              <span onClick={toggleText}>{text2}</span>
             </p>
             {/* {isDesktop || showFullText
                 ? text

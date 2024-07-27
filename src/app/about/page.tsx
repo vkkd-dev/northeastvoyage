@@ -130,7 +130,7 @@ const AboutPage = () => {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 lg:px-32 lg:mt-4">
         <h2 className="text-2xl font-bold">{tripData.alt}</h2>
         <h2 className="text-lg mt-3">{tripData.description}</h2>
         <h1 className="mt-10 font-semibold text-2xl">Featured Package</h1>

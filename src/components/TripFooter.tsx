@@ -103,7 +103,7 @@ function TripFooter({ price }: any) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-10 rounded-ss-3xl rounded-se-3xl">
+      {/* <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-10 rounded-ss-3xl rounded-se-3xl">
         <div className="flex flex-col gap-1">
           <span className="tracking-wider font-bold text-sm">Start From</span>
           <div className="text-2xl font-extrabold">
@@ -117,7 +117,7 @@ function TripFooter({ price }: any) {
           <BiSolidPhoneCall size={20} />
           Call Now
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

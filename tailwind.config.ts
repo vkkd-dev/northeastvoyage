@@ -26,10 +26,11 @@ const config = {
         connect: "url('/cover.jpeg')",
       },
       colors: {
-        primary: "#65A78E",
+        primary: "#0DB295",
         accent: "#E39E18",
         secondary: "#0DB295",
         title: "#990000",
+        text: "#696969",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

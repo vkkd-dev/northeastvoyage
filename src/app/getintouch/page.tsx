@@ -116,7 +116,7 @@ const GetInTouch = () => {
       <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[15vh]">
         <div className="bg-white rounded-lg border-2 border-secondary mt-10 p-4 lg:p-10 w-[100%] lg:w-[85%] mx-auto">
           <h2 className="text-xl font-bold text-secondary mb-5">
-            Get In Touch
+            Enquiry Form
           </h2>
           <form onSubmit={onSubmit}>
             <div className="grid gap-4">

@@ -165,7 +165,7 @@ const Destination: React.FC = () => {
               className="m-1 cursor-pointer"
               onClick={() => handleNavigation(destination)}
             >
-              <div className="relative w-20 h-20 lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden">
+              <div className="relative w-[75px] h-[75px] lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden">
                 <Image
                   src={destination.img}
                   alt={destination.alt}
@@ -174,7 +174,7 @@ const Destination: React.FC = () => {
                   className="rounded-full"
                 />
               </div>
-              <h1 className="destination-h1 text-black text-center mt-2 text-base lg:text-lg font-light tracking-wider">
+              <h1 className="destination-h1 text-black text-center mt-2 text-[0.9rem] lg:text-lg font-light tracking-wider">
                 {destination.alt}
               </h1>
             </div>
