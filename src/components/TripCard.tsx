@@ -39,17 +39,19 @@ function TripCard({ trip }: TripCardProps) {
             `${formatCurrency(trip?.price)} /per person`}
           {trip.tripType === "customize" && `Customised`}
         </h1>
-        <h1 className="text-white text-sm lg:text-2xl absolute bottom-16 lg:bottom-24 left-3 lg:left-5 font-bold">
-          {trip?.name}
-        </h1>
-        <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-10 lg:bottom-12 left-3 lg:left-5 font-bold">
-          <FaClock />
-          {trip?.city}
-        </h1>
-        <h1 className="flex items-center gap-2 text-white text-xs lg:text-base absolute bottom-4 lg:bottom-5 left-3 lg:left-5 font-bold">
-          <FaLocationDot />
-          {trip?.duration}
-        </h1>
+        <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4">
+          <h1 className="text-white text-sm lg:text-2xl font-bold">
+            {trip?.name}
+          </h1>
+          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm mt-2 mb-1">
+            <FaLocationDot />
+            {trip?.duration}
+          </h1>
+          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm">
+            <FaClock />
+            {trip?.city}
+          </h1>
+        </div>
       </div>
     </div>
   );

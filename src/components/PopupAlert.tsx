@@ -43,11 +43,15 @@ const PopupAlert = () => {
   }, []);
 
   useEffect(() => {
-    const isVisited = localStorage.getItem("isVisited");
-    if (!isVisited) {
-      setIsOpen(true);
-      localStorage.setItem("isVisited", "true");
-    }
+    const timer = setTimeout(() => {
+      const isVisited = localStorage.getItem("isVisited");
+      if (!isVisited) {
+        setIsOpen(true);
+        localStorage.setItem("isVisited", "true");
+      }
+    }, 40000); // 40 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timeout on component unmount
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -106,11 +106,15 @@ body {
   }
 
   .nav-links {
-    @apply relative text-black font-bold cursor-pointer text-[16px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center tracking-wider flex hidden;
+    @apply relative text-black font-bold cursor-pointer text-[16px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center tracking-wider hidden;
   }
 
   .nav-links-mobile {
-    @apply relative mb-[2rem] font-bold cursor-pointer text-[20px] w-fit lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-fit after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center;
+    @apply relative flex justify-between w-full cursor-pointer lg:block after:block after:content-[''] after:absolute after:h-[3px] after:bg-red-600 after:w-fit after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center;
+  }
+
+  .nav-links-mobile-border {
+    @apply border-b-[1px] border-black px-10 py-5;
   }
 
   .heading {

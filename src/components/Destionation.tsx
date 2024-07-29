@@ -174,7 +174,7 @@ const Destination: React.FC = () => {
                   className="rounded-full"
                 />
               </div>
-              <h1 className="destination-h1 text-black text-center mt-2 text-[0.9rem] lg:text-lg font-light tracking-wider">
+              <h1 className="destination-h1 text-black text-center mt-2 text-[0.8rem] lg:text-lg font-light tracking-wider">
                 {destination.alt}
               </h1>
             </div>

@@ -5,7 +5,7 @@ const Cover = () => {
   const router = useRouter();
 
   const handleNavigate = () => {
-    router.push("getintouch");
+    router.push("/enquiryform");
   };
 
   return (

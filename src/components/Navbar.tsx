@@ -79,7 +79,7 @@ function Navbar({ nav, openNav }: Props) {
             <HoverCardContent>
               {/* <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md z-50"> */}
               <ul className="py-2">
-                {["Trips", "Destinations"].map((category) => (
+                {["Group", "Family", "Honeymoon", "Solo"].map((category) => (
                   <li key={category} className="px-4 py-2 hover:bg-gray-200">
                     <Link href={`#`}>{category}</Link>
                   </li>
@@ -121,9 +121,7 @@ function Navbar({ nav, openNav }: Props) {
           </div>
           <div className="flex flex-col">
             <span className="text-sm">Call Us</span>
-            <h1 className="text-base font-bold">
-              +91 8099451325
-            </h1>
+            <h1 className="text-base font-bold">+91 8099451325</h1>
           </div>
         </div>
       </div>

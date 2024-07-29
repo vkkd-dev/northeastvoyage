@@ -23,6 +23,13 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import TripFooter from "@/components/TripFooter";
 import InclusionCard from "@/components/InclusionCard";
 import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Trip {
   id: string;
@@ -108,8 +115,7 @@ const TripPage = () => {
     fetchTrips();
   }, []);
 
-  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
+  const handleMonthChange = (value: string) => {
     setSelectedMonth(value === "all" ? "all" : parseInt(value));
   };
 
@@ -314,6 +320,12 @@ const TripPage = () => {
           </Accordion>
         </div>
 
+        <div className="flex justify-center mt-4 lg:mt-6">
+          <div className="border-primary border-2 py-2 px-5 rounded-full cursor-pointer">
+            Download Itinerary
+          </div>
+        </div>
+
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-lg lg:text-xl mb-2">Inclusions</h2>
           {tripData.inclusions?.map((inclusion, index) => (
@@ -353,20 +365,41 @@ const TripPage = () => {
         {tripData.tripType === "customize" && (
           <div className="mt-8">
             <h2 className="font-bold text-lg lg:text-xl mb-4">Price List</h2>
-            <table className="min-w-full border-collapse border-primary text-sm">
+            <table className="min-w-full border-collapse border-primary border-2 text-sm rounded-sm">
               <thead>
                 <tr className="text-center">
-                  <th className="border p-2">No. of people</th>
-                  <th className="border p-2">Standard Hotel/Homestay</th>
-                  <th className="border p-2">Deluxe Hotel</th>
+                  <th
+                    className="border-2 p-2 border-primary"
+                    style={{ width: "50%" }}
+                  >
+                    No. of people
+                  </th>
+                  <th
+                    className="border-2 p-2 border-primary"
+                    style={{ width: "25%" }}
+                  >
+                    Standard Hotel/Homestay
+                  </th>
+                  <th
+                    className="border-2 p-2 border-primary"
+                    style={{ width: "25%" }}
+                  >
+                    Deluxe Hotel
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {tripData.priceList?.map((priceItem: any, index: any) => (
                   <tr key={index} className="text-center">
-                    <td className="border p-2">{priceItem.people}</td>
-                    <td className="border p-2">{priceItem.standard}</td>
-                    <td className="border p-2">{priceItem.deluxe}</td>
+                    <td className="border-2 p-2 border-primary">
+                      {priceItem.people}
+                    </td>
+                    <td className="border-2 p-2 border-primary">
+                      {priceItem.standard}
+                    </td>
+                    <td className="border-2 p-2 border-primary">
+                      {priceItem.deluxe}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -377,19 +410,25 @@ const TripPage = () => {
         {tripData.tripType === "public" && (
           <div className="mt-10">
             <h2 className="text-2xl font-bold mb-6">Upcoming Dates</h2>
-            <select
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              className="mb-6 py-1 px-2 border rounded bg-primary text-white font-semibold"
-            >
-              <option value="all">All</option>
-              {uniqueMonths.map((month) => (
-                <option key={month} value={month}>
-                  {format(new Date(2020, month - 1, 1), "MMMM")}
-                </option>
-              ))}
-            </select>
-            {renderDates()}
+            <div className="w-24 lg:w-28">
+              <Select
+                value={selectedMonth.toString()}
+                onValueChange={handleMonthChange}
+              >
+                <SelectTrigger className="mb-6 py-1 px-4 border rounded bg-primary text-white font-semibold">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {uniqueMonths.map((month) => (
+                    <SelectItem key={month} value={month.toString()}>
+                      {format(new Date(2020, month - 1, 1), "MMM")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {renderDates()}
+            </div>
           </div>
         )}
 

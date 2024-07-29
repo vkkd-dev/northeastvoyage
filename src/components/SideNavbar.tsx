@@ -86,13 +86,13 @@ const SideNavbar = () => {
           },
           {
             title: "Trips - Sub 1",
-            href: "/admin/trekkingtrips",
+            href: "/admin/tripssub1",
             icon: Bike,
             variant: "ghost",
           },
           {
             title: "Trips - Sub 2",
-            href: "/admin/summertrips",
+            href: "/admin/tripssub2",
             icon: Ship,
             variant: "ghost",
           },

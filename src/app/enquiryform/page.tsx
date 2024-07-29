@@ -19,7 +19,7 @@ import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import Footer from "@/components/Footer";
 
-const GetInTouch = () => {
+const EnquiryForm = () => {
   const [nav, setNav] = useState(false);
   const openNavbar = () => setNav(true);
   const closeNavbar = () => setNav(false);
@@ -212,13 +212,13 @@ const GetInTouch = () => {
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem
                       value="Group Trips/Fixed Departures"
-                      id="r1"
+                      id="r6"
                     />
-                    <Label htmlFor="r1">Group Trips/Fixed Departures</Label>
+                    <Label htmlFor="r6">Group Trips/Fixed Departures</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Customized/Private Trips" id="r2" />
-                    <Label htmlFor="r2">Customized/Private Trips</Label>
+                    <RadioGroupItem value="Customized/Private Trips" id="r7" />
+                    <Label htmlFor="r7">Customized/Private Trips</Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -261,4 +261,4 @@ const GetInTouch = () => {
   );
 };
 
-export default GetInTouch;
+export default EnquiryForm;

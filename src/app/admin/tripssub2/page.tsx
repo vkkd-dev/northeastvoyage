@@ -33,7 +33,7 @@ interface Trip {
   overview: string;
 }
 
-const SummerTrips = () => {
+const TripsSub2 = () => {
   const [tripsData, setTripsData] = useState<Trip[]>([]);
   const [selectedTrips, setSelectedTrips] = useState<Trip[]>([]);
   const [isFetching, setIsFetching] = useState(true);
@@ -96,9 +96,28 @@ const SummerTrips = () => {
   useEffect(() => {
     const saveSelectedTrips = async () => {
       const trekkingTripsCollection = collection(firestore, "trips_sub2");
+
+      // Fetch existing trip documents
+      const existingDocs = await getDocs(trekkingTripsCollection);
+      const existingTripIds = existingDocs.docs.map((doc) => doc.id);
+
+      // Determine which trips need to be deleted
+      const tripsToDelete = existingTripIds.filter(
+        (id) => !selectedTrips.some((trip) => trip.id === id)
+      );
+
+      // Delete trips that are not selected
       await Promise.all(
-        selectedTrips.map(async (trip, index) => {
-          const tripDoc = doc(trekkingTripsCollection, `trip_${index + 1}`);
+        tripsToDelete.map(async (id) => {
+          const tripDoc = doc(trekkingTripsCollection, id);
+          await deleteDoc(tripDoc);
+        })
+      );
+
+      // Add or update selected trips
+      await Promise.all(
+        selectedTrips.map(async (trip) => {
+          const tripDoc = doc(trekkingTripsCollection, trip.id);
           await setDoc(tripDoc, trip);
         })
       );
@@ -118,13 +137,19 @@ const SummerTrips = () => {
     fetchTitle();
   }, []);
 
-  const handleSelectTrip = (trip: Trip) => {
+  const handleSelectTrip = async (trip: Trip) => {
     setSelectedTrips((prevSelectedTrips) => {
       let updatedTrips: Trip[];
-      if (prevSelectedTrips.length < 4) {
-        updatedTrips = [...prevSelectedTrips, trip];
+      if (isTripSelected(trip.id)) {
+        // Unselect the trip
+        updatedTrips = prevSelectedTrips.filter((t) => t.id !== trip.id);
       } else {
-        updatedTrips = [...prevSelectedTrips.slice(1), trip];
+        // Select the trip
+        if (prevSelectedTrips.length < 4) {
+          updatedTrips = [...prevSelectedTrips, trip];
+        } else {
+          updatedTrips = [...prevSelectedTrips.slice(1), trip];
+        }
       }
       return updatedTrips;
     });
@@ -225,7 +250,7 @@ const SummerTrips = () => {
               tripsData.map((trip) => (
                 <div
                   key={trip.id}
-                  className="border border-gray-300 rounded p-2"
+                  className="flex flex-col border border-gray-300 rounded p-2"
                 >
                   <div className="relative w-full h-40 mb-2 overflow-hidden">
                     <Image
@@ -251,15 +276,14 @@ const SummerTrips = () => {
 
                   <Button
                     onClick={() => handleSelectTrip(trip)}
-                    disabled={isTripSelected(trip.id)}
                     className={`${
                       isTripSelected(trip.id)
-                        ? "bg-green-500"
+                        ? "bg-red-500"
                         : "bg-secondary hover:bg-yellow-600"
-                    } text-white w-full rounded transition duration-200 flex items-center justify-center gap-1`}
+                    } text-white w-full rounded transition duration-200 flex items-center justify-center gap-1 mt-auto`}
                   >
                     <TiTick size={18} />
-                    {isTripSelected(trip.id) ? "Selected" : "Select"}
+                    {isTripSelected(trip.id) ? "Unselect" : "Select"}
                   </Button>
                 </div>
               ))}
@@ -270,4 +294,4 @@ const SummerTrips = () => {
   );
 };
 
-export default SummerTrips;
+export default TripsSub2;

@@ -134,7 +134,7 @@ function ReviewSlider() {
           {reviewsData.map((review, index) => (
             <div
               key={index}
-              className="w-[340px] lg:w-[300px] h-[270px] p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+              className="w-[90%] lg:w-[300px] h-[270px] p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
             >
               <div>
                 <Image
@@ -181,8 +181,8 @@ function ReviewSlider() {
                 />
               </div>
               <p className="text-center text-sm w-[90%] mx-auto">
-                {review.review.length > 125
-                  ? review.review.slice(0, 125) + "..."
+                {review.review.length > 105
+                  ? review.review.slice(0, 105) + "..."
                   : review.review}
               </p>
             </div>

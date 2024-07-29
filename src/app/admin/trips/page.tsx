@@ -98,6 +98,7 @@ const TripsPage = () => {
     ],
     selectedDates: [] as Date[],
   });
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -360,6 +361,7 @@ const TripsPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
+      selectedCategory === null ||
       formData.city === "" ||
       formData.description === "" ||
       formData.duration === "" ||
@@ -391,6 +393,7 @@ const TripsPage = () => {
       }
 
       const tripData: any = {
+        category: selectedCategory,
         city: formData.city,
         description: formData.description,
         duration: formData.duration,
@@ -714,6 +717,21 @@ const TripsPage = () => {
                 <AccordionContent>
                   <div className="flex flex-col gap-4 mb-4 p-2">
                     {/* <h1 className="text-lg font-semibold">Add New Trip</h1> */}
+
+                    <Select onValueChange={setSelectedCategory}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Trip Category</SelectLabel>
+                          <SelectItem value="group">Group</SelectItem>
+                          <SelectItem value="family">Family</SelectItem>
+                          <SelectItem value="honeymoon">Honeymoon</SelectItem>
+                          <SelectItem value="solo">Solo</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
 
                     {/* Name Input */}
                     <input
@@ -1169,10 +1187,10 @@ const TripsPage = () => {
           {/* Edit Modal */}
           {editModalOpen && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-              <div className="bg-white p-4 rounded w-full sm:w-96">
+              <div className="bg-white p-4 lg:p-10 m-4 rounded w-full lg:w-[50%]">
                 <h2 className="text-xl font-bold mb-4">Edit Trip</h2>
                 <div className="flex flex-col gap-4">
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="title" className="font-semibold">
                       Title
                     </Label>
@@ -1186,7 +1204,7 @@ const TripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="city" className="font-semibold">
                       City
                     </Label>
@@ -1200,7 +1218,7 @@ const TripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="description" className="font-semibold">
                       Description
                     </Label>
@@ -1217,7 +1235,7 @@ const TripsPage = () => {
                       rows={4}
                     />
                   </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="description" className="font-semibold">
                       Duration
                     </Label>
@@ -1231,7 +1249,7 @@ const TripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="price" className="font-semibold">
                       Price
                     </Label>
@@ -1246,7 +1264,7 @@ const TripsPage = () => {
                     />
                   </div>
 
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="description" className="font-semibold">
                       Overview
                     </Label>
