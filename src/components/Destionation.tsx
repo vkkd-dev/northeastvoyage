@@ -79,52 +79,6 @@ const Destination: React.FC = () => {
     router.push(`/about?id=${destination.id}`);
   };
 
-  const renderMobileView = () => {
-    const itemsPerRow = 4;
-    const rows: JSX.Element[][] = [];
-    let currentRow: JSX.Element[] = [];
-
-    destinationData.forEach((destination, index) => {
-      if (index > 0 && index % itemsPerRow === 0) {
-        rows.push(currentRow);
-        currentRow = [];
-      }
-      currentRow.push(
-        <div
-          key={index}
-          className="m-2 cursor-pointer"
-          onClick={() => handleNavigation(destination)}
-        >
-          <div className="relative w-20 h-20 mx-auto rounded-full overflow-hidden">
-            <Image
-              src={destination.img}
-              alt={destination.alt}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-full"
-            />
-          </div>
-          <h1 className="destination-h1 text-center mt-2">{destination.alt}</h1>
-        </div>
-      );
-    });
-
-    // Push the last row if it's not already added
-    if (currentRow.length > 0) {
-      rows.push(currentRow);
-    }
-
-    return (
-      <div>
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex justify-center">
-            {row}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <>
       {isLoading && (

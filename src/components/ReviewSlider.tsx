@@ -14,6 +14,7 @@ interface Review {
   image: string;
   name: string;
   review: string;
+  star: number;
 }
 
 const responsive = {
@@ -148,41 +149,32 @@ function ReviewSlider() {
               <h1 className="mt-[0.5rem] font-bold text-center text-[16px] text-black">
                 {review.name}
               </h1>
-              <div className="flex mx-auto items-center justify-center my-1">
-                <Image
-                  width={20}
-                  height={20}
-                  src={"/review_star.svg"}
-                  alt="star"
-                />
-                <Image
-                  width={20}
-                  height={20}
-                  src={"/review_star.svg"}
-                  alt="star"
-                />
-                <Image
-                  width={20}
-                  height={20}
-                  src={"/review_star.svg"}
-                  alt="star"
-                />
-                <Image
-                  width={20}
-                  height={20}
-                  src={"/review_star.svg"}
-                  alt="star"
-                />
-                <Image
-                  width={20}
-                  height={20}
-                  src={"/review_star.svg"}
-                  alt="star"
-                />
+              <div className="flex items-center justify-center my-2">
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`w-5 h-5 ${
+                        star <= review.star
+                          ? "text-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
+                </div>
               </div>
               <p className="text-center text-sm w-[90%] mx-auto">
-                {review.review.length > 105
-                  ? review.review.slice(0, 105) + "..."
+                {review.review.length > 85
+                  ? review.review.slice(0, 85) + "..."
                   : review.review}
               </p>
             </div>

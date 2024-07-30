@@ -114,7 +114,11 @@ body {
   }
 
   .nav-links-mobile-border {
-    @apply border-b-[1px] border-black px-10 py-5;
+    @apply border-b-[1px] border-gray-400 py-5;
+  }
+
+  .nav-links-mobile-text {
+    @apply flex justify-between mx-10 w-full font-medium;
   }
 
   .heading {
@@ -134,7 +138,7 @@ body {
   }
 
   .footer-link {
-    @apply mb-[1.5rem] text-white text-[20px] font-bold;
+    @apply mb-[1rem] text-lg lg:text-xl font-bold text-black tracking-wider;
   }
 
   .footer-text {

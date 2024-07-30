@@ -13,6 +13,7 @@ import {
   Book,
   Bike,
   Ship,
+  FolderTree,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -73,6 +74,12 @@ const SideNavbar = () => {
             variant: "ghost",
           },
           {
+            title: "Categories",
+            href: "/admin/categories",
+            icon: FolderTree,
+            variant: "ghost",
+          },
+          {
             title: "Destinations",
             href: "/admin/destinations",
             icon: Map,
@@ -109,8 +116,8 @@ const SideNavbar = () => {
             variant: "ghost",
           },
           {
-            title: "Contact Form",
-            href: "/admin/contact",
+            title: "Enquiries",
+            href: "/admin/enquiry",
             icon: Book,
             variant: "ghost",
           },

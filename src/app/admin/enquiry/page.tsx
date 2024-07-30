@@ -12,11 +12,12 @@ interface Query {
   number: string;
   email: string;
   people: string;
+  month: string;
   type: string;
   timestamp: string;
 }
 
-const ContactForm = () => {
+const EnquiryForm = () => {
   const [queries, setQueries] = useState<Query[]>([]);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const ContactForm = () => {
     <div className="min-h-screen w-full bg-white text-black flex">
       <SideNavbar />
       <div className="flex flex-col gap-5 w-full p-8">
-        <PageTitle title="Contact Forms" />
+        <PageTitle title="Users Enquiry" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 p-5">
           {queries.map((query) => (
             <div
@@ -47,10 +48,22 @@ const ContactForm = () => {
             >
               <p className="font-bold my-1">{query.name}</p>
               <div className="flex flex-col gap-1 p-2">
-                <p>Phone: {query.number}</p>
-                <p>Email: {query.email}</p>
-                <p>People: {query.people}</p>
-                <p>Type: {query.type}</p>
+                <p>
+                  <span className="text-slate-500">Phone:</span> {query.number}
+                </p>
+                <p>
+                  <span className="text-slate-500">Email:</span> {query.email}
+                </p>
+                <p>
+                  <span className="text-slate-500">People: </span>{" "}
+                  {query.people}
+                </p>
+                <p>
+                  <span className="text-slate-500">Month:</span> {query.month}
+                </p>
+                <p>
+                  <span className="text-slate-500">Type:</span> {query.type}
+                </p>
               </div>
             </div>
           ))}
@@ -60,4 +73,4 @@ const ContactForm = () => {
   );
 };
 
-export default ContactForm;
+export default EnquiryForm;

@@ -3,12 +3,20 @@
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import TripCard from "@/components/TripCard";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore } from "@/app/firebase/firebase-cofig";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Footer from "@/components/Footer";
 
 interface Destination {
   id: string;
@@ -77,24 +85,30 @@ const AboutPage = () => {
       setIsTripsLoading(true);
 
       try {
-        const tripsCollection = collection(firestore, "trips"); // Reference to the "trips" collection in Firestore
-        const querySnapshot = await getDocs(tripsCollection);
+        const tripsCollection = collection(firestore, "trips");
 
-        const trips: any = [];
+        // Build the query to filter trips by the destination id
+        const tripsQuery = id
+          ? query(tripsCollection, where("destination", "==", id))
+          : tripsCollection;
+
+        const querySnapshot = await getDocs(tripsQuery);
+
+        const trips: any[] = [];
         querySnapshot.forEach((doc) => {
           trips.push({ id: doc.id, ...doc.data() });
         });
 
         setTrips(trips);
       } catch (error) {
-        console.error("Error fetching hero image:", error);
+        console.error("Error fetching trips:", error);
       } finally {
         setIsTripsLoading(false);
       }
     };
 
     fetchTrips();
-  }, []);
+  }, [id]);
 
   if (!tripData) {
     return (
@@ -119,14 +133,8 @@ const AboutPage = () => {
             alt={tripData.alt}
             layout="fill"
             objectFit="cover"
-            // objectPosition="center"
             priority
           />
-          {/* <img
-            src={tripData.img}
-            alt={tripData.alt}
-            className="absolute top-0 left-0 w-full h-full object-top lg:object-cover z-0"
-          /> */}
         </div>
       </div>
 
@@ -144,7 +152,7 @@ const AboutPage = () => {
           </div>
         )}
         {trips.length === 0 && !isTripsLoading && (
-          <h1 className="text-center">No trips found.</h1>
+          <h1 className="text-center mt-10">No trips of this destination found.</h1>
         )}
         {!isTripsLoading && (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
@@ -154,6 +162,8 @@ const AboutPage = () => {
           </div>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 };

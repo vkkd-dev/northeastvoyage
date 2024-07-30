@@ -30,6 +30,7 @@ interface Review {
   image: string;
   name: string;
   review: string;
+  star: number;
 }
 
 const truncateText = (text: string): string => {
@@ -42,10 +43,12 @@ const ReviewPage = () => {
   const [formData, setFormData] = useState<{
     name: string;
     review: string;
+    star: number;
     image: File | null;
   }>({
     name: "",
     review: "",
+    star: 0,
     image: null,
   });
   const [editData, setEditData] = useState<Review | null>(null);
@@ -53,6 +56,7 @@ const ReviewPage = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [deleteReviewId, setDeleteReviewId] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchReviews = async () => {
@@ -78,8 +82,6 @@ const ReviewPage = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!formData.image) return;
-
     if (formData.name === "" || formData.review === "" || !formData.image) {
       toast({
         description: (
@@ -94,6 +96,7 @@ const ReviewPage = () => {
     }
 
     try {
+      setIsLoading(true);
       const storageRef = ref(storage, `reviews/${formData.image.name}`);
       const uploadTask = uploadBytesResumable(storageRef, formData.image);
 
@@ -109,6 +112,7 @@ const ReviewPage = () => {
             name: formData.name,
             review: formData.review,
             image: downloadURL,
+            star: formData.star,
           };
           const docRef = await addDoc(
             collection(firestore, "reviews"),
@@ -138,7 +142,8 @@ const ReviewPage = () => {
         variant: "destructive",
       });
     } finally {
-      setFormData({ name: "", review: "", image: null });
+      setFormData({ name: "", review: "", star: 0, image: null });
+      setIsLoading(false);
     }
   };
 
@@ -221,6 +226,7 @@ const ReviewPage = () => {
             name: editData.name,
             review: editData.review,
             image: imageUrl,
+            star: editData.star, // Update star rating
           });
           setReviewsData(
             reviewsData.map((review) =>
@@ -231,7 +237,7 @@ const ReviewPage = () => {
           );
           setShowModal(false);
           setEditData(null);
-          setFormData({ name: "", review: "", image: null });
+          setFormData({ name: "", review: "", star: 0, image: null });
         }
       );
     } else {
@@ -239,6 +245,7 @@ const ReviewPage = () => {
         name: editData.name,
         review: editData.review,
         image: imageUrl,
+        star: editData.star, // Update star rating
       });
       setReviewsData(
         reviewsData.map((review) =>
@@ -248,6 +255,52 @@ const ReviewPage = () => {
       setShowModal(false);
       setEditData(null);
     }
+  };
+
+  const StarRating = ({
+    star,
+    setStar,
+  }: {
+    star: number;
+    setStar: (rating: number) => void;
+  }) => {
+    const handleClick = (rating: number) => {
+      setStar(rating);
+    };
+
+    return (
+      <div className="flex gap-1">
+        {/* {[1, 2, 3, 4, 5].map((star) => (
+          <svg
+            key={star}
+            xmlns="http://www.w3.org/2000/svg"
+            className={`w-5 h-5 ${
+              star <= rating ? "text-yellow-500" : "text-gray-300"
+            }`}
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="none"
+          >
+            <path d="M12 2l3 6 6 .875-4.5 4.375L18 20l-6-3.125L6 20l1.5-6.75L3 8.875 9 8.75l3-6z" />
+          </svg>
+        ))} */}
+        {[1, 2, 3, 4, 5].map((rating) => (
+          <svg
+            key={rating}
+            onClick={() => handleClick(rating)}
+            xmlns="http://www.w3.org/2000/svg"
+            className={`w-10 h-10 cursor-pointer ${
+              rating <= star ? "text-yellow-500" : "text-gray-300"
+            }`}
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="none"
+          >
+            <path d="M12 2l3 6 6 .875-4.5 4.375L18 20l-6-3.125L6 20l1.5-6.75L3 8.875 9 8.75l3-6z" />
+          </svg>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -264,6 +317,7 @@ const ReviewPage = () => {
             <div className="flex flex-col gap-5 mb-4">
               <h1 className="text-lg font-semibold">Add New Review</h1>
 
+              {/* Name */}
               <Input
                 type="text"
                 name="name"
@@ -274,6 +328,8 @@ const ReviewPage = () => {
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
+
+              {/* Review */}
               <textarea
                 name="review"
                 placeholder="Review"
@@ -283,6 +339,14 @@ const ReviewPage = () => {
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
+
+              {/* Star */}
+              <StarRating
+                star={formData.star}
+                setStar={(rating) => setFormData({ ...formData, star: rating })}
+              />
+
+              {/* Image */}
               <Input
                 type="file"
                 accept="image/*"
@@ -317,7 +381,7 @@ const ReviewPage = () => {
               reviewsData.map((review) => (
                 <div
                   key={review.id}
-                  className="border border-gray-300 rounded p-2"
+                  className="flex flex-col border border-gray-300 rounded p-2"
                 >
                   <div className="relative w-full flex items-center justify-center h-50 mb-2">
                     <Image
@@ -328,14 +392,33 @@ const ReviewPage = () => {
                       className="rounded"
                     />
                   </div>
-                  <div className="mb-2">
-                    <h2 className="text-lg font-bold text-center">
-                      {review.name}
-                    </h2>
-                    <p className="min-h-20">{truncateText(review.review)}</p>
+                  <h2 className="text-lg font-bold text-center">
+                    {review.name}
+                  </h2>
+                  <p className="mb-2">{truncateText(review.review)}</p>
+
+                  <div className="flex items-center justify-center mb-5">
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                          key={star}
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`w-7 h-7 ${
+                            star <= review.star
+                              ? "text-yellow-500"
+                              : "text-gray-300"
+                          }`}
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="none"
+                        >
+                          <path d="M12 2l3 6 6 .875-4.5 4.375L18 20l-6-3.125L6 20l1.5-6.75L3 8.875 9 8.75l3-6z" />
+                        </svg>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 mt-auto">
                     <button
                       onClick={() => openEditModal(review)}
                       className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
@@ -377,6 +460,50 @@ const ReviewPage = () => {
                       onChange={handleEditChange}
                       className="max-w-3xl px-2 py-1 border border-gray-300 rounded"
                     />
+                    <div className="flex items-center justify-center gap-1 mb-4">
+                      {/* <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg
+                            key={star}
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={`w-5 h-5 ${
+                              star <= editData.star
+                                ? "text-yellow-500"
+                                : "text-gray-300"
+                            }`}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z" />
+                          </svg>
+                        ))}
+                      </div> */}
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                          key={star}
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`w-10 h-10 ${
+                            star <= editData.star
+                              ? "text-yellow-500"
+                              : "text-gray-300"
+                          } cursor-pointer`}
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="none"
+                          onClick={() => {
+                            setEditData((prev: any) => {
+                              return { ...prev, star: star };
+                            });
+                          }}
+                        >
+                          <path d="M12 2l3 6 6 .875-4.5 4.375L18 20l-6-3.125L6 20l1.5-6.75L3 8.875 9 8.75l3-6z" />
+                        </svg>
+                      ))}
+                    </div>
                     <input
                       type="file"
                       accept="image/*"

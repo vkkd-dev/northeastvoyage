@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Trip {
   id: string;
@@ -38,6 +39,7 @@ interface Trip {
   price: string;
   duration: string;
   image: string;
+  pdf: string;
   description: string;
   overview: string;
   inclusion: any;
@@ -66,6 +68,8 @@ const TripPage = () => {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const openNavbar = () => setNav(true);
   const closeNavbar = () => setNav(false);
+
+  const { toast } = useToast();
 
   useEffect(() => {
     if (id) {
@@ -172,6 +176,28 @@ const TripPage = () => {
     window.location.href = "tel:+918099451325";
   };
 
+  const handleDownload = async () => {
+    // Check if tripData and its pdf property are available
+    if (!tripData || !tripData.pdf) {
+      toast({
+        description: "No PDF available for download.",
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+    console.log("tripData.pdf", tripData.pdf);
+
+    try {
+      window.open(tripData.pdf, "_blank");
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast({
+        description: "Failed to download the PDF.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // const formatPrice = (price: number) => {
   //   return new Intl.NumberFormat("en-IN", {
   //     style: "currency",
@@ -208,6 +234,8 @@ const TripPage = () => {
           />
         </div>
       </div>
+
+      {/* Floating WhatsApp */}
       <Image
         width={75}
         height={75}
@@ -217,10 +245,13 @@ const TripPage = () => {
         onClick={handleWhatsapp}
       />
 
-      <div className="fixed w-full bottom-0 z-50">
-        <div className="flex justify-between bg-white px-7 lg:px-28 py-6 lg:py-10 rounded-ss-3xl rounded-se-3xl shadow-2xl shadow-black">
+      {/* Floating Navbar */}
+      <div className="fixed w-full bottom-0 z-50 shadow-2xl shadow-black">
+        <div className="flex justify-between bg-white px-7 lg:px-32 py-4 lg:py-7 rounded-ss-3xl rounded-se-3xl shadow-2xl shadow-black">
           <div className="flex flex-col gap-1">
-            <span className="tracking-wider font-bold text-sm">Start From</span>
+            <span className="tracking-wider font-bold text-xs lg:text-sm">
+              Start From
+            </span>
             <div className="text-2xl font-extrabold text-primary">
               {/* {formatPrice(parseInt(tripData.price))} */}₹ {tripData.price}
             </div>
@@ -235,8 +266,10 @@ const TripPage = () => {
         </div>
       </div>
 
-      <div className="p-5 lg:px-32 lg:mt-4">
+      <div className="p-3 lg:px-32 lg:mt-4">
         <h2 className="text-2xl font-bold">{tripData.name}</h2>
+
+        {/* Details */}
         <div className="flex flex-col gap-2 mt-4">
           <h2>Details</h2>
           <p className="text-sm flex items-center gap-1">
@@ -248,14 +281,18 @@ const TripPage = () => {
             {tripData.duration}
           </p>
         </div>
+
+        {/* Inclusion */}
         <div className="flex flex-col gap-3 mt-4">
           <h2 className="text-md">Inclusion</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-1 lg:gap-2">
             {inclusion.map((inclusion: any, index: any) => (
               <InclusionCard key={index} inclusion={inclusion} />
             ))}
           </div>
         </div>
+
+        {/* Overview */}
         <div className="flex flex-col pt-6">
           <h2 className="font-extrabold text-lg lg:text-xl mb-2">Overview</h2>
           {isDesktop || showFullText
@@ -270,6 +307,7 @@ const TripPage = () => {
           <span className="text-secondary font-bold">Show More</span> */}
         </div>
 
+        {/* Itinerary */}
         <div className="pt-6">
           <h2 className="font-extrabold text-lg lg:text-xl">Itinerary</h2>
           <Accordion type="single" collapsible>
@@ -320,12 +358,17 @@ const TripPage = () => {
           </Accordion>
         </div>
 
+        {/* Download */}
         <div className="flex justify-center mt-4 lg:mt-6">
-          <div className="border-primary border-2 py-2 px-5 rounded-full cursor-pointer">
+          <div
+            className="border-primary border-2 py-2 px-5 rounded-full cursor-pointer"
+            onClick={handleDownload}
+          >
             Download Itinerary
           </div>
         </div>
 
+        {/* Inclusions */}
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-lg lg:text-xl mb-2">Inclusions</h2>
           {tripData.inclusions?.map((inclusion, index) => (
@@ -344,6 +387,7 @@ const TripPage = () => {
           ))}
         </div>
 
+        {/* Exclusions */}
         <div className="flex flex-col pt-6 gap-2">
           <h2 className="font-extrabold text-lg lg:text-xl mb-2">Exclusions</h2>
           {tripData.exclusions?.map((exclusion, index) => (
@@ -362,6 +406,7 @@ const TripPage = () => {
           ))}
         </div>
 
+        {/* Customize */}
         {tripData.tripType === "customize" && (
           <div className="mt-8">
             <h2 className="font-bold text-lg lg:text-xl mb-4">Price List</h2>
@@ -407,31 +452,33 @@ const TripPage = () => {
           </div>
         )}
 
+        {/* Public */}
         {tripData.tripType === "public" && (
           <div className="mt-10">
             <h2 className="text-2xl font-bold mb-6">Upcoming Dates</h2>
-            <div className="w-24 lg:w-28">
-              <Select
-                value={selectedMonth.toString()}
-                onValueChange={handleMonthChange}
-              >
+            <Select
+              value={selectedMonth.toString()}
+              onValueChange={handleMonthChange}
+            >
+              <div className="w-24 lg:w-28">
                 <SelectTrigger className="mb-6 py-1 px-4 border rounded bg-primary text-white font-semibold">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  {uniqueMonths.map((month) => (
-                    <SelectItem key={month} value={month.toString()}>
-                      {format(new Date(2020, month - 1, 1), "MMM")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {renderDates()}
-            </div>
+              </div>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                {uniqueMonths.map((month) => (
+                  <SelectItem key={month} value={month.toString()}>
+                    {format(new Date(2020, month - 1, 1), "MMM")}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {renderDates()}
           </div>
         )}
 
+        {/* FAQs */}
         <div className="mt-10">
           <h2 className="font-bold text-lg lg:text-xl">FAQs</h2>
           <Accordion type="single" collapsible>
@@ -469,7 +516,7 @@ const TripPage = () => {
           </div>
         )}
       </div>
-      <TripFooter price={tripData.price} />
+      <TripFooter />
     </>
   );
 };

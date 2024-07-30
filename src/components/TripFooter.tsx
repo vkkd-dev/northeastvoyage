@@ -1,33 +1,34 @@
+"use client";
+
+import { useState } from "react";
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
-import { BiSolidPhoneCall } from "react-icons/bi";
 
-function TripFooter({ price }: any) {
-  const handleCall = () => {
-    window.location.href = "tel:+918099451325";
-  };
+function TripFooter() {
+  const [showFullText, setShowFullText] = useState(false);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(price);
+  const text = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India. We aspire to champion eco-friendly practices and support local communities, ensuring that our operations benefit the environment and the people who call Northeast India home. We aim to set the standard for excellence in the travel industry through our constant commitment to quality, safety, and personalized service.`;
+  const text2 = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India.`;
+  const toggleText = () => {
+    setShowFullText(!showFullText);
   };
 
   return (
-    <div className="flex flex-col justify-end bg-secondary h-[45rem] lg:h-[47rem] mt-[10rem]">
-      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[4rem] pb-[1rem] mb-[9rem] lg:mb-[14rem] bg-white rounded-2xl border-2 border-[#0DB295]">
+    <div className="flex flex-col justify-end bg-secondary h-[40rem] lg:h-[45rem] mt-[10rem]">
+      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[8rem] lg:mb-[12rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[80%] mx-auto items-center">
           <div className="space-y-3">
-            <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
-            <p className="tracking-wide">
-              Our vision is to be the leading platform for unforgettable travel
-              experiences in the Northeast. We aim to inspire and empower
-              travelers to explore the beauty and culture of the region
-              effortlessly
+            <h1 className="text-lg lg:text-xl font-bold tracking-wider">
+              Our Vision
+            </h1>
+            <p className="tracking-wider hidden lg:flex text-text text-sm lg:text-base">
+              <span onClick={toggleText}>{text}</span>
+            </p>
+            <p className="tracking-wider lg:hidden text-text text-sm lg:text-base">
+              <span onClick={toggleText}>{text2}</span>
             </p>
           </div>
           <div className="space-y-3 mt-7">
-            <h1 className="text-xl font-bold tracking-wider">
+            <h1 className="text-lg lg:text-xl font-bold tracking-wider">
               Connect with us
             </h1>
             <div className="flex items-center justify-start space-x-5 mb-14">
@@ -37,58 +38,46 @@ function TripFooter({ price }: any) {
             </div>
           </div>
           <div className="flex flex-col mt-10">
-            <a href="#" className="footer-link text-black tracking-wider">
+            <a href="#" className="footer-link">
               Quick Links
             </a>
             <div className="justify-between grid grid-cols-2 mb-10 lg:mb-[5rem]">
               <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
                 <a
                   href="/"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
+                  className="cursor-pointer self-start tracking-wide"
                 >
                   Home
                 </a>
                 <a
                   href="/aboutus"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
+                  className="cursor-pointer self-start tracking-wide"
                 >
                   About Us
                 </a>
                 <a
-                  href="#"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
-                >
-                  Linktree
-                </a>
-                <a
                   href="/cancellationpolicy"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
+                  className="cursor-pointer self-start tracking-wide"
                 >
                   Cancellation policy
                 </a>
               </div>
               <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
                 <a
-                  href="/"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
-                >
-                  Home
-                </a>
-                <a
                   href="/contactus"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
+                  className="cursor-pointer self-start tracking-wide"
                 >
                   Contact Us
                 </a>
                 <a
                   href="/privacypolicy"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
+                  className="cursor-pointer self-start tracking-wide"
                 >
                   Privacy Policy
                 </a>
                 <a
                   href="/termsandconditions"
-                  className="cursor-pointer self-start tracking-wider hover:text-secondary hover:font-bold"
+                  className="cursor-pointer self-start tracking-wide"
                 >
                   Terms & Conditions
                 </a>

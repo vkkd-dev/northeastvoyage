@@ -55,6 +55,18 @@ import {
   getMonth,
 } from "date-fns";
 
+interface Category {
+  id: string;
+  title: string;
+}
+
+interface Destination {
+  id: string;
+  alt: string;
+  description: string;
+  img: string;
+}
+
 interface Trip {
   id: string;
   name: string;
@@ -64,7 +76,6 @@ interface Trip {
   image: string;
   description: string;
   overview: string;
-  // inclusion: string[];
   itinerary: any;
   inclusions: string[];
   exclusions: string[];
@@ -83,7 +94,6 @@ const TripsPage = () => {
     price: "",
     overview: "",
     image: "",
-    // inclusion: [""],
     itinerary: [{ title: "", items: [""], images: [""] }],
     inclusions: [""],
     exclusions: [""],
@@ -98,18 +108,56 @@ const TripsPage = () => {
     ],
     selectedDates: [] as Date[],
   });
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedDestination, setSelectedDestination] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editTripId, setEditTripId] = useState<string | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [deleteTripId, setDeleteTripId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categoriesCollection = collection(firestore, "categories");
+      const querySnapshot = await getDocs(categoriesCollection);
+      const fetchedCategories: Category[] = [];
+      querySnapshot.forEach((doc) => {
+        fetchedCategories.push({ id: doc.id, title: doc.data().title });
+      });
+      setCategories(fetchedCategories);
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      const destinationsCollection = collection(firestore, "destinations");
+      const querySnapshot = await getDocs(destinationsCollection);
+      const fetchedDestinations: Destination[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        fetchedDestinations.push({
+          id: doc.id,
+          alt: data.alt,
+          description: data.description,
+          img: data.img,
+        });
+      });
+      setDestinations(fetchedDestinations);
+    };
+
+    fetchDestinations();
+  }, []);
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -361,7 +409,8 @@ const TripsPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
-      selectedCategory === null ||
+      selectedCategory === "" ||
+      selectedDestination === "" ||
       formData.city === "" ||
       formData.description === "" ||
       formData.duration === "" ||
@@ -370,6 +419,7 @@ const TripsPage = () => {
       formData.overview === "" ||
       imageFile === null ||
       selectedType === null ||
+      !pdfFile ||
       formData.inclusions.some((inclusion) => inclusion.trim() === "")
     ) {
       toast({
@@ -392,20 +442,28 @@ const TripsPage = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
+      let pdfUrl = ""; // Initialize PDF URL
+      if (pdfFile) {
+        const pdfRef = ref(storage, `pdf/${pdfFile.name}`);
+        await uploadBytes(pdfRef, pdfFile);
+        pdfUrl = await getDownloadURL(pdfRef);
+      }
+
       const tripData: any = {
         category: selectedCategory,
+        destination: selectedDestination,
         city: formData.city,
         description: formData.description,
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
-        // inclusion: formData.inclusion,
         itinerary: formData.itinerary,
         inclusions: formData.inclusions,
         exclusions: formData.exclusions,
         faqs: formData.faqs,
         image: imageUrl,
+        pdf: pdfUrl,
         tripType: selectedType,
       };
 
@@ -466,7 +524,10 @@ const TripsPage = () => {
         ],
         selectedDates: [],
       });
+      setSelectedCategory("");
+      setSelectedDestination("");
       setImageFile(null);
+      setPdfFile(null);
       setPreviewImage(null);
       setIsLoading(false);
     }
@@ -716,19 +777,42 @@ const TripsPage = () => {
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col gap-4 mb-4 p-2">
-                    {/* <h1 className="text-lg font-semibold">Add New Trip</h1> */}
-
-                    <Select onValueChange={setSelectedCategory}>
+                    {/* Category Select */}
+                    <Select
+                      onValueChange={setSelectedCategory}
+                      value={selectedCategory}
+                    >
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select a category" />
+                        <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Trip Category</SelectLabel>
-                          <SelectItem value="group">Group</SelectItem>
-                          <SelectItem value="family">Family</SelectItem>
-                          <SelectItem value="honeymoon">Honeymoon</SelectItem>
-                          <SelectItem value="solo">Solo</SelectItem>
+                          {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.title}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    {/* Destination Select */}
+                    <Select onValueChange={setSelectedDestination}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select destination" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Trip Destination</SelectLabel>
+                          {destinations.map((destination) => (
+                            <SelectItem
+                              key={destination.id}
+                              value={destination.id}
+                            >
+                              {destination.alt}
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -804,17 +888,41 @@ const TripsPage = () => {
 
                     {/* Image Input */}
                     <div className="items-center space-x-2">
+                      <label
+                        htmlFor="imageFile"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Select Image
+                      </label>
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleFileChange}
-                        className="py-1 rounded"
+                        className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                       />
-                      {imageFile && (
+                      {/* {imageFile && (
                         <span className="text-sm text-gray-500">
                           {imageFile.name}
                         </span>
-                      )}
+                      )} */}
+                    </div>
+
+                    <div className="mb-4">
+                      <label
+                        htmlFor="pdfFile"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Select PDF
+                      </label>
+                      <input
+                        type="file"
+                        id="pdfFile"
+                        accept=".pdf"
+                        onChange={(e) =>
+                          setPdfFile(e.target.files?.[0] || null)
+                        }
+                        className="mt-1 block rounded text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
+                      />
                     </div>
 
                     {/* <div className="mt-6">
@@ -1142,7 +1250,7 @@ const TripsPage = () => {
               tripsData.map((trip) => (
                 <div
                   key={trip.id}
-                  className="border border-gray-300 rounded p-2"
+                  className="flex flex-col border border-gray-300 rounded p-2"
                 >
                   <div className="relative w-full h-40 mb-2 overflow-hidden">
                     <Image
@@ -1164,7 +1272,7 @@ const TripsPage = () => {
                     </h2>
                     <p>{truncateText(trip.description)}</p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-auto">
                     <button
                       onClick={() => openEditModal(trip)}
                       className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { useMediaQuery } from "react-responsive";
@@ -21,11 +20,13 @@ function Footer() {
       <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[2rem] lg:mb-[4rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[85%] mx-auto items-center">
           <div className="space-y-3">
-            <h1 className="text-xl font-bold tracking-wider">Our Vision</h1>
-            <p className="tracking-wider hidden lg:flex text-text">
+            <h1 className="text-lg lg:text-xl font-bold tracking-wider">
+              Our Vision
+            </h1>
+            <p className="tracking-wider hidden lg:flex text-text text-sm lg:text-base">
               <span onClick={toggleText}>{text}</span>
             </p>
-            <p className="tracking-wider lg:hidden text-text">
+            <p className="tracking-wider lg:hidden text-text text-sm lg:text-base">
               <span onClick={toggleText}>{text2}</span>
             </p>
             {/* {isDesktop || showFullText
@@ -41,7 +42,7 @@ function Footer() {
               )} */}
           </div>
           <div className="space-y-3 mt-7">
-            <h1 className="text-xl font-bold tracking-wider">
+            <h1 className="text-lg lg:text-xl font-bold tracking-wider">
               Connect with us
             </h1>
             <div className="flex items-center justify-start space-x-5 mb-14">
@@ -51,7 +52,7 @@ function Footer() {
             </div>
           </div>
           <div className="flex flex-col mt-10">
-            <a href="#" className="footer-link text-black tracking-wider">
+            <a href="#" className="footer-link">
               Quick Links
             </a>
             <div className="justify-between grid grid-cols-2 mb-10 lg:mb-[5rem]">
@@ -78,64 +79,38 @@ function Footer() {
                   About Us
                   {/* </div> */}
                 </Link>
-                <Link
+                {/* <Link
                   href={"/"}
                   className="cursor-pointer self-start tracking-wider"
                 >
-                  {/* <div
-                    className="cursor-pointer self-start tracking-wider"
-                    onClick={() => handleNavigation("/")}
-                  > */}
                   Linktree
-                  {/* </div> */}
-                </Link>
+                </Link> */}
                 <Link
                   href={"/cancellationpolicy"}
                   className="cursor-pointer self-start tracking-wider"
                 >
-                  {/* <div onClick={() => handleNavigation("/cancellationpolicy")}> */}
                   Cancellation policy
-                  {/* </div> */}
                 </Link>
               </div>
               <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
-                <Link href={"/admin"}>
-                  {/* <div
-                    className="cursor-pointer self-start tracking-wider"
-                    onClick={() => handleNavigation("/admin")}
-                  > */}
-                  Admin
-                  {/* </div> */}
-                </Link>
+                {/* <Link href={"/admin"}>Admin</Link> */}
                 <Link
                   href={"/contactus"}
                   className="cursor-pointer self-start tracking-wider"
                 >
-                  {/* <div onClick={() => handleNavigation("/contactus")}> */}
                   Contact Us
-                  {/* </div> */}
                 </Link>
                 <Link
                   href={"/privacypolicy"}
                   className="cursor-pointer self-start tracking-wider"
                 >
-                  {/* <div
-                    className="cursor-pointer self-start tracking-wider"
-                    onClick={() => handleNavigation("/privacypolicy")}
-                  > */}
                   Privacy Policy
-                  {/* </div> */}
                 </Link>
                 <Link
                   href={"/termsandconditions"}
                   className="cursor-pointer self-start tracking-wider"
                 >
-                  {/* <div
-                    className="cursor-pointer self-start tracking-wider"
-                    onClick={() => handleNavigation("/termsandconditions")}
-                  > */}
                   Terms & Conditions
-                  {/* </div> */}
                 </Link>
               </div>
             </div>

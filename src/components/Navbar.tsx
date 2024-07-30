@@ -1,3 +1,4 @@
+"use client";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import { IoIosArrowDown } from "react-icons/io";
 import { CgPhone } from "react-icons/cg";
@@ -6,7 +7,22 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { collection, getDocs } from "firebase/firestore";
+import { firestore } from "@/app/firebase/firebase-cofig";
+
+interface Destination {
+  id: string;
+  alt: string;
+  description: string;
+  img: string;
+}
+
+interface Category {
+  id: string;
+  title: string;
+}
 
 interface Props {
   nav: boolean;
@@ -14,6 +30,60 @@ interface Props {
 }
 
 function Navbar({ nav, openNav }: Props) {
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        const querySnapshot = await getDocs(
+          collection(firestore, "destinations")
+        );
+        const destinationsData: Destination[] = querySnapshot.docs.map(
+          (doc) => {
+            const data = doc.data() as Omit<Destination, "id">;
+            return {
+              id: doc.id, // Only specify 'id' once
+              ...data, // Spread the rest of the data
+            };
+          }
+        );
+        setDestinations(destinationsData);
+      } catch (error) {
+        console.error("Error fetching destinations:", error);
+      }
+    };
+
+    fetchDestinations();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const querySnapshot = await getDocs(
+          collection(firestore, "categories")
+        );
+        const categoriesData: Category[] = querySnapshot.docs.map((doc) => {
+          const data = doc.data() as Omit<Category, "id">;
+          return {
+            id: doc.id, // Only specify 'id' once
+            ...data, // Spread the rest of the data
+          };
+        });
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
+
   const handleCall = () => {
     window.location.href = "tel:+918099451325";
   };
@@ -46,24 +116,19 @@ function Navbar({ nav, openNav }: Props) {
               </div>
             </HoverCardTrigger>
             <HoverCardContent>
-              {/* <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md z-50"> */}
               <ul className="py-2">
-                {[
-                  "Assam",
-                  "Arunachal",
-                  "Manipur",
-                  "Meghalaya",
-                  "Mizoram",
-                  "Nagaland",
-                  "Tripura",
-                  "Sikkim",
-                ].map((destination) => (
-                  <li key={destination} className="px-4 py-2 hover:bg-gray-200">
-                    <Link href={`#`}>{destination}</Link>
+                {destinations.map((destination) => (
+                  <li
+                    key={destination.id}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() =>
+                      handleNavigation(`/about?id=${destination.id}`)
+                    }
+                  >
+                    {destination.alt}
                   </li>
                 ))}
               </ul>
-              {/* </div> */}
             </HoverCardContent>
           </HoverCard>
 
@@ -77,20 +142,24 @@ function Navbar({ nav, openNav }: Props) {
               </div>
             </HoverCardTrigger>
             <HoverCardContent>
-              {/* <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md z-50"> */}
               <ul className="py-2">
-                {["Group", "Family", "Honeymoon", "Solo"].map((category) => (
-                  <li key={category} className="px-4 py-2 hover:bg-gray-200">
-                    <Link href={`#`}>{category}</Link>
+                {categories.map((category) => (
+                  <li
+                    key={category.id}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() =>
+                      handleNavigation(`/category?id=${category.id}`)
+                    }
+                  >
+                    {category.title}
                   </li>
                 ))}
               </ul>
-              {/* </div> */}
             </HoverCardContent>
           </HoverCard>
 
           <div className="flex items-center gap-1">
-            <a href="#" className="nav-links">
+            <a href="/aboutus" className="nav-links">
               About Us
             </a>
           </div>
