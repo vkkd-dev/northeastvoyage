@@ -1,32 +1,6 @@
 import Image from "next/image";
 
 const AboutUsCard = ({ data }: any) => {
-  // const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsMobile(window.innerWidth <= 768); // Adjust the breakpoint as needed
-  //   };
-
-  //   // Initial check
-  //   handleResize();
-
-  //   // Event listener for resizing
-  //   window.addEventListener("resize", handleResize);
-
-  //   // Cleanup event listener
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
-
-  // const addLineBreaks = (text: string): JSX.Element[] => {
-  //   return text.split(" ").map((word, index) => (
-  //     <Fragment key={index}>
-  //       {word}
-  //       {index < text.split(" ").length - 1 && <br />}
-  //     </Fragment>
-  //   ));
-  // };
-
   const handleNavigate = () => {
     window.open(data.url, "_blank");
   };
