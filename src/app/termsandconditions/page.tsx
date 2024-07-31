@@ -14,9 +14,9 @@ const TermsAndConditions = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
+      <div className="max-container page-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
         <h1 className="page-heading">TERMS & CONDITIONS</h1>
-        <ul className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed list-disc list-inside space-y-2">
+        <ul className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify content list-disc list-inside space-y-2">
           <li>For bookings, 50% of the total amount is due in advance.</li>
           <li>
             Full Payment of the trip cost must be completed before the trip

@@ -97,6 +97,10 @@ body {
     @apply px-3 lg:px-32;
   }
 
+  .page-container {
+    @apply px-1 lg:px-52;
+  }
+
   .review-padding-container {
     @apply px-4 lg:px-28;
   }
@@ -126,7 +130,19 @@ body {
   }
 
   .page-heading {
-    @apply text-[#333] text-[25px] lg:text-[40px] capitalize font-extrabold tracking-wider text-center;
+    @apply text-black text-xl lg:text-2xl capitalize font-extrabold tracking-wider text-center;
+  }
+
+  .sub-heading {
+    @apply font-extrabold text-lg mb-1;
+  }
+
+  .sub-page-heading {
+    @apply font-extrabold text-lg mt-6 mb-2;
+  }
+
+  .content {
+    @apply text-sm lg:text-base;
   }
 
   .destination-h1 {

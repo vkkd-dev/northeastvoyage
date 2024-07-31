@@ -4,6 +4,34 @@ import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useState } from "react";
+import AboutUsCard from "@/components/AboutUsCard";
+
+const AboutUsData = [
+  {
+    image: "/aboutus/nayajraj.jpg",
+    name: "Nayaj Raj",
+    designation: "Founder",
+    url: "https://www.instagram.com/raw.saikia?igsh=cW4yYmNrdHI3M2Ro",
+  },
+  {
+    image: "/aboutus/rimichetri.jpg",
+    name: "Rimi Chetri",
+    designation: "Co-founder",
+    url: "https://www.instagram.com/chasingcorners_?igsh=MXRqdjN5bWk1cjdldw==",
+  },
+  {
+    image: "/aboutus/rajakankan.jpg",
+    name: "Raja Kankan",
+    designation: "Manager",
+    url: "https://www.instagram.com/storiesbyraja_?igsh=MXJnamprZ2Zla3B5YQ==",
+  },
+  {
+    image: "/aboutus/kapilkumar.jpg",
+    name: "Kapil Kumar",
+    designation: "Trip operator",
+    url: "https://www.instagram.com/moi_kapil_?igsh=MXFtbGYyeGd3ZXBhdQ==",
+  },
+];
 
 const AboutUs = () => {
   const [nav, setNav] = useState(false);
@@ -14,12 +42,11 @@ const AboutUs = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
+      <div className="max-container page-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
         <h1 className="page-heading">ABOUT US</h1>
-        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
-          <p>Welcome to Northeast Voyage!</p>
-          <br></br>
-          <p>
+        <div className="pt-[2rem] lg:pt-[3rem] w-[90%] mx-auto tracking-wider text-justify">
+          <p className="sub-heading">Welcome to Northeast Voyage!</p>
+          <p className="content">
             We are your ultimate guide to exploring the breathtaking
             destinations of Northeast India. Our mission is to provide you with
             an unforgettable travel experience by offering curated trips that
@@ -29,8 +56,8 @@ const AboutUs = () => {
             for every traveler.
           </p>
           <br></br>
-          <h2>Our Story:</h2>
-          <p>
+          <h2 className="sub-heading">Our Story</h2>
+          <p className="content">
             Northeast Voyage was founded by a group of passionate travelers and
             explorers who fell in love with the beauty and diversity of
             Northeast India. We realized that this unique part of the world
@@ -40,8 +67,8 @@ const AboutUs = () => {
             memorable.
           </p>
           <br></br>
-          <h2>Our Mission:</h2>
-          <p>
+          <h2 className="sub-heading">Our Mission</h2>
+          <p className="content">
             Our mission is to provide exceptional travel experiences that go
             beyond the ordinary. We aim to connect travelers with the hidden
             gems of Northeast India, offering authentic and immersive
@@ -50,7 +77,17 @@ const AboutUs = () => {
             that benefits local communities and preserves the natural
             environment for future generations.
           </p>
-          <br></br>
+          <div className="mt-[8rem]">
+            <h2 className="font-extrabold text-2xl text-center">
+              Meet Our Team: An Exceptional Group of Extraordinary People
+            </h2>
+            <div className="flex justify-between items-center mt-[4rem]">
+              {AboutUsData.map((data, index) => (
+                <AboutUsCard data={data} key={index} />
+              ))}
+            </div>
+          </div>
+          {/* <br></br>
           <h2>Why Choose Us:</h2>
           <p>
             At Northeast Voyage, we pride ourselves on our deep knowledge of the
@@ -140,7 +177,7 @@ const AboutUs = () => {
             Join us on a journey to discover the hidden gems of Northeast India.
             Let Northeast Voyage be your trusted partner in creating
             unforgettable travel memories.
-          </p>
+          </p> */}
         </div>
       </div>
       <Footer />

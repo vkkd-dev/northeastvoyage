@@ -42,11 +42,8 @@ function TripFooter() {
               Quick Links
             </a>
             <div className="justify-between grid grid-cols-2 mb-10 lg:mb-[5rem]">
-              <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
-                <a
-                  href="/"
-                  className="cursor-pointer self-start tracking-wide"
-                >
+              <div className="flex flex-col gap-2 text-[#696969] text-sm lg:text-lg">
+                <a href="/" className="cursor-pointer self-start tracking-wide">
                   Home
                 </a>
                 <a
@@ -62,7 +59,7 @@ function TripFooter() {
                   Cancellation policy
                 </a>
               </div>
-              <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
+              <div className="flex flex-col gap-2 text-[#696969] text-sm lg:text-lg">
                 <a
                   href="/contactus"
                   className="cursor-pointer self-start tracking-wide"
@@ -85,7 +82,7 @@ function TripFooter() {
             </div>
             <a
               href="#"
-              className="footer-text text-center text-sm lg:text-lg text-black tracking-wider"
+              className="footer-text text-center text-xs lg:text-sm text-black tracking-wider"
             >
               @northeastvoyage, All right reserved
             </a>

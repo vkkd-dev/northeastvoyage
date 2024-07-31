@@ -31,9 +31,9 @@ const ContactUs = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
+      <div className="max-container page-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
         <h1 className="page-heading">CONTACT US</h1>
-        <div className="py-[1rem] lg:py-[3rem] w-[95%] lg:w-[90%] mx-auto tracking-wider text-justify leading-relaxed">
+        <div className="py-[1rem] lg:py-[3rem] w-[95%] lg:w-[90%] mx-auto tracking-wider text-justify content">
           <p>We&apos;d love to hear from you!</p>
           <br></br>
           <p>

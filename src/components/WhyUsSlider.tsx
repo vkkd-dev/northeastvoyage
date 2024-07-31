@@ -1,10 +1,10 @@
 import Carousel from "react-multi-carousel";
 import Image from "next/image";
-import "react-multi-carousel/lib/styles.css";
 import { Button } from "./ui/button";
 import { FiChevronLeft } from "react-icons/fi";
 import { BiChevronRight } from "react-icons/bi";
 import { useEffect, useState } from "react";
+import "react-multi-carousel/lib/styles.css";
 
 const responsive = {
   desktop: {
@@ -79,7 +79,7 @@ function WhyUsSlider() {
       responsive={responsive}
       itemClass="item"
     >
-      <div className="m-4 p-8 border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
+      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
         <Image
           width={150}
           height={150}
@@ -88,14 +88,59 @@ function WhyUsSlider() {
           className="mx-auto"
         />
         <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
-          Expertise in Northeastern Destinations:
+          Local Expertise:
         </h1>
-        <p className="text-center">
-          Experience: With so many years of exploring the Northeast, we bring
-          insider knowledge to craft unforgettable journeys. Local Insights: Our
-          team includes locals who understand the region, ensuring authentic
-          experiences. Exclusive Access: Gain access to hidden gems and
-          lesser-known spots that only locals frequent.
+        <p className="text-center text-sm">
+          Being locals from the region, our team has a deep knowledge of
+          Northeast India&apos;s hidden gems.
+        </p>
+      </div>
+      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
+          Sustainable Travel:
+        </h1>
+        <p className="text-center text-sm">
+          Commited to responsible tourism, ensuring minimal impact on the
+          environment.
+        </p>
+      </div>
+      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
+          Personalized Service:
+        </h1>
+        <p className="text-center text-sm">
+          Dedicated team to provide exceptional service, catering to your needs
+          and making your trip memorable.
+        </p>
+      </div>
+      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
+        <Image
+          width={150}
+          height={150}
+          alt="Why us image"
+          src="/whyus.png"
+          className="mx-auto"
+        />
+        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
+          Safety First:
+        </h1>
+        <p className="text-center text-sm">
+          Proper safety measures and experienced professionals to ensure a
+          secure travel experience.
         </p>
       </div>
     </Carousel>

@@ -95,11 +95,15 @@ function Navbar({ nav, openNav }: Props) {
           <div className="relative cursor-pointer">
             <a
               href="/"
-              className="text-xl lg:text-3xl font-extrabold text-primary"
+              className="text-2xl lg:text-3xl font-extrabold text-primary"
+              style={{ fontWeight: 950 }}
             >
               Northeast Voyage
             </a>
-            <h1 className="text-xs lg:text-xs font-extrabold tracking-wider">
+            <h1
+              className="text-xs lg:text-xs font-extrabold tracking-wider"
+              style={{ fontWeight: 950 }}
+            >
               A SOCIAL TRAVEL COMMUNITY
             </h1>
           </div>

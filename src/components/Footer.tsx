@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { useState } from "react";
 import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
@@ -116,7 +115,7 @@ function Footer() {
             </div>
             <a
               href="#"
-              className="footer-text text-center text-sm lg:text-lg text-black tracking-wider"
+              className="footer-text text-center text-xs lg:text-sm text-black tracking-wider"
             >
               @northeastvoyage, All right reserved
             </a>

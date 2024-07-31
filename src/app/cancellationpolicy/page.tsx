@@ -14,16 +14,14 @@ const CancellationPolicy = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] pt-[15vh] lg:pt-[10vh]">
-        <h1 className="page-heading">
-          CANCELLATION POLICY
-        </h1>
-        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto tracking-wider leading-relaxed">
-          <h2 className="font-bold text-lg">
+      <div className="max-container page-container flex flex-col justify-center min-h-[100vh] pt-[10vh]">
+        <h1 className="page-heading">CANCELLATION POLICY</h1>
+        <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto">
+          <h2 className="text-lg font-medium">
             NO REFUND SHALL BE MADE WITH RESPECT TO THE INITIAL BOOKING AMOUNT
             FOR ANY OF THE CANCELLATIONS. HOWEVER,
           </h2>
-          <ul className="m-5 space-y-2">
+          <ul className="content m-5 space-y-2">
             <li>
               ● Cancel your trip before 30 days, 75% refund of total amount.
             </li>
@@ -39,7 +37,7 @@ const CancellationPolicy = () => {
             <li>● No refund within 7 days.</li>
             <li>● The process of refund will take around 7-10 days</li>
           </ul>
-          <p className="font-bold text-lg">
+          <p className="text-lg font-medium">
             In the case of unforeseen weather conditions or government
             restrictions, certain activities may be cancelled and in such cases,
             the operator will try his best to provide an alternate feasible
