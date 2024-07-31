@@ -101,8 +101,8 @@ function WhyUsSlider() {
       responsive={responsive}
       itemClass="item"
     >
-      {WhyUsData.map((data) => (
-        <WhyUsCard data={data} />
+      {WhyUsData.map((data, index) => (
+        <WhyUsCard data={data} key={index} />
       ))}
     </Carousel>
   );
