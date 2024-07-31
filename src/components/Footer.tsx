@@ -16,7 +16,7 @@ function Footer() {
 
   return (
     <div className="flex flex-col justify-end bg-secondary h-[35rem] lg:h-[38rem] mt-[10rem] lg:mt-[15rem]">
-      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[4rem] bg-white rounded-2xl border-2 border-[#0DB295]">
+      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[2rem] lg:mb-[4rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[85%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-lg lg:text-xl font-bold tracking-wider">
@@ -55,7 +55,7 @@ function Footer() {
               Quick Links
             </a>
             <div className="justify-between grid grid-cols-2 mb-10 lg:mb-[5rem]">
-              <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
+              <div className="flex flex-col gap-2 text-[#696969] text-sm lg:text-lg">
                 <Link
                   href={"/"}
                   className="cursor-pointer self-start tracking-wider"
@@ -91,7 +91,7 @@ function Footer() {
                   Cancellation policy
                 </Link>
               </div>
-              <div className="flex flex-col gap-2 text-[#696969] lg:text-lg">
+              <div className="flex flex-col gap-2 text-[#696969] text-sm lg:text-lg">
                 {/* <Link href={"/admin"}>Admin</Link> */}
                 <Link
                   href={"/contactus"}
