@@ -15,7 +15,7 @@ function Footer() {
   };
 
   return (
-    <div className="flex flex-col justify-end bg-secondary h-[35rem] lg:h-[38rem] mt-[10rem] lg:mt-[15rem]">
+    <div className="flex flex-col justify-end bg-secondary h-[30rem] lg:h-[38rem] mt-[10rem] lg:mt-[15rem]">
       <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[2rem] lg:mb-[4rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[85%] mx-auto items-center">
           <div className="space-y-3">

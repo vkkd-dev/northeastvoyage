@@ -13,8 +13,8 @@ function TripFooter() {
   };
 
   return (
-    <div className="flex flex-col justify-end bg-secondary h-[40rem] lg:h-[45rem] mt-[10rem]">
-      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[8rem] lg:mb-[12rem] bg-white rounded-2xl border-2 border-[#0DB295]">
+    <div className="flex flex-col justify-end bg-secondary h-[36rem] lg:h-[45rem] mt-[10rem]">
+      <div className="absolute left-[50%] translate-x-[-50%] w-[90%] pt-[2rem] lg:pt-[4rem] pb-[1rem] mb-[7rem] lg:mb-[12rem] bg-white rounded-2xl border-2 border-[#0DB295]">
         <div className="w-[80%] mx-auto items-center">
           <div className="space-y-3">
             <h1 className="text-lg lg:text-xl font-bold tracking-wider">
