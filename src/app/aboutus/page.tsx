@@ -81,7 +81,7 @@ const AboutUs = () => {
             <h2 className="font-extrabold text-2xl text-center">
               Meet Our Team: An Exceptional Group of Extraordinary People
             </h2>
-            <div className="flex justify-between items-center mt-[4rem]">
+            <div className="flex flex-col gap-10 lg:flex-row justify-between items-center mt-[4rem]">
               {AboutUsData.map((data, index) => (
                 <AboutUsCard data={data} key={index} />
               ))}

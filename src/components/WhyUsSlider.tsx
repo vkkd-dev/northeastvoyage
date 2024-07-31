@@ -1,10 +1,32 @@
 import Carousel from "react-multi-carousel";
-import Image from "next/image";
 import { Button } from "./ui/button";
 import { FiChevronLeft } from "react-icons/fi";
 import { BiChevronRight } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import "react-multi-carousel/lib/styles.css";
+import WhyUsCard from "./WhyUsCard";
+
+const WhyUsData = [
+  {
+    title: "Local Expertise",
+    subtitle: `Being locals from the region, our team has a deep knowledge of Northeast India's hidden gems.`,
+  },
+  {
+    title: "Sustainable Travel",
+    subtitle:
+      "Commited to responsible tourism, ensuring minimal impact on the environment.",
+  },
+  {
+    title: "Personalized Service",
+    subtitle:
+      "Dedicated team to provide exceptional service, catering to your needs and making your trip memorable.",
+  },
+  {
+    title: "Safety First",
+    subtitle:
+      "Proper safety measures and experienced professionals to ensure a secure travel experience.",
+  },
+];
 
 const responsive = {
   desktop: {
@@ -79,70 +101,9 @@ function WhyUsSlider() {
       responsive={responsive}
       itemClass="item"
     >
-      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
-        <Image
-          width={150}
-          height={150}
-          alt="Why us image"
-          src="/whyus.png"
-          className="mx-auto"
-        />
-        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
-          Local Expertise:
-        </h1>
-        <p className="text-center text-sm">
-          Being locals from the region, our team has a deep knowledge of
-          Northeast India&apos;s hidden gems.
-        </p>
-      </div>
-      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
-        <Image
-          width={150}
-          height={150}
-          alt="Why us image"
-          src="/whyus.png"
-          className="mx-auto"
-        />
-        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
-          Sustainable Travel:
-        </h1>
-        <p className="text-center text-sm">
-          Commited to responsible tourism, ensuring minimal impact on the
-          environment.
-        </p>
-      </div>
-      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
-        <Image
-          width={150}
-          height={150}
-          alt="Why us image"
-          src="/whyus.png"
-          className="mx-auto"
-        />
-        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
-          Personalized Service:
-        </h1>
-        <p className="text-center text-sm">
-          Dedicated team to provide exceptional service, catering to your needs
-          and making your trip memorable.
-        </p>
-      </div>
-      <div className="m-4 p-4 min-h-[20rem] flex flex-col justify-center items-center border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl">
-        <Image
-          width={150}
-          height={150}
-          alt="Why us image"
-          src="/whyus.png"
-          className="mx-auto"
-        />
-        <h1 className="mt-[1.5rem] mb-[0.5rem] font-bold text-center">
-          Safety First:
-        </h1>
-        <p className="text-center text-sm">
-          Proper safety measures and experienced professionals to ensure a
-          secure travel experience.
-        </p>
-      </div>
+      {WhyUsData.map((data) => (
+        <WhyUsCard data={data} />
+      ))}
     </Carousel>
   );
 }
