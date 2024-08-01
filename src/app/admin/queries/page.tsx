@@ -14,7 +14,7 @@ interface Query {
   timestamp: string;
 }
 
-const ConnectPage = () => {
+const QueriesPage = () => {
   const [queries, setQueries] = useState<Query[]>([]);
 
   useEffect(() => {
@@ -35,17 +35,21 @@ const ConnectPage = () => {
       <SideNavbar />
       <div className="flex flex-col gap-5 w-full p-8">
         <PageTitle title="User Queries" />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 p-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:p-5">
           {queries.map((query) => (
             <div
               key={query.id}
               className="w-full bg-gray-100 p-4 rounded-md shadow-md"
             >
-              <p className="font-bold my-1">{query.name}</p>
-              <div className="flex flex-col gap-1 p-2">
+              <div className="flex justify-between items-center">
+                <p className="font-bold">{query.name}</p>
+                <p className="text-xs">
+                  {new Date(query.timestamp).toLocaleString()}
+                </p>
+              </div>
+              <div className="flex flex-col gap-1 pt-3 py-1">
                 <p>Email: {query.email}</p>
                 <p>Phone: {query.phone}</p>
-                <p>Timestamp: {new Date(query.timestamp).toLocaleString()}</p>
               </div>
             </div>
           ))}
@@ -55,4 +59,4 @@ const ConnectPage = () => {
   );
 };
 
-export default ConnectPage;
+export default QueriesPage;

@@ -14,7 +14,7 @@ const CancellationPolicy = () => {
     <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="max-container page-container flex flex-col justify-center min-h-[100vh] pt-[10vh]">
+      <div className="max-container page-container flex flex-col justify-center min-h-[100vh] pt-[15vh]">
         <h1 className="page-heading">CANCELLATION POLICY</h1>
         <div className="py-[1rem] lg:py-[3rem] w-[90%] mx-auto">
           <h2 className="text-lg font-medium">

@@ -1,12 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
-import { useMediaQuery } from "react-responsive";
+import { FaInstagram, FaWhatsapp, FaFacebook } from "react-icons/fa";
 
 function Footer() {
   const [showFullText, setShowFullText] = useState(false);
-  const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   const text = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India. We aspire to champion eco-friendly practices and support local communities, ensuring that our operations benefit the environment and the people who call Northeast India home. We aim to set the standard for excellence in the travel industry through our constant commitment to quality, safety, and personalized service.`;
   const text2 = `At Northeast Voyage, our vision is to promote unparalleled, authentic, and sustainable travel experiences in Northeast India.`;
@@ -45,9 +43,21 @@ function Footer() {
               Connect with us
             </h1>
             <div className="flex items-center justify-start space-x-5 mb-14">
-              <FaInstagram color="#696969" fontSize={30} />
-              <FaWhatsapp color="#696969" fontSize={30} />
-              <FaYoutube color="#696969" fontSize={30} />
+              <FaInstagram
+                color="#696969"
+                fontSize={30}
+                className="cursor-pointer"
+              />
+              <FaWhatsapp
+                color="#696969"
+                fontSize={30}
+                className="cursor-pointer"
+              />
+              <FaFacebook
+                color="#696969"
+                fontSize={30}
+                className="cursor-pointer"
+              />
             </div>
           </div>
           <div className="flex flex-col mt-10">

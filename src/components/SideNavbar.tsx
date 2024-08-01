@@ -110,6 +110,12 @@ const SideNavbar = () => {
             variant: "ghost",
           },
           {
+            title: "Contacts",
+            href: "/admin/contactus",
+            icon: MessageSquareDot,
+            variant: "ghost",
+          },
+          {
             title: "Queries",
             href: "/admin/queries",
             icon: MessageSquareDot,

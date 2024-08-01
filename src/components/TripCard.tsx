@@ -37,7 +37,7 @@ function TripCard({ trip }: TripCardProps) {
         <h1 className="text-white absolute text-xs lg:text-base font-medium top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-bl-sm rounded-tl-sm">
           {trip.tripType === "public" &&
             `${formatCurrency(trip?.price)} /per person`}
-          {trip.tripType === "customize" && `Customised`}
+          {trip.tripType === "customize" && `Customized`}
         </h1>
         <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4">
           <h1 className="text-white text-sm lg:text-2xl font-bold">
@@ -47,7 +47,7 @@ function TripCard({ trip }: TripCardProps) {
             <FaLocationDot />
             {trip?.duration}
           </h1>
-          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm">
+          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm font-semibold">
             <FaClock />
             {trip?.city}
           </h1>

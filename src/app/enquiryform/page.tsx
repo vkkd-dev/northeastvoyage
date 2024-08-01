@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -34,7 +33,7 @@ const EnquiryForm = () => {
     month: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
@@ -47,7 +46,7 @@ const EnquiryForm = () => {
     setInputs({ ...inputs, [name]: value });
   };
 
-  async function onSubmit(event: React.SyntheticEvent) {
+  async function onSubmit(event: SyntheticEvent) {
     event.preventDefault();
 
     if (
@@ -115,9 +114,6 @@ const EnquiryForm = () => {
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="max-container padding-container flex flex-col justify-center min-h-[100vh] py-[15vh]">
         <div className="bg-white rounded-lg border-2 border-secondary mt-10 p-4 lg:p-10 w-[100%] lg:w-[85%] mx-auto">
-          <h2 className="text-xl font-bold text-secondary mb-5">
-            Enquiry Form
-          </h2>
           <form onSubmit={onSubmit}>
             <div className="grid gap-4">
               <div className="grid gap-2">

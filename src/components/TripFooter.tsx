@@ -1,7 +1,6 @@
 "use client";
-
 import { useState } from "react";
-import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaWhatsapp, FaFacebook } from "react-icons/fa";
 
 function TripFooter() {
   const [showFullText, setShowFullText] = useState(false);
@@ -34,7 +33,7 @@ function TripFooter() {
             <div className="flex items-center justify-start space-x-5 mb-14">
               <FaInstagram color="#696969" fontSize={30} />
               <FaWhatsapp color="#696969" fontSize={30} />
-              <FaYoutube color="#696969" fontSize={30} />
+              <FaFacebook color="#696969" fontSize={30} />
             </div>
           </div>
           <div className="flex flex-col mt-10">

@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import Footer from "@/components/Footer";
 
 interface Trip {
   id: string;
@@ -241,7 +242,7 @@ const TripPage = () => {
         height={75}
         src={"/whatsapp.png"}
         alt="whatsapp"
-        className="fixed right-3 lg:right-16 bottom-28 lg:bottom-36 z-50 cursor-pointer"
+        className="fixed right-3 lg:right-16 bottom-28 lg:bottom-32 z-50 cursor-pointer"
         onClick={handleWhatsapp}
       />
 
@@ -516,6 +517,7 @@ const TripPage = () => {
           </div>
         )}
       </div>
+
       <TripFooter />
     </>
   );
