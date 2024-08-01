@@ -43,7 +43,7 @@ function TripCard({ trip }: TripCardProps) {
           <h1 className="text-white text-sm lg:text-2xl font-bold">
             {trip?.name}
           </h1>
-          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm mt-2 mb-1">
+          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm mt-2 mb-1 font-semibold">
             <FaLocationDot />
             {trip?.duration}
           </h1>
