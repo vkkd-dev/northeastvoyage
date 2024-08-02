@@ -8,20 +8,24 @@ import WhyUsCard from "./WhyUsCard";
 
 const WhyUsData = [
   {
+    icon: "/graphics/service-svgrepo-com 1.svg",
     title: "Local Expertise",
     subtitle: `Being locals from the region, our team has a deep knowledge of Northeast India's hidden gems.`,
   },
   {
+    icon: "/graphics/mdi_plant.svg",
     title: "Sustainable Travel",
     subtitle:
-      "Commited to responsible tourism, ensuring minimal impact on the environment.",
+    "Commited to responsible tourism, ensuring minimal impact on the environment.",
   },
   {
+    icon: "/graphics/user-expert-svgrepo-com 1.svg",
     title: "Personalized Service",
     subtitle:
       "Dedicated team to provide exceptional service, catering to your needs and making your trip memorable.",
   },
   {
+    icon: "/graphics/safety-supervision-svgrepo-com 1.svg",
     title: "Safety First",
     subtitle:
       "Proper safety measures and experienced professionals to ensure a secure travel experience.",

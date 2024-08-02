@@ -14,6 +14,7 @@ import {
   Bike,
   Ship,
   FolderTree,
+  GalleryVertical,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -71,6 +72,12 @@ const SideNavbar = () => {
             title: "Hero",
             href: "/admin/hero",
             icon: GalleryThumbnails,
+            variant: "ghost",
+          },
+          {
+            title: "Cover",
+            href: "/admin/cover",
+            icon: GalleryVertical,
             variant: "ghost",
           },
           {

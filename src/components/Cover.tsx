@@ -1,7 +1,30 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "@/app/firebase/firebase-cofig";
 
 const Cover = () => {
+  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchHeroImage = async () => {
+    setIsLoading(true);
+    try {
+      const heroImageRef = ref(storage, "cover/currentImage");
+      const url = await getDownloadURL(heroImageRef);
+      setCoverImageUrl(url);
+    } catch (error) {
+      console.error("Error fetching hero image:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHeroImage();
+  }, []);
   const router = useRouter();
 
   const handleNavigate = () => {
@@ -14,7 +37,7 @@ const Cover = () => {
       <div
         id="hero"
         className="bg-cover bg-center bg-no-repeat h-full w-full z-10"
-        style={{ backgroundImage: `url(/cover.jpeg)` }}
+        style={{ backgroundImage: `url(${coverImageUrl})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-gray-800" />
 

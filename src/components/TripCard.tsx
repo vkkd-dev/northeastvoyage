@@ -18,7 +18,7 @@ function TripCard({ trip }: TripCardProps) {
   };
 
   const formatCurrency = (amount: string) => {
-    return `₹${amount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    return `₹ ${amount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
   };
 
   return (
@@ -26,7 +26,7 @@ function TripCard({ trip }: TripCardProps) {
       className="cursor-pointer bg-white rounded-2xl overflow-hidden"
       onClick={handleNavigation}
     >
-      <div className="relative overflow-hidden w-full h-64 lg:h-96">
+      <div className="relative overflow-hidden w-full h-[20rem] lg:h-[26rem]">
         <Image
           src={trip?.image}
           alt={trip?.name}
@@ -34,22 +34,22 @@ function TripCard({ trip }: TripCardProps) {
           fill
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-        <h1 className="text-white absolute text-xs lg:text-base font-medium top-5 right-0 bg-gradient-to-r from-[#0DB295] to-[#0ECE44] p-2 rounded-bl-sm rounded-tl-sm">
-          {trip.tripType === "public" &&
-            `${formatCurrency(trip?.price)} /per person`}
-          {trip.tripType === "customize" && `Customized`}
-        </h1>
-        <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4">
-          <h1 className="text-white text-sm lg:text-2xl font-bold">
+        <div className="absolute bottom-0 w-full">
+          <h1 className="text-white text-sm lg:text-2xl font-bold m-4">
             {trip?.name}
           </h1>
-          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm mt-2 mb-1 font-semibold">
-            <FaLocationDot />
+          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm mt-2 font-semibold ml-4 mb-2">
+            <FaClock />
             {trip?.duration}
           </h1>
-          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm font-semibold">
-            <FaClock />
+          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm font-semibold ml-4 mb-4">
+            <FaLocationDot />
             {trip?.city}
+          </h1>
+          <h1 className="text-white text-xs lg:text-base font-medium bg-gradient-to-r from-[#0DB295] to-[#0ECE44] py-3 px-4">
+            {trip.tripType === "public" &&
+              `${formatCurrency(trip?.price)} / person`}
+            {trip.tripType === "customize" && `Customized`}
           </h1>
         </div>
       </div>

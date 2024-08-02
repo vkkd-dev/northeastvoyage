@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import SearchBox from "./SearchBox";
 import { getDownloadURL, ref } from "firebase/storage";
@@ -13,7 +12,6 @@ function Hero() {
   const fetchHeroImage = async () => {
     setIsLoading(true);
     try {
-      // Replace 'hero-image-path' with the actual path to your hero image in Firebase Storage
       const heroImageRef = ref(storage, "hero/currentImage");
       const url = await getDownloadURL(heroImageRef);
       setHeroImageUrl(url);
@@ -41,7 +39,7 @@ function Hero() {
   }
 
   return (
-    <div className="relative w-full h-[30vh] lg:h-[50vh] mt-[10vh]">
+    <div className="relative w-full h-[30vh] lg:h-[55vh] mt-[10vh]">
       <div className="absolute top-0 left-0 w-full h-full opacity-50"></div>
       <div
         id="hero"

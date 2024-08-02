@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Accordion,
   AccordionContent,
@@ -485,11 +484,11 @@ const TripPage = () => {
           <Accordion type="single" collapsible>
             {tripData.faqs?.map((faq: any, index: any) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-start">
+                <AccordionTrigger className="text-start font-semibold">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <p>{faq.answer}</p>
+                  <p className="font-medium">{faq.answer}</p>
                 </AccordionContent>
               </AccordionItem>
             ))}

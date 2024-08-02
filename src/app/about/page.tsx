@@ -126,19 +126,19 @@ const AboutPage = () => {
     <div>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="flex flex-col h-[55vh]">
+      <div className="flex flex-col h-[50vh] lg:h-[75vh]">
         <div className="relative w-full h-full lg:h-full overflow-hidden">
           <Image
             src={tripData.img}
             alt={tripData.alt}
             layout="fill"
-            objectFit="cover"
+            objectFit="center"
             priority
           />
         </div>
       </div>
 
-      <div className="p-5 lg:px-32 lg:mt-4">
+      <div className="p-5 lg:px-32 lg:mt-4 min-h-[40vh]">
         <h2 className="text-2xl font-bold">{tripData.alt}</h2>
         <h2 className="text-lg mt-3">{tripData.description}</h2>
         <h1 className="mt-10 font-semibold text-2xl">Featured Package</h1>
@@ -152,7 +152,9 @@ const AboutPage = () => {
           </div>
         )}
         {trips.length === 0 && !isTripsLoading && (
-          <h1 className="text-center mt-10">No trips of this destination found.</h1>
+          <h1 className="text-center mt-10">
+            No trips of this destination found.
+          </h1>
         )}
         {!isTripsLoading && (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">

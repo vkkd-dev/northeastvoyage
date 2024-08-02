@@ -11,6 +11,7 @@ interface Destination {
   id: string;
   alt: string;
   description: string;
+  cover: string;
   img: string;
 }
 
@@ -121,7 +122,7 @@ const Destination: React.FC = () => {
             >
               <div className="relative w-[75px] h-[75px] lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden">
                 <Image
-                  src={destination.img}
+                  src={destination.cover}
                   alt={destination.alt}
                   layout="fill"
                   objectFit="cover"

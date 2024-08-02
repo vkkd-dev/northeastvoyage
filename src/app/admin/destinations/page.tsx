@@ -17,17 +17,19 @@ import { SiTicktick } from "react-icons/si";
 import { MdErrorOutline } from "react-icons/md";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { IoIosRemoveCircle } from "react-icons/io";
-import Image from "next/image";
-import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import { Input } from "@/components/ui/input";
 import { firestore, storage } from "@/app/firebase/firebase-cofig";
+import Image from "next/image";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { Label } from "@/components/ui/label";
 
 interface Destination {
   id: string;
   alt: string;
   description: string;
+  cover: string;
   img: string;
 }
 
@@ -36,13 +38,16 @@ const ContentPage = () => {
   const [formData, setFormData] = useState({
     alt: "",
     description: "",
+    cover: "",
     img: "",
   });
+  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editDestinationId, setEditDestinationId] = useState<string | null>(
     null
   );
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [deleteDestinationId, setDeleteDestinationId] = useState<string | null>(
@@ -73,15 +78,27 @@ const ContentPage = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "cover" | "image"
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      if (type === "cover") {
+        setCoverFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setCoverPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -90,6 +107,7 @@ const ContentPage = () => {
     setFormData({
       alt: destination.alt,
       description: destination.description,
+      cover: destination.cover,
       img: destination.img,
     });
     setPreviewImage(destination.img); // Set initial preview image
@@ -98,7 +116,7 @@ const ContentPage = () => {
 
   const closeEditModal = () => {
     setEditDestinationId(null);
-    setFormData({ alt: "", description: "", img: "" });
+    setFormData({ alt: "", description: "", cover: "", img: "" });
     setPreviewImage(null);
     setEditModalOpen(false);
   };
@@ -108,13 +126,14 @@ const ContentPage = () => {
     if (
       formData.alt === "" ||
       formData.description === "" ||
-      imageFile === null
+      imageFile === null ||
+      coverFile === null
     ) {
       toast({
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>All fields must be fielded</p>
+            <p>All fields must be filled</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -122,25 +141,37 @@ const ContentPage = () => {
       return;
     }
     try {
-      let imageUrl = formData.img;
+      let coverUrl = formData.cover;
+      let imgUrl = formData.img;
+
+      if (coverFile) {
+        const coverRef = ref(storage, `destinations/cover_${coverFile.name}`);
+        await uploadBytes(coverRef, coverFile);
+        coverUrl = await getDownloadURL(coverRef);
+      }
+
       if (imageFile) {
-        const storageRef = ref(storage, `destinations/${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
+        const imgRef = ref(storage, `destinations/image_${imageFile.name}`);
+        await uploadBytes(imgRef, imageFile);
+        imgUrl = await getDownloadURL(imgRef);
       }
 
       const docRef = await addDoc(collection(firestore, "destinations"), {
         alt: formData.alt,
         description: formData.description,
-        img: imageUrl,
+        cover: coverUrl,
+        img: imgUrl,
       });
 
       setDestinationData((prevData) => [
         ...prevData,
-        { id: docRef.id, ...formData, img: imageUrl },
+        { id: docRef.id, ...formData, cover: coverUrl, img: imgUrl },
       ]);
-      setFormData({ alt: "", description: "", img: "" });
+      setFormData({ alt: "", description: "", cover: "", img: "" });
+      setCoverFile(null);
       setImageFile(null);
+      setCoverPreview(null);
+      setPreviewImage(null);
       toast({
         description: (
           <div className="flex items-center gap-2">
@@ -206,17 +237,26 @@ const ContentPage = () => {
 
   const handleUpdate = async () => {
     try {
-      let imageUrl = formData.img;
+      let coverUrl = formData.cover;
+      let imgUrl = formData.img;
+
+      if (coverFile) {
+        const coverRef = ref(storage, `destinations/cover_${coverFile.name}`);
+        await uploadBytes(coverRef, coverFile);
+        coverUrl = await getDownloadURL(coverRef);
+      }
+
       if (imageFile) {
-        const storageRef = ref(storage, `destinations/${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
+        const imgRef = ref(storage, `destinations/image_${imageFile.name}`);
+        await uploadBytes(imgRef, imageFile);
+        imgUrl = await getDownloadURL(imgRef);
       }
 
       await updateDoc(doc(firestore, "destinations", editDestinationId!), {
         alt: formData.alt,
         description: formData.description,
-        img: imageUrl,
+        cover: coverUrl,
+        img: imgUrl,
       });
 
       // Update local state with updated data
@@ -227,7 +267,8 @@ const ContentPage = () => {
                 id: item.id,
                 alt: formData.alt,
                 description: formData.description,
-                img: imageUrl,
+                cover: coverUrl,
+                img: imgUrl,
               }
             : item
         )
@@ -299,18 +340,49 @@ const ContentPage = () => {
                 rows={4}
               />
 
-              {/* Image Input */}
+              {/* Cover Image Input */}
+              <Label
+                htmlFor="imageFile"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Select Cover Image
+              </Label>
               <div className="flex gap-2 items-center">
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={handleFileChange}
+                  onChange={(e) => handleFileChange(e, "cover")}
                   className="rounded"
                 />
-                {imageFile && (
-                  <span className="text-sm text-gray-500">
-                    {imageFile.name}
-                  </span>
+                {coverPreview && (
+                  <img
+                    src={coverPreview}
+                    alt="Cover Preview"
+                    className="w-20 h-20 object-cover mt-2"
+                  />
+                )}
+              </div>
+
+              {/* Image Input */}
+              <Label
+                htmlFor="imageFile"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Select Main Image
+              </Label>
+              <div className="flex gap-2 items-center">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, "image")}
+                  className="rounded"
+                />
+                {previewImage && (
+                  <img
+                    src={previewImage}
+                    alt="Image Preview"
+                    className="w-20 h-20 object-cover mt-2"
+                  />
                 )}
               </div>
 
@@ -414,15 +486,40 @@ const ContentPage = () => {
                     />
                   </div>
                   <div className="mb-4">
-                    {/* Image preview */}
-                    {previewImage && (
+                    {/* Cover Image Preview */}
+                    {formData.cover && (
+                      <div className="mb-2">
+                        <h3 className="text-lg font-bold mb-2">
+                          Current Cover Image Preview
+                        </h3>
+                        <div className="relative w-full h-40 mb-2">
+                          <Image
+                            src={formData.cover}
+                            alt="Cover Image Preview"
+                            width={100}
+                            height={50}
+                            className="rounded"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileChange(e, "cover")}
+                      className="py-1 rounded"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    {/* Image Preview */}
+                    {formData.img && (
                       <div className="mb-2">
                         <h3 className="text-lg font-bold mb-2">
                           Current Image Preview
                         </h3>
                         <div className="relative w-full h-40 mb-2">
                           <Image
-                            src={previewImage}
+                            src={formData.img}
                             alt="Image Preview"
                             width={100}
                             height={50}
@@ -434,7 +531,7 @@ const ContentPage = () => {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleFileChange}
+                      onChange={(e) => handleFileChange(e, "image")}
                       className="py-1 rounded"
                     />
                   </div>

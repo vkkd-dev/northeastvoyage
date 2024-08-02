@@ -887,7 +887,7 @@ const TripsPage = () => {
                     />
 
                     {/* Image Input */}
-                    <div className="items-center space-x-2">
+                    <div className="items-center">
                       <label
                         htmlFor="imageFile"
                         className="block text-sm font-medium text-gray-700"
