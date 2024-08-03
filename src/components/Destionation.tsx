@@ -136,7 +136,6 @@ const Destination: React.FC = () => {
           ))}
         </Carousel>
       )}
-      {/* </div> */}
       {/* <div className="block sm:hidden mt-4">{renderMobileView()}</div> */}
     </>
   );

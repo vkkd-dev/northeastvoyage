@@ -270,20 +270,6 @@ const ReviewPage = () => {
 
     return (
       <div className="flex gap-1">
-        {/* {[1, 2, 3, 4, 5].map((star) => (
-          <svg
-            key={star}
-            xmlns="http://www.w3.org/2000/svg"
-            className={`w-5 h-5 ${
-              star <= rating ? "text-yellow-500" : "text-gray-300"
-            }`}
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            stroke="none"
-          >
-            <path d="M12 2l3 6 6 .875-4.5 4.375L18 20l-6-3.125L6 20l1.5-6.75L3 8.875 9 8.75l3-6z" />
-          </svg>
-        ))} */}
         {[1, 2, 3, 4, 5].map((rating) => (
           <svg
             key={rating}

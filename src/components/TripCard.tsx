@@ -23,10 +23,10 @@ function TripCard({ trip }: TripCardProps) {
 
   return (
     <div
-      className="cursor-pointer bg-white rounded-2xl overflow-hidden"
+      className="cursor-pointer bg-white overflow-hidden"
       onClick={handleNavigation}
     >
-      <div className="relative overflow-hidden w-full h-[20rem] lg:h-[26rem]">
+      <div className="relative overflow-hidden w-full h-[20rem] lg:h-[26rem] rounded-2xl">
         <Image
           src={trip?.image}
           alt={trip?.name}

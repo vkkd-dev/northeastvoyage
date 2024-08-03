@@ -223,6 +223,8 @@ const TripPage = () => {
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
 
+      {console.log("tripData", tripData)}
+
       <div className="flex flex-col h-[37vh] lg:h-[66vh]">
         <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
           <Image
@@ -370,40 +372,64 @@ const TripPage = () => {
 
         {/* Inclusions */}
         <div className="flex flex-col pt-6 gap-2">
-          <h2 className="font-extrabold text-lg lg:text-xl mb-2">Inclusions</h2>
-          {tripData.inclusions?.map((inclusion, index) => (
-            <div className="flex gap-2 items-start" key={index}>
-              <div className="flex-shrink-0 w-5 h-5">
-                <Image
-                  width={16}
-                  height={16}
-                  src={"/tick-circle-solid.svg"}
-                  alt="tick"
-                  className="mt-1"
-                />
-              </div>
-              <p className="text-sm lg:text-base">{inclusion}</p>
-            </div>
-          ))}
+          {tripData.inclusions &&
+            tripData.inclusions.some(
+              (inclusion) => inclusion.trim() !== ""
+            ) && (
+              <>
+                <h2 className="font-extrabold text-lg lg:text-xl mb-2">
+                  Inclusions
+                </h2>
+                {tripData.inclusions.map(
+                  (inclusion, index) =>
+                    inclusion.trim() !== "" && (
+                      <div className="flex gap-2 items-start" key={index}>
+                        <div className="flex-shrink-0 w-5 h-5">
+                          <Image
+                            width={16}
+                            height={16}
+                            src={"/tick-circle-solid.svg"}
+                            alt="tick"
+                            className="mt-1"
+                          />
+                        </div>
+                        <p className="text-sm lg:text-base">{inclusion}</p>
+                      </div>
+                    )
+                )}
+              </>
+            )}
         </div>
 
         {/* Exclusions */}
         <div className="flex flex-col pt-6 gap-2">
-          <h2 className="font-extrabold text-lg lg:text-xl mb-2">Exclusions</h2>
-          {tripData.exclusions?.map((exclusion, index) => (
-            <div className="flex gap-2" key={index}>
-              <div className="flex-shrink-0 w-5 h-5">
-                <Image
-                  width={16}
-                  height={16}
-                  src={"/cross-circle-solid.svg"}
-                  alt="tick"
-                  className="mt-1"
-                />
-              </div>
-              <p className="text-sm lg:text-base">{exclusion}</p>
-            </div>
-          ))}
+          {tripData.exclusions &&
+            tripData.exclusions.some(
+              (exclusion) => exclusion.trim() !== ""
+            ) && (
+              <>
+                <h2 className="font-extrabold text-lg lg:text-xl mb-2">
+                  Exclusions
+                </h2>
+                {tripData.exclusions.map(
+                  (exclusion, index) =>
+                    exclusion.trim() !== "" && (
+                      <div className="flex gap-2" key={index}>
+                        <div className="flex-shrink-0 w-5 h-5">
+                          <Image
+                            width={16}
+                            height={16}
+                            src={"/cross-circle-solid.svg"}
+                            alt="cross"
+                            className="mt-1"
+                          />
+                        </div>
+                        <p className="text-sm lg:text-base">{exclusion}</p>
+                      </div>
+                    )
+                )}
+              </>
+            )}
         </div>
 
         {/* Customize */}
@@ -455,7 +481,9 @@ const TripPage = () => {
         {/* Public */}
         {tripData.tripType === "public" && (
           <div className="mt-10">
-            <h2 className="text-2xl font-bold mb-6">Upcoming Dates</h2>
+            <h2 className="text-lg lg:text-xl font-bold mb-6">
+              Upcoming Dates
+            </h2>
             <Select
               value={selectedMonth.toString()}
               onValueChange={handleMonthChange}
@@ -480,22 +508,36 @@ const TripPage = () => {
 
         {/* FAQs */}
         <div className="mt-10">
-          <h2 className="font-bold text-lg lg:text-xl">FAQs</h2>
-          <Accordion type="single" collapsible>
-            {tripData.faqs?.map((faq: any, index: any) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-start font-semibold">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="font-medium">{faq.answer}</p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          {tripData.faqs &&
+            tripData.faqs.some(
+              (faq: any) =>
+                faq.question.trim() !== "" && faq.answer.trim() !== ""
+            ) && (
+              <>
+                <h2 className="font-bold text-lg lg:text-xl">FAQs</h2>
+                <Accordion type="single" collapsible>
+                  {tripData.faqs.map(
+                    (faq: any, index: any) =>
+                      faq.question.trim() !== "" &&
+                      faq.answer.trim() !== "" && (
+                        <AccordionItem key={index} value={`item-${index}`}>
+                          <AccordionTrigger className="text-start font-semibold">
+                            {faq.question}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <p className="font-medium">{faq.answer}</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      )
+                  )}
+                </Accordion>
+              </>
+            )}
         </div>
 
-        <h1 className="mt-10 font-semibold text-2xl">Similar Trips</h1>
+        <h1 className="mt-10 font-semibold text-lg lg:text-xl">
+          Similar Trips
+        </h1>
         {isTripsLoading && (
           <div className="flex justify-center items-center mt-4">
             <ImSpinner2

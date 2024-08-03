@@ -110,7 +110,7 @@ const TripsPage = () => {
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDestination, setSelectedDestination] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -231,11 +231,14 @@ const TripsPage = () => {
     }
   };
 
-  // const handleInclusionChange = (index: number, value: string) => {
-  //   const newInclusion = [...formData.inclusion];
-  //   newInclusion[index] = value;
-  //   setFormData({ ...formData, inclusion: newInclusion });
-  // };
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategories(
+      (prevSelected) =>
+        prevSelected.includes(categoryId)
+          ? prevSelected.filter((id) => id !== categoryId) // Deselect
+          : [...prevSelected, categoryId] // Select
+    );
+  };
 
   const handleInclusionsChange = (index: number, value: string) => {
     const newInclusions = [...formData.inclusions];
@@ -335,23 +338,6 @@ const TripsPage = () => {
     }
   };
 
-  // const addInclusion = () => {
-  //   const lastInclusion = formData.inclusion[formData.inclusion.length - 1];
-  //   if (lastInclusion.trim() !== "") {
-  //     setFormData({ ...formData, inclusion: [...formData.inclusion, ""] });
-  //   } else {
-  //     toast({
-  //       description: (
-  //         <div className="flex items-center gap-2">
-  //           <MdErrorOutline size={20} />
-  //           <p>Please fill the current inclusion before adding a new one.</p>
-  //         </div>
-  //       ),
-  //       className: "bg-primary text-white font-bold",
-  //     });
-  //   }
-  // };
-
   const addInclusions = () => {
     const lastInclusions = formData.inclusions[formData.inclusions.length - 1];
     if (lastInclusions.trim() !== "") {
@@ -409,7 +395,7 @@ const TripsPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
-      selectedCategory === "" ||
+      selectedCategories.length === 0 ||
       selectedDestination === "" ||
       formData.city === "" ||
       formData.description === "" ||
@@ -419,8 +405,8 @@ const TripsPage = () => {
       formData.overview === "" ||
       imageFile === null ||
       selectedType === null ||
-      !pdfFile ||
-      formData.inclusions.some((inclusion) => inclusion.trim() === "")
+      !pdfFile
+      // formData.inclusions.some((inclusion) => inclusion.trim() === "")
     ) {
       toast({
         description: (
@@ -442,7 +428,7 @@ const TripsPage = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
-      let pdfUrl = ""; // Initialize PDF URL
+      let pdfUrl = ""; 
       if (pdfFile) {
         const pdfRef = ref(storage, `pdf/${pdfFile.name}`);
         await uploadBytes(pdfRef, pdfFile);
@@ -450,7 +436,7 @@ const TripsPage = () => {
       }
 
       const tripData: any = {
-        category: selectedCategory,
+        category: selectedCategories,
         destination: selectedDestination,
         city: formData.city,
         description: formData.description,
@@ -458,14 +444,23 @@ const TripsPage = () => {
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
-        itinerary: formData.itinerary,
-        inclusions: formData.inclusions,
-        exclusions: formData.exclusions,
-        faqs: formData.faqs,
         image: imageUrl,
         pdf: pdfUrl,
         tripType: selectedType,
       };
+
+      if (formData.inclusions && formData.inclusions.length > 0) {
+        tripData.inclusions = formData.inclusions;
+      }
+      if (formData.exclusions && formData.exclusions.length > 0) {
+        tripData.exclusions = formData.exclusions;
+      }
+      if (formData.itinerary && formData.itinerary.length > 0) {
+        tripData.itinerary = formData.itinerary;
+      }
+      if (formData.faqs && formData.faqs.length > 0) {
+        tripData.faqs = formData.faqs;
+      }
 
       if (selectedType === "public") {
         tripData.selectedDates = formData.selectedDates;
@@ -509,7 +504,6 @@ const TripsPage = () => {
         price: "",
         overview: "",
         image: "",
-        // inclusion: [],
         itinerary: [{ title: "", items: [""], images: [""] }],
         inclusions: [""],
         exclusions: [""],
@@ -524,7 +518,7 @@ const TripsPage = () => {
         ],
         selectedDates: [],
       });
-      setSelectedCategory("");
+      setSelectedCategories([]);
       setSelectedDestination("");
       setImageFile(null);
       setPdfFile(null);
@@ -778,7 +772,7 @@ const TripsPage = () => {
                 <AccordionContent>
                   <div className="flex flex-col gap-4 mb-4 p-2">
                     {/* Category Select */}
-                    <Select
+                    {/* <Select
                       onValueChange={setSelectedCategory}
                       value={selectedCategory}
                     >
@@ -795,7 +789,28 @@ const TripsPage = () => {
                           ))}
                         </SelectGroup>
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+                    <Label
+                      htmlFor="imageFile"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Select Categories
+                    </Label>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((category) => (
+                        <button
+                          key={category.id}
+                          onClick={() => handleCategoryClick(category.id)}
+                          className={`px-4 py-2 rounded-full border ${
+                            selectedCategories.includes(category.id)
+                              ? "bg-blue-500 text-white border-blue-500"
+                              : "bg-gray-200 text-gray-800 border-gray-400"
+                          }`}
+                        >
+                          {category.title}
+                        </button>
+                      ))}
+                    </div>
 
                     {/* Destination Select */}
                     <Select onValueChange={setSelectedDestination}>

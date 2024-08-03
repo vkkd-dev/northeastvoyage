@@ -4,6 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import Link from "next/link";
 
 const SearchBox = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -77,7 +78,8 @@ const SearchBox = () => {
         <div className="absolute top-[62%] lg:top-[60%] left-[50%] translate-x-[-50%] w-[90%] lg:w-[40%] bg-white border rounded-2xl shadow-lg max-h-[300px] overflow-y-auto z-10">
           {filteredTrips.length > 0 ? (
             filteredTrips.map((trip) => (
-              <div
+              <Link
+                href={`/trip?id=${trip.id}`}
                 key={trip.id}
                 className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
               >
@@ -90,7 +92,7 @@ const SearchBox = () => {
                   <p className="font-semibold">{trip.name}</p>
                   <p className="text-sm text-gray-600">{trip.city}</p>
                 </div>
-              </div>
+              </Link>
             ))
           ) : (
             <div className="p-4 text-center text-gray-500">

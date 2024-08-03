@@ -1,13 +1,15 @@
 "use client";
 
 import BarChart from "@/components/BarChart";
-import Card, { CardContent, CardProps } from "@/components/Card";
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
+import Card, { CardContent, CardProps } from "@/components/Card";
 import BookingsCard, { BookingProps } from "@/components/BookingsCard";
 import { User } from "lucide-react";
 import { UserAuthForm } from "@/components/ui/user-auth-form";
 import { useUser } from "@/context/AdminContext";
+import { ChangePasswordForm } from "@/components/ui/change-password-form";
+import { useChangePassword } from "@/context/ChangePasswordContext";
 import Image from "next/image";
 
 const cardData: CardProps[] = [
@@ -67,6 +69,7 @@ const bookingsData: BookingProps[] = [
 
 export default function AdminPage() {
   const { isAdminLoggedIn, isLoading } = useUser();
+  const { isChangePassword, setIsChangePassword } = useChangePassword();
 
   return (
     <div>
@@ -94,36 +97,41 @@ export default function AdminPage() {
                 </blockquote>
               </div>
             </div>
-            <div className="p-6 lg:p-8 w-full">
-              <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-                <div className="flex flex-col space-y-2 text-center">
-                  <h1 className="text-2xl font-semibold tracking-tight">
-                    Admin Login
-                  </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Enter your email and password
-                  </p>
+            {!isChangePassword ? (
+              <div className="p-6 lg:p-8 w-full">
+                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                  <div className="flex flex-col space-y-2 text-center">
+                    <h1 className="text-2xl font-semibold tracking-tight">
+                      Admin Login
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Enter your email and password
+                    </p>
+                  </div>
+                  <UserAuthForm />
+                  <span
+                    className="text-xs lg:text-sm cursor-pointer text-primary"
+                    onClick={() => setIsChangePassword(true)}
+                  >
+                    Change Password
+                  </span>
                 </div>
-                <UserAuthForm />
-                {/* <p className="px-8 text-center text-sm text-muted-foreground">
-                By clicking continue, you agree to our{" "}
-                <Link
-                  href="/terms"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link
-                  href="/privacy"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  Privacy Policy
-                </Link>
-                .
-              </p> */}
               </div>
-            </div>
+            ) : (
+              <div className="p-6 lg:p-8 w-full">
+                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                  <div className="flex flex-col space-y-2 text-center">
+                    <h1 className="text-2xl font-semibold tracking-tight">
+                      Change Password
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Enter your email and password
+                    </p>
+                  </div>
+                  <ChangePasswordForm />
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}

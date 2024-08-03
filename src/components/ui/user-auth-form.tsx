@@ -8,6 +8,8 @@ import { Label } from "./label";
 import { Icons } from "./icons";
 import { useUser } from "@/context/AdminContext";
 import { useToast } from "@/components/ui/use-toast";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/app/firebase/firebase-cofig";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -37,24 +39,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         return;
       }
 
-      if (inputs.email !== "admin@admin.com" || inputs.password !== "admin") {
-        toast({
-          title: "Failed to login",
-          description: "Invalid email or password",
-          variant: "default",
-        });
-        return;
-      }
-
       setIsLoading(true);
-      setTimeout(() => {
-        setIsAdminLoggedIn(!isAdminLoggedIn);
-        localStorage.setItem("isLogin", "true");
-        setIsLoading(false);
-      }, 1000);
+
+      // Use Firebase Authentication to sign in
+      await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+
+      setIsAdminLoggedIn(true); // Or however you handle login state
+      localStorage.setItem("isLogin", "true");
     } catch (error) {
       console.log("error: ", error);
+      toast({
+        title: "Failed to login",
+        description: "Invalid email or password",
+        variant: "default",
+      });
     } finally {
+      setIsLoading(false);
       setInputs({
         email: "",
         password: "",

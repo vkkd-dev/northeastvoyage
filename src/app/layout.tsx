@@ -3,6 +3,7 @@ import { UserProvider } from "@/context/AdminContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 import "./globals.css";
+import { ChangePasswordProvider } from "@/context/ChangePasswordContext";
 
 export const metadata: Metadata = {
   title: "Northeast Travel Guide | Explore the Marvels of the Northeast",
@@ -30,16 +31,18 @@ export default function RootLayout({
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
       />
       <UserProvider>
-        <body
-        // className={cn({
-        //   "debug-screens": process.env.NODE_ENV === "development",
-        // })}
-        >
-          <main className="font-primary">
-            <Suspense fallback={<>Loading...</>}>{children}</Suspense>
-            <Toaster />
-          </main>
-        </body>
+        <ChangePasswordProvider>
+          <body
+          // className={cn({
+          //   "debug-screens": process.env.NODE_ENV === "development",
+          // })}
+          >
+            <main className="font-primary">
+              <Suspense fallback={<>Loading...</>}>{children}</Suspense>
+              <Toaster />
+            </main>
+          </body>
+        </ChangePasswordProvider>
       </UserProvider>
     </html>
   );

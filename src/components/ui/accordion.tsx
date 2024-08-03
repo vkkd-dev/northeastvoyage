@@ -39,8 +39,8 @@ const AccordionTrigger = React.forwardRef<
         className={cn(
           "flex flex-1 items-center justify-between py-4 font-medium transition-all",
           {
-            "text-[#0DB295]": !open,
-            "text-black": open,
+            "text-primary": open,
+            "text-black": !open,
           },
           className
         )}
