@@ -3,8 +3,8 @@ import Destination from "./Destionation";
 
 function Destinations() {
   return (
-    <div className="padding-container mt-[2rem] lg:mt-[2rem]">
-      <div className="flex gap-3">
+    <div className="mt-[2rem] lg:mt-[2rem]">
+      <div className="flex padding-container gap-3">
         <Image
           width={20}
           height={20}

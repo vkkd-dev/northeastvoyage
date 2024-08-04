@@ -166,6 +166,16 @@ body {
     flex-wrap: wrap;
   }
 
+  /* styles.css */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   @media (max-width: 764px) {
     .carousel-container .react-multi-carousel-item {
       flex: 0 0 50%;

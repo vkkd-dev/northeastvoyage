@@ -100,33 +100,20 @@ const Destination: React.FC = () => {
       )}
 
       {!isLoading && destinationData.length > 0 && (
-        <Carousel
-          // additionalTransfrom={0}
-          swipeable={true}
-          draggable={true}
-          arrows={false}
-          autoPlay={false}
-          centerMode={false}
-          infinite={true}
-          responsive={responsive}
-          itemClass="item"
-          customTransition="all .5"
-          transitionDuration={500}
-          containerClass="carousel-container"
-        >
+        <div className="flex overflow-x-auto no-scrollbar space-x-4 lg:space-x-8 p-4 lg:px-36">
           {destinationData.map((destination, index) => (
             <div
               key={index}
-              className="m-1 cursor-pointer"
+              className="flex-shrink-0 w-[22%] lg:w-[10%] cursor-pointer"
               onClick={() => handleNavigation(destination)}
             >
-              <div className="relative w-[75px] h-[75px] lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden">
+              <div className="relative w-full pt-[100%] mx-auto rounded-full overflow-hidden">
                 <Image
                   src={destination.cover}
                   alt={destination.alt}
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-full"
+                  className="absolute top-0 left-0 w-full h-full rounded-full"
                 />
               </div>
               <h1 className="destination-h1 text-black text-center mt-2 text-[0.8rem] lg:text-lg font-light tracking-wider">
@@ -134,7 +121,43 @@ const Destination: React.FC = () => {
               </h1>
             </div>
           ))}
-        </Carousel>
+        </div>
+
+        // <Carousel
+        //   // additionalTransfrom={0}
+        //   swipeable={true}
+        //   draggable={true}
+        //   arrows={false}
+        //   autoPlay={false}
+        //   centerMode={false}
+        //   infinite={true}
+        //   responsive={responsive}
+        //   itemClass="item"
+        //   customTransition="all .5"
+        //   transitionDuration={500}
+        //   containerClass="carousel-container"
+        // >
+        //   {destinationData.map((destination, index) => (
+        //     <div
+        //       key={index}
+        //       className="m-1 cursor-pointer"
+        //       onClick={() => handleNavigation(destination)}
+        //     >
+        //       <div className="relative w-[75px] h-[75px] lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden">
+        //         <Image
+        //           src={destination.cover}
+        //           alt={destination.alt}
+        //           layout="fill"
+        //           objectFit="cover"
+        //           className="rounded-full"
+        //         />
+        //       </div>
+        //       <h1 className="destination-h1 text-black text-center mt-2 text-[0.8rem] lg:text-lg font-light tracking-wider">
+        //         {destination.alt}
+        //       </h1>
+        //     </div>
+        //   ))}
+        // </Carousel>
       )}
       {/* <div className="block sm:hidden mt-4">{renderMobileView()}</div> */}
     </>
