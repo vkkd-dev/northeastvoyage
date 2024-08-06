@@ -31,6 +31,7 @@ interface Trip {
   city: string;
   price: string;
   duration: string;
+  coverImage: string;
   image: string;
   description: string;
   overview: string;
