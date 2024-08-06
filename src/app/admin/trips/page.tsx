@@ -337,7 +337,7 @@ const TripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Can't delete the last item</p>
+            <p>Can not delete the last item</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -386,7 +386,7 @@ const TripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Can't delete the last section</p>
+            <p>Can not delete the last section</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -426,7 +426,7 @@ const TripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Can't delete the last item</p>
+            <p>Can not delete the last item</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -467,7 +467,7 @@ const TripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Can't delete the last item</p>
+            <p>Can not delete the last item</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -511,7 +511,7 @@ const TripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Can't delete the last FAQ</p>
+            <p>Can not delete the last FAQ</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
