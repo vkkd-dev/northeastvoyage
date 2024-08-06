@@ -135,7 +135,7 @@ function ReviewSlider() {
           {reviewsData.map((review, index) => (
             <div
               key={index}
-              className="w-[90%] lg:w-[300px] h-[270px] p-3 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
+              className="w-[90%] lg:w-[310px] h-[350px] p-4 m-1 mx-auto border-[#0DB295] sm:border-none lg:border-solid border-2 rounded-3xl"
             >
               <div>
                 <Image
@@ -149,7 +149,7 @@ function ReviewSlider() {
               <h1 className="mt-[0.5rem] font-bold text-center text-[16px] text-black">
                 {review.name}
               </h1>
-              <div className="flex items-center justify-center my-2">
+              <div className="flex items-center justify-center my-1">
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
@@ -169,9 +169,9 @@ function ReviewSlider() {
                   ))}
                 </div>
               </div>
-              <p className="text-center text-sm w-[90%] mx-auto">
-                {review.review.length > 85
-                  ? review.review.slice(0, 85) + "..."
+              <p className="text-center text-sm w-full mx-auto">
+                {review.review.length > 400
+                  ? review.review.slice(0, 400) + "..."
                   : review.review}
               </p>
             </div>

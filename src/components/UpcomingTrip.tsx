@@ -12,6 +12,7 @@ export interface Trip {
   price: string;
   duration: string;
   image: string;
+  coverImage: string;
   description: string;
   overview: string;
   inclusion: any;

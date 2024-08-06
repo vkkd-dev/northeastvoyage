@@ -28,7 +28,7 @@ function TripCard({ trip }: TripCardProps) {
     >
       <div className="relative overflow-hidden w-full h-[20rem] lg:h-[26rem] rounded-2xl">
         <Image
-          src={trip?.image}
+          src={trip?.coverImage}
           alt={trip?.name}
           className="transform object-cover transition-all duration-700 scale-100 hover:scale-125"
           fill

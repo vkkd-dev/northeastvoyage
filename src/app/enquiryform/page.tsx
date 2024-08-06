@@ -28,7 +28,9 @@ const EnquiryForm = () => {
     name: "",
     number: "",
     email: "",
+    place: "",
     people: "",
+    message: "",
     type: "",
     month: "",
   });
@@ -52,6 +54,8 @@ const EnquiryForm = () => {
     if (
       inputs.name === "" ||
       inputs.email === "" ||
+      inputs.place === "" ||
+      inputs.message === "" ||
       inputs.number === "" ||
       inputs.people === "" ||
       inputs.type === "" ||
@@ -82,6 +86,8 @@ const EnquiryForm = () => {
         name: "",
         number: "",
         email: "",
+        place: "",
+        message: "",
         people: "",
         type: "",
         month: "",
@@ -160,6 +166,35 @@ const EnquiryForm = () => {
                   disabled={isLoading}
                   value={inputs.email}
                   onChange={handleChange}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Place you want to visit</Label>
+                <Input
+                  name="place"
+                  placeholder="...."
+                  type="text"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  disabled={isLoading}
+                  value={inputs.place}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="message">Your message</Label>
+                <textarea
+                  placeholder="..."
+                  value={inputs.message}
+                  onChange={(e) =>
+                    setInputs({
+                      ...inputs,
+                      message: e.target.value,
+                    })
+                  }
+                  className="px-2 py-1 border border-gray-300 rounded"
+                  rows={4}
                 />
               </div>
 

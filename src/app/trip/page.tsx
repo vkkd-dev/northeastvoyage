@@ -30,7 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import Footer from "@/components/Footer";
 
 interface Trip {
   id: string;
@@ -38,6 +37,7 @@ interface Trip {
   city: string;
   price: string;
   duration: string;
+  coverImage: string;
   image: string;
   pdf: string;
   description: string;
@@ -198,12 +198,21 @@ const TripPage = () => {
     }
   };
 
-  // const formatPrice = (price: number) => {
-  //   return new Intl.NumberFormat("en-IN", {
-  //     style: "currency",
-  //     currency: "INR",
-  //   }).format(price);
-  // };
+  const formatPrice = (price: string): string => {
+    // Convert the price to a number and format it with commas
+    const number = parseFloat(price.replace(/[^0-9.]/g, "")); // Remove non-numeric characters except '.'
+    if (isNaN(number)) return "₹ 0";
+
+    // Format the number with commas and the ₹ symbol
+    const formattedPrice = number.toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0, // Customize as needed
+      maximumFractionDigits: 0, // Customize as needed
+    });
+
+    return formattedPrice;
+  };
 
   if (!tripData) {
     return (
@@ -252,10 +261,10 @@ const TripPage = () => {
         <div className="flex justify-between bg-white px-7 lg:px-32 py-4 lg:py-7 rounded-ss-3xl rounded-se-3xl shadow-2xl shadow-black">
           <div className="flex flex-col gap-1">
             <span className="tracking-wider font-bold text-xs lg:text-sm">
-              Start From
+              Starting From
             </span>
             <div className="text-2xl font-extrabold text-primary">
-              {/* {formatPrice(parseInt(tripData.price))} */}₹ {tripData.price}
+              {formatPrice(tripData.price)}
             </div>
           </div>
           <div

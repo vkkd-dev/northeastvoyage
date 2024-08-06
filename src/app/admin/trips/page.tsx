@@ -20,6 +20,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { RiPriceTag3Line } from "react-icons/ri";
 import { IoMdAddCircle } from "react-icons/io";
 import { IoIosRemoveCircle } from "react-icons/io";
+import { IoMdRemoveCircle } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -74,6 +75,7 @@ interface Trip {
   price: string;
   duration: string;
   image: string;
+  coverImage: string;
   description: string;
   overview: string;
   itinerary: any;
@@ -93,6 +95,7 @@ const TripsPage = () => {
     name: "",
     price: "",
     overview: "",
+    coverImage: "",
     image: "",
     itinerary: [{ title: "", items: [""], images: [""] }],
     inclusions: [""],
@@ -115,6 +118,10 @@ const TripsPage = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
+    null
+  );
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editTripId, setEditTripId] = useState<string | null>(null);
@@ -196,6 +203,18 @@ const TripsPage = () => {
 
     fetchTrips();
   }, [toast]);
+
+  const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -312,6 +331,29 @@ const TripsPage = () => {
     }
   };
 
+  const removeItineraryItem = (sectionIndex: number, itemIndex: number) => {
+    if (formData.itinerary[sectionIndex].items.length === 1) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Can't delete the last item</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      const newItinerary = [...formData.itinerary];
+      newItinerary[sectionIndex].items = [""];
+      setFormData({ ...formData, itinerary: newItinerary });
+      return;
+    }
+    const newItinerary = [...formData.itinerary];
+    newItinerary[sectionIndex].items = newItinerary[sectionIndex].items.filter(
+      (_, index) => index !== itemIndex
+    );
+    setFormData({ ...formData, itinerary: newItinerary });
+  };
+
   const addItinerarySection = () => {
     const lastSection = formData.itinerary[formData.itinerary.length - 1];
     if (
@@ -338,6 +380,29 @@ const TripsPage = () => {
     }
   };
 
+  const removeItinerarySection = (sectionIndex: number) => {
+    if (formData.itinerary.length === 1) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Can't delete the last section</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      setFormData({
+        ...formData,
+        itinerary: [{ title: "", items: [""], images: [""] }],
+      });
+      return;
+    }
+    const newItinerary = formData.itinerary.filter(
+      (_, index) => index !== sectionIndex
+    );
+    setFormData({ ...formData, itinerary: newItinerary });
+  };
+
   const addInclusions = () => {
     const lastInclusions = formData.inclusions[formData.inclusions.length - 1];
     if (lastInclusions.trim() !== "") {
@@ -355,6 +420,30 @@ const TripsPage = () => {
     }
   };
 
+  const handleRemoveInclusion = (index: number) => {
+    if (formData.inclusions.length === 1) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Can't delete the last item</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      setFormData({
+        ...formData,
+        inclusions: [""], // Reset to a single empty item
+      });
+      return;
+    }
+    const newInclusions = formData.inclusions.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      inclusions: newInclusions,
+    });
+  };
+
   const addExclusions = () => {
     const lastExclusions = formData.exclusions[formData.exclusions.length - 1];
     if (lastExclusions.trim() !== "") {
@@ -370,6 +459,30 @@ const TripsPage = () => {
         className: "bg-primary text-white font-bold",
       });
     }
+  };
+
+  const handleRemoveExclusion = (index: number) => {
+    if (formData.exclusions.length === 1) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Can't delete the last item</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      setFormData({
+        ...formData,
+        exclusions: [""], // Reset to a single empty item
+      });
+      return;
+    }
+    const newExclusions = formData.exclusions.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      exclusions: newExclusions,
+    });
   };
 
   const addFAQs = () => {
@@ -392,6 +505,23 @@ const TripsPage = () => {
     }
   };
 
+  const removeFAQs = (index: number) => {
+    if (formData.faqs.length === 1) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Can't delete the last FAQ</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+    const newFAQs = formData.faqs.filter((_, faqIndex) => faqIndex !== index);
+    setFormData({ ...formData, faqs: newFAQs });
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -404,6 +534,7 @@ const TripsPage = () => {
       formData.price === "" ||
       formData.overview === "" ||
       imageFile === null ||
+      coverImageFile === null ||
       selectedType === null ||
       !pdfFile
       // formData.inclusions.some((inclusion) => inclusion.trim() === "")
@@ -428,7 +559,17 @@ const TripsPage = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
-      let pdfUrl = ""; 
+      let coverImageUrl = formData.coverImage;
+      if (coverImageFile) {
+        const coverImageRef = ref(
+          storage,
+          `trips/coverImages/${coverImageFile.name}`
+        );
+        await uploadBytes(coverImageRef, coverImageFile);
+        coverImageUrl = await getDownloadURL(coverImageRef);
+      }
+
+      let pdfUrl = "";
       if (pdfFile) {
         const pdfRef = ref(storage, `pdf/${pdfFile.name}`);
         await uploadBytes(pdfRef, pdfFile);
@@ -444,6 +585,7 @@ const TripsPage = () => {
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
+        coverImage: coverImageUrl,
         image: imageUrl,
         pdf: pdfUrl,
         tripType: selectedType,
@@ -472,7 +614,12 @@ const TripsPage = () => {
 
       setTripsData((prevData) => [
         ...prevData,
-        { id: docRef.id, ...formData, image: imageUrl },
+        {
+          id: docRef.id,
+          ...formData,
+          image: imageUrl,
+          coverImage: coverImageUrl,
+        },
       ]);
 
       toast({
@@ -503,6 +650,7 @@ const TripsPage = () => {
         name: "",
         price: "",
         overview: "",
+        coverImage: "",
         image: "",
         itinerary: [{ title: "", items: [""], images: [""] }],
         inclusions: [""],
@@ -587,8 +735,8 @@ const TripsPage = () => {
       name: trip.name,
       price: trip.price,
       overview: trip.overview,
+      coverImage: trip.coverImage,
       image: trip.image,
-      // inclusion: [],
       itinerary: [{ title: "", items: [""], images: [""] }],
       inclusions: [],
       exclusions: [],
@@ -616,8 +764,8 @@ const TripsPage = () => {
       name: "",
       price: "",
       overview: "",
+      coverImage: "",
       image: "",
-      // inclusion: [],
       itinerary: [{ title: "", items: [""], images: [""] }],
       inclusions: [],
       exclusions: [],
@@ -639,12 +787,26 @@ const TripsPage = () => {
   const handleUpdate = async () => {
     try {
       let imageUrl = formData.image;
+      let coverImageUrl = formData.coverImage; // Add cover image handling
+
+      // Handle main image upload
       if (imageFile) {
         const storageRef = ref(storage, `trips/${imageFile.name}`);
         await uploadBytes(storageRef, imageFile);
         imageUrl = await getDownloadURL(storageRef);
       }
 
+      // Handle cover image upload
+      if (coverImageFile) {
+        const coverImageRef = ref(
+          storage,
+          `trips/coverImages/${coverImageFile.name}`
+        );
+        await uploadBytes(coverImageRef, coverImageFile);
+        coverImageUrl = await getDownloadURL(coverImageRef);
+      }
+
+      // Update Firestore document
       await updateDoc(doc(firestore, "trips", editTripId!), {
         city: formData.city,
         description: formData.description,
@@ -658,6 +820,7 @@ const TripsPage = () => {
         priceList: formData.priceList,
         selectedDates: formData.selectedDates,
         image: imageUrl,
+        coverImage: coverImageUrl, // Update cover image URL
       });
 
       // Update local state with updated data
@@ -672,7 +835,6 @@ const TripsPage = () => {
                 name: formData.name,
                 price: formData.price,
                 overview: formData.overview,
-                // inclusion: formData.inclusion,
                 itinerary: formData.itinerary,
                 inclusions: formData.inclusions,
                 exclusions: formData.exclusions,
@@ -680,10 +842,12 @@ const TripsPage = () => {
                 priceList: formData.priceList,
                 selectedDates: formData.selectedDates,
                 image: imageUrl,
+                coverImage: coverImageUrl, // Update cover image URL
               }
             : item
         )
       );
+
       toast({
         description: (
           <div className="flex items-center gap-2">
@@ -693,6 +857,7 @@ const TripsPage = () => {
         ),
         className: "bg-primary text-white font-bold",
       });
+
       closeEditModal();
     } catch (error) {
       console.error("Error updating trip:", error);
@@ -901,6 +1066,22 @@ const TripsPage = () => {
                       rows={4}
                     />
 
+                    {/* Cover Input */}
+                    <div className="items-center">
+                      <label
+                        htmlFor="coverImageFile"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Select Cover Image
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleCoverImageChange}
+                        className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
+                      />
+                    </div>
+
                     {/* Image Input */}
                     <div className="items-center">
                       <label
@@ -915,13 +1096,9 @@ const TripsPage = () => {
                         onChange={handleFileChange}
                         className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                       />
-                      {/* {imageFile && (
-                        <span className="text-sm text-gray-500">
-                          {imageFile.name}
-                        </span>
-                      )} */}
                     </div>
 
+                    {/* PDF Input */}
                     <div className="mb-4">
                       <label
                         htmlFor="pdfFile"
@@ -940,30 +1117,7 @@ const TripsPage = () => {
                       />
                     </div>
 
-                    {/* <div className="mt-6">
-                      <h2 className="font-bold text-lg">Inclusion</h2>
-                      {formData.inclusion.map((inclusion, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 mt-2"
-                        >
-                          <Input
-                            type="text"
-                            placeholder={`Item ${index + 1}`}
-                            value={inclusion}
-                            onChange={(e) =>
-                              handleInclusionChange(index, e.target.value)
-                            }
-                          />
-                        </div>
-                      ))}
-                      <IoMdAddCircle
-                        size={30}
-                        onClick={addInclusion}
-                        className="cursor-pointer m-2"
-                      />
-                    </div> */}
-
+                    {/* Itinerary */}
                     <div className="mt-6">
                       <h2 className="font-bold text-lg">Itinerary</h2>
                       {formData.itinerary.map((section, sectionIndex) => (
@@ -971,18 +1125,27 @@ const TripsPage = () => {
                           key={sectionIndex}
                           className="flex flex-col gap-1 mt-5"
                         >
-                          <Input
-                            type="text"
-                            placeholder={`Title ${sectionIndex + 1}`}
-                            value={section.title}
-                            onChange={(e) =>
-                              handleItineraryChange(
-                                sectionIndex,
-                                "title",
-                                e.target.value
-                              )
-                            }
-                          />
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="text"
+                              placeholder={`Title ${sectionIndex + 1}`}
+                              value={section.title}
+                              onChange={(e) =>
+                                handleItineraryChange(
+                                  sectionIndex,
+                                  "title",
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <IoMdRemoveCircle
+                              size={24}
+                              onClick={() =>
+                                removeItinerarySection(sectionIndex)
+                              }
+                              className="cursor-pointer"
+                            />
+                          </div>
                           <input
                             type="file"
                             multiple
@@ -1018,6 +1181,13 @@ const TripsPage = () => {
                                     )
                                   }
                                 />
+                                <IoMdRemoveCircle
+                                  size={24}
+                                  onClick={() =>
+                                    removeItineraryItem(sectionIndex, itemIndex)
+                                  }
+                                  className="cursor-pointer"
+                                />
                               </div>
                             ))}
                             <IoMdAddCircle
@@ -1035,6 +1205,7 @@ const TripsPage = () => {
                       />
                     </div>
 
+                    {/* Inclusions */}
                     <div>
                       <h2 className="font-bold text-lg">Inclusions</h2>
                       {formData.inclusions.map((inclusion, index) => (
@@ -1049,6 +1220,12 @@ const TripsPage = () => {
                             onChange={(e) =>
                               handleInclusionsChange(index, e.target.value)
                             }
+                            className="flex-1"
+                          />
+                          <IoMdRemoveCircle
+                            size={24}
+                            onClick={() => handleRemoveInclusion(index)}
+                            className="cursor-pointer"
                           />
                         </div>
                       ))}
@@ -1059,6 +1236,7 @@ const TripsPage = () => {
                       />
                     </div>
 
+                    {/* Exclusions */}
                     <div>
                       <h2 className="font-bold text-lg">Exclusions</h2>
                       {formData.exclusions.map((exclusion, index) => (
@@ -1073,6 +1251,12 @@ const TripsPage = () => {
                             onChange={(e) =>
                               handleExclusionsChange(index, e.target.value)
                             }
+                            className="flex-1"
+                          />
+                          <IoMdRemoveCircle
+                            size={24}
+                            onClick={() => handleRemoveExclusion(index)}
+                            className="cursor-pointer"
                           />
                         </div>
                       ))}
@@ -1083,22 +1267,32 @@ const TripsPage = () => {
                       />
                     </div>
 
+                    {/* FAQs */}
                     <div>
                       <h2 className="font-bold text-lg">FAQs</h2>
                       {formData.faqs.map((faq, index) => (
                         <div key={index} className="flex flex-col gap-1 mt-5">
-                          <Input
-                            type="text"
-                            placeholder={`Question ${index + 1}`}
-                            value={faq.question}
-                            onChange={(e) =>
-                              handleFAQsChange(
-                                index,
-                                "question",
-                                e.target.value
-                              )
-                            }
-                          />
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="text"
+                              placeholder={`Question ${index + 1}`}
+                              value={faq.question}
+                              onChange={(e) =>
+                                handleFAQsChange(
+                                  index,
+                                  "question",
+                                  e.target.value
+                                )
+                              }
+                            />
+                            {formData.faqs.length > 1 && (
+                              <IoMdRemoveCircle
+                                size={24}
+                                onClick={() => removeFAQs(index)}
+                                className="cursor-pointer"
+                              />
+                            )}
+                          </div>
                           <Input
                             type="text"
                             placeholder={`Answer ${index + 1}`}
@@ -1116,6 +1310,7 @@ const TripsPage = () => {
                       />
                     </div>
 
+                    {/* Trip Type */}
                     <Select onValueChange={setSelectedType}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select a type" />

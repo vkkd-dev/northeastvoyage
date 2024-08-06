@@ -11,6 +11,8 @@ interface Query {
   name: string;
   number: string;
   email: string;
+  place: string;
+  message: string;
   people: string;
   month: string;
   type: string;
@@ -40,6 +42,11 @@ const EnquiryForm = () => {
       <SideNavbar />
       <div className="flex flex-col gap-5 w-full p-8">
         <PageTitle title="Users Enquiry" />
+        {queries.length === 0 && (
+          <h2 className="flex justify-center items-center min-h-[90vh]">
+            No responses yet
+          </h2>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:p-5">
           {queries.map((query) => (
             <div
@@ -62,6 +69,10 @@ const EnquiryForm = () => {
                   <span className="text-slate-500">Email:</span> {query.email}
                 </p>
                 <p>
+                  <span className="text-slate-500">Place:</span>{" "}
+                  {query.place || "N/A"}
+                </p>
+                <p>
                   <span className="text-slate-500">People: </span>{" "}
                   {query.people}
                 </p>
@@ -70,6 +81,10 @@ const EnquiryForm = () => {
                 </p>
                 <p>
                   <span className="text-slate-500">Type:</span> {query.type}
+                </p>
+                <p>
+                  <span className="text-slate-500">Message:</span>{" "}
+                  {query.message}
                 </p>
               </div>
             </div>

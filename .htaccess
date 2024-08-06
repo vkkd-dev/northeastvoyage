@@ -1,3 +1,5 @@
-<IfModule mod_rewrite.c>
+<!-- <IfModule mod_rewrite.c>
     RewriteEngine On RewriteBase / RewriteRule ^index\.html$ - [L] RewriteCond %{REQUEST_FILENAME} !-f RewriteCond %{REQUEST_FILENAME} !-d RewriteRule . /index.html [L]
-</IfModule>
+</IfModule> -->
+RewriteEngine On # Serve static assets directly if they exist RewriteCond %{REQUEST_FILENAME} -f [OR] RewriteCond %{REQUEST_FILENAME} -d RewriteRule ^ - [L] # Handle /admin route # RewriteCond %{REQUEST_URI} ^/admin$ # RewriteRule ^ /admin/index.html
+[L] # Redirect all other requests to index.html RewriteRule ^ index.html [L]
