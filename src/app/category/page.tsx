@@ -104,11 +104,11 @@ const CategoryPage = () => {
   }
 
   return (
-    <div>
+    <>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
 
-      <div className="px-5 lg:px-32 pt-32 lg:mt-4">
+      <div className="px-5 lg:px-32 pt-32">
         {/* <PageTitle title={`Category - ${getCategoryTitleById(id!)}`} /> */}
         <h1 className={"text-2xl font-semibold"}>
           Category -{" "}
@@ -130,7 +130,7 @@ const CategoryPage = () => {
       </div>
 
       <Footer />
-    </div>
+    </>
   );
 };
 

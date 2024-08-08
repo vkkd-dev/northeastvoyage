@@ -9,10 +9,10 @@ import Reviews from "@/components/Reviews";
 import UpcomingTrip from "@/components/UpcomingTrip";
 import WhyUs from "@/components/WhyUs";
 import Image from "next/image";
-import TrekkingTrips from "../components/TrekkingTrips";
-import SummerTrips from "../components/SummerTrips";
-import { useState } from "react";
+import TripsSub1 from "../components/TripsSub1";
+import TripsSub2 from "../components/TripsSub2";
 import PopupAlert from "@/components/PopupAlert";
+import { useState } from "react";
 
 function HomePage() {
   const [nav, setNav] = useState(false);
@@ -40,9 +40,9 @@ function HomePage() {
       <Destinations />
       <UpcomingTrip />
       <Reviews />
-      <TrekkingTrips />
+      <TripsSub1 />
       <Cover />
-      <SummerTrips />
+      <TripsSub2 />
       <WhyUs />
       <Footer />
     </div>

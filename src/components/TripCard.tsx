@@ -35,14 +35,14 @@ function TripCard({ trip }: TripCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
         <div className="absolute bottom-0 w-full">
-          <h1 className="text-white text-sm lg:text-2xl font-bold m-4">
+          <h1 className="text-white text-sm lg:text-2xl font-bold m-3 lg:m-4">
             {trip?.name}
           </h1>
-          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm mt-2 font-semibold ml-4 mb-2">
+          <h1 className="flex items-center gap-1 lg:gap-2 text-white text-[9px] lg:text-sm mt-2 font-semibold ml-3 lg:ml-4 mb-2">
             <FaClock />
             {trip?.duration}
           </h1>
-          <h1 className="flex items-center gap-2 text-white text-[10px] lg:text-sm font-semibold ml-4 mb-4">
+          <h1 className="flex items-center gap-1 lg:gap-2 text-white text-[9px] lg:text-sm font-semibold ml-3 lg:ml-4 mb-4">
             <FaLocationDot />
             {trip?.city}
           </h1>

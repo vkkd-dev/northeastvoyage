@@ -228,11 +228,8 @@ const TripPage = () => {
 
   return (
     <>
-      {/* {console.log("tripData", tripData)} */}
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-
-      {console.log("tripData", tripData)}
 
       <div className="flex flex-col h-[37vh] lg:h-[66vh]">
         <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
@@ -240,7 +237,7 @@ const TripPage = () => {
             src={tripData.image}
             alt={tripData.name}
             layout="fill"
-            objectFit="cover"
+            objectFit="none"
             priority
           />
         </div>
@@ -444,7 +441,7 @@ const TripPage = () => {
         {/* Customize */}
         {tripData.tripType === "customize" && (
           <div className="mt-8">
-            <h2 className="font-bold text-lg lg:text-xl mb-4">Price List</h2>
+            <h2 className="font-bold text-lg lg:text-xl mb-4">Price List (Per person)</h2>
             <table className="min-w-full border-collapse border-primary border-2 text-sm rounded-sm">
               <thead>
                 <tr className="text-center">

@@ -85,7 +85,9 @@ const TripsSub1 = () => {
       const querySnapshot = await getDocs(trekkingTripsCollection);
       const fetchedTrips: Trip[] = [];
       querySnapshot.forEach((doc) => {
-        fetchedTrips.push(doc.data() as Trip);
+        if (doc.id !== "trip_title") {
+          fetchedTrips.push(doc.data() as Trip);
+        }
       });
       setSelectedTrips(fetchedTrips);
     };

@@ -9,7 +9,9 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { BiSolidEditAlt } from "react-icons/bi";
@@ -216,7 +218,7 @@ const TripsPage = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
@@ -225,6 +227,30 @@ const TripsPage = () => {
         setPreviewImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "image" | "coverImage"
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (type === "image") {
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else if (type === "coverImage") {
+        setCoverImageFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setCoverImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -677,9 +703,31 @@ const TripsPage = () => {
 
   const handleDelete = async () => {
     if (!deleteTripId) return;
+
+    const collections = ["trips_sub1", "trips_sub2"];
+
     try {
+      // Delete from the main 'trips' collection
       await deleteDoc(doc(firestore, "trips", deleteTripId));
+
+      // Loop through each collection and delete documents with the matching ID
+      await Promise.all(
+        collections.map(async (collectionName) => {
+          const collectionRef = collection(firestore, collectionName);
+          const querySnapshot = await getDocs(
+            query(collectionRef, where("__name__", "==", deleteTripId))
+          );
+
+          const deletePromises = querySnapshot.docs.map((doc) =>
+            deleteDoc(doc.ref)
+          );
+          await Promise.all(deletePromises);
+        })
+      );
+
+      // Update local state to reflect the deletion
       setTripsData(tripsData.filter((trip) => trip.id !== deleteTripId));
+
       toast({
         description: (
           <div className="flex items-center gap-2">
@@ -751,7 +799,8 @@ const TripsPage = () => {
       ],
       selectedDates: [],
     });
-    setPreviewImage(trip.image); // Set initial preview image
+    setPreviewImage(trip.image);
+    setCoverImagePreview(trip.coverImage);
     setEditModalOpen(true);
   };
 
@@ -781,6 +830,7 @@ const TripsPage = () => {
       selectedDates: [],
     });
     setPreviewImage(null);
+    setCoverImagePreview(null);
     setEditModalOpen(false);
   };
 
@@ -1093,7 +1143,7 @@ const TripsPage = () => {
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={handleFileChange}
+                        onChange={handleImageChange}
                         className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                       />
                     </div>
@@ -1505,7 +1555,7 @@ const TripsPage = () => {
           {/* Edit Modal */}
           {editModalOpen && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-              <div className="bg-white p-4 lg:p-10 m-4 rounded w-full lg:w-[50%]">
+              <div className="bg-white p-4 lg:p-10 m-4 rounded w-full lg:w-[50%] max-h-[90vh] overflow-y-auto">
                 <h2 className="text-xl font-bold mb-4">Edit Trip</h2>
                 <div className="flex flex-col gap-4">
                   <div className="grid w-full items-center gap-1.5">
@@ -1554,7 +1604,7 @@ const TripsPage = () => {
                     />
                   </div>
                   <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="description" className="font-semibold">
+                    <Label htmlFor="duration" className="font-semibold">
                       Duration
                     </Label>
                     <Input
@@ -1581,40 +1631,61 @@ const TripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
-
                   <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="description" className="font-semibold">
+                    <Label htmlFor="overview" className="font-semibold">
                       Overview
                     </Label>
                     <textarea
-                      placeholder="Description"
+                      placeholder="Overview"
                       value={formData.overview}
                       onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          overview: e.target.value,
-                        })
+                        setFormData({ ...formData, overview: e.target.value })
                       }
                       className="px-2 py-1 border border-gray-300 rounded"
                       rows={4}
                     />
                   </div>
 
-                  <div className="flex gap-2 items-center">
+                  <div className="grid w-full items-center gap-1.5">
+                    <Label htmlFor="coverImage" className="font-semibold">
+                      Cover Image
+                    </Label>
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={handleFileChange}
+                      onChange={(e) => handleFileChange(e, "coverImage")}
+                      className="rounded"
+                    />
+                    {coverImagePreview && (
+                      <div className="relative w-16 h-16 mt-2">
+                        <Image
+                          src={coverImagePreview}
+                          alt="Cover Image Preview"
+                          width={100}
+                          height={50}
+                          className="rounded"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid w-full items-center gap-1.5 mt-4">
+                    <Label htmlFor="image" className="font-semibold">
+                      Image
+                    </Label>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileChange(e, "image")}
                       className="rounded"
                     />
                     {previewImage && (
-                      <div className="relative w-16 h-16">
+                      <div className="relative w-16 h-16 mt-2">
                         <Image
                           src={previewImage}
                           alt="Preview"
                           width={100}
                           height={50}
-                          // objectFit="cover"
                           className="rounded"
                         />
                       </div>
