@@ -44,11 +44,11 @@ const PopupAlert = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const isVisited = localStorage.getItem("isVisited");
-      if (!isVisited) {
-        setIsOpen(true);
-        localStorage.setItem("isVisited", "true");
-      }
+      // const isVisited = localStorage.getItem("isVisited");
+      // if (!isVisited) {
+      setIsOpen(true);
+      // localStorage.setItem("isVisited", "true");
+      // }
     }, 30000); // 30 seconds delay
 
     return () => clearTimeout(timer); // Cleanup timeout on component unmount
