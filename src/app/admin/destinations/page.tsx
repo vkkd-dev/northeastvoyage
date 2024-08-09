@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
@@ -9,6 +8,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  Timestamp,
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -20,10 +20,10 @@ import { IoIosRemoveCircle } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { firestore, storage } from "@/app/firebase/firebase-cofig";
 import Image from "next/image";
 import ConfirmDialog from "@/components/ConfirmDialog";
-import { Label } from "@/components/ui/label";
 
 interface Destination {
   id: string;
@@ -31,6 +31,7 @@ interface Destination {
   description: string;
   cover: string;
   img: string;
+  createdAt: Timestamp;
 }
 
 const ContentPage = () => {
@@ -40,6 +41,7 @@ const ContentPage = () => {
     description: "",
     cover: "",
     img: "",
+    createdAt: new Date(),
   });
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -109,6 +111,7 @@ const ContentPage = () => {
       description: destination.description,
       cover: destination.cover,
       img: destination.img,
+      createdAt: destination.createdAt.toDate(),
     });
     setPreviewImage(destination.img); // Set initial preview image
     setEditModalOpen(true);
@@ -116,7 +119,13 @@ const ContentPage = () => {
 
   const closeEditModal = () => {
     setEditDestinationId(null);
-    setFormData({ alt: "", description: "", cover: "", img: "" });
+    setFormData({
+      alt: "",
+      description: "",
+      cover: "",
+      img: "",
+      createdAt: new Date(),
+    });
     setPreviewImage(null);
     setEditModalOpen(false);
   };
@@ -161,13 +170,26 @@ const ContentPage = () => {
         description: formData.description,
         cover: coverUrl,
         img: imgUrl,
+        createdAt: Timestamp.now(),
       });
 
       setDestinationData((prevData) => [
         ...prevData,
-        { id: docRef.id, ...formData, cover: coverUrl, img: imgUrl },
+        {
+          id: docRef.id,
+          ...formData,
+          cover: coverUrl,
+          img: imgUrl,
+          createdAt: Timestamp.now(),
+        },
       ]);
-      setFormData({ alt: "", description: "", cover: "", img: "" });
+      setFormData({
+        alt: "",
+        description: "",
+        cover: "",
+        img: "",
+        createdAt: new Date(),
+      });
       setCoverFile(null);
       setImageFile(null);
       setCoverPreview(null);
@@ -257,6 +279,7 @@ const ContentPage = () => {
         description: formData.description,
         cover: coverUrl,
         img: imgUrl,
+        createdAt: Timestamp.fromDate(formData.createdAt),
       });
 
       // Update local state with updated data
@@ -269,6 +292,7 @@ const ContentPage = () => {
                 description: formData.description,
                 cover: coverUrl,
                 img: imgUrl,
+                createdAt: Timestamp.fromDate(formData.createdAt),
               }
             : item
         )
@@ -457,7 +481,7 @@ const ContentPage = () => {
           {/* Edit Modal */}
           {editModalOpen && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
-              <div className="bg-white p-4 rounded shadow-lg w-96">
+              <div className="bg-white p-4 rounded shadow-lg w-96 max-h-[80vh] overflow-y-auto">
                 <h2 className="text-xl font-bold mb-4">Edit Destination</h2>
                 <form encType="multipart/form-data">
                   <div className="mb-4">
@@ -503,8 +527,15 @@ const ContentPage = () => {
                         </div>
                       </div>
                     )}
+                    <label
+                      htmlFor="coverImage"
+                      className="block font-semibold mb-1"
+                    >
+                      Upload Cover Image
+                    </label>
                     <input
                       type="file"
+                      id="coverImage"
                       accept="image/*"
                       onChange={(e) => handleFileChange(e, "cover")}
                       className="py-1 rounded"
@@ -528,14 +559,38 @@ const ContentPage = () => {
                         </div>
                       </div>
                     )}
+                    <label htmlFor="image" className="block font-semibold mb-1">
+                      Upload Image
+                    </label>
                     <input
                       type="file"
+                      id="image"
                       accept="image/*"
                       onChange={(e) => handleFileChange(e, "image")}
                       className="py-1 rounded"
                     />
                   </div>
-                  <div className="flex justify-between">
+                  <div className="mb-4">
+                    <label
+                      htmlFor="createdAt"
+                      className="block font-semibold mb-1"
+                    >
+                      Created At
+                    </label>
+                    <input
+                      type="date"
+                      id="createdAt"
+                      value={formData.createdAt.toISOString().split("T")[0]} // Format the date value
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          createdAt: new Date(e.target.value),
+                        })
+                      }
+                      className="w-full px-2 py-1 border border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="flex justify-between mt-4">
                     <button
                       type="button"
                       onClick={closeEditModal}

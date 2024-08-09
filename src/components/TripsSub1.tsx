@@ -17,11 +17,8 @@ const TripsSub1 = () => {
       const querySnapshot = await getDocs(trekkingTripsCollection);
       const fetchedTrips: Trip[] = [];
       querySnapshot.forEach((doc) => {
-        if (doc.id !== "trip_title") {
-          fetchedTrips.push(doc.data() as Trip);
-        }
+        fetchedTrips.push(doc.data() as Trip);
       });
-
       setSelectedTrips(fetchedTrips);
       setIsLoading(false);
     };
@@ -31,7 +28,9 @@ const TripsSub1 = () => {
 
   useEffect(() => {
     const fetchTitle = async () => {
-      const titleDoc = await getDoc(doc(firestore, "trips_sub1", "trip_title"));
+      const titleDoc = await getDoc(
+        doc(firestore, "trips_sub1_title", "trip_title")
+      );
       if (titleDoc.exists()) {
         setTitle(titleDoc.data().title);
       }

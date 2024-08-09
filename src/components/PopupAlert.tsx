@@ -49,7 +49,7 @@ const PopupAlert = () => {
         setIsOpen(true);
         localStorage.setItem("isVisited", "true");
       }
-    }, 40000); // 40 seconds delay
+    }, 30000); // 30 seconds delay
 
     return () => clearTimeout(timer); // Cleanup timeout on component unmount
   }, []);

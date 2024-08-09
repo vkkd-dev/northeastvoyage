@@ -133,7 +133,7 @@ const AboutPage = () => {
             src={tripData.img}
             alt={tripData.alt}
             layout="fill"
-            objectFit="center"
+            objectFit="cover"
             priority
           />
         </div>

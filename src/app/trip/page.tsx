@@ -68,7 +68,6 @@ const TripPage = () => {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const openNavbar = () => setNav(true);
   const closeNavbar = () => setNav(false);
-
   const { toast } = useToast();
 
   useEffect(() => {
@@ -237,7 +236,7 @@ const TripPage = () => {
             src={tripData.image}
             alt={tripData.name}
             layout="fill"
-            objectFit="none"
+            objectFit={!isDesktop ? "cover" : "none"}
             priority
           />
         </div>
@@ -441,7 +440,9 @@ const TripPage = () => {
         {/* Customize */}
         {tripData.tripType === "customize" && (
           <div className="mt-8">
-            <h2 className="font-bold text-lg lg:text-xl mb-4">Price List (Per person)</h2>
+            <h2 className="font-bold text-lg lg:text-xl mb-4">
+              Price List (Per person)
+            </h2>
             <table className="min-w-full border-collapse border-primary border-2 text-sm rounded-sm">
               <thead>
                 <tr className="text-center">
@@ -472,10 +473,10 @@ const TripPage = () => {
                       {priceItem.people}
                     </td>
                     <td className="border-2 p-2 border-primary">
-                      {priceItem.standard}
+                      {formatPrice(priceItem.standard)}
                     </td>
                     <td className="border-2 p-2 border-primary">
-                      {priceItem.deluxe}
+                      {formatPrice(priceItem.deluxe)}
                     </td>
                   </tr>
                 ))}

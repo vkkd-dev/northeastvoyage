@@ -28,7 +28,9 @@ function TripsSub2() {
 
   useEffect(() => {
     const fetchTitle = async () => {
-      const titleDoc = await getDoc(doc(firestore, "trips_sub2", "trip_title"));
+      const titleDoc = await getDoc(
+        doc(firestore, "trips_sub2_title", "trip_title")
+      );
       if (titleDoc.exists()) {
         setTitle(titleDoc.data().title);
       }

@@ -85,9 +85,7 @@ const TripsSub2 = () => {
       const querySnapshot = await getDocs(trekkingTripsCollection);
       const fetchedTrips: Trip[] = [];
       querySnapshot.forEach((doc) => {
-        if (doc.id !== "trip_title") {
-          fetchedTrips.push(doc.data() as Trip);
-        }
+        fetchedTrips.push(doc.data() as Trip);
       });
       setSelectedTrips(fetchedTrips);
     };
@@ -130,7 +128,9 @@ const TripsSub2 = () => {
 
   useEffect(() => {
     const fetchTitle = async () => {
-      const titleDoc = await getDoc(doc(firestore, "trips_sub2", "trip_title"));
+      const titleDoc = await getDoc(
+        doc(firestore, "trips_sub2_title", "trip_title")
+      );
       if (titleDoc.exists()) {
         setTitle(titleDoc.data().title);
       }
@@ -173,7 +173,7 @@ const TripsSub2 = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await setDoc(doc(firestore, "trips_sub2", "trip_title"), { title });
+      await setDoc(doc(firestore, "trips_sub2_title", "trip_title"), { title });
       toast({
         description: (
           <div className="flex items-center gap-2">

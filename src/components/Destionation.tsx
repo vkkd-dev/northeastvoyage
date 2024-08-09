@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { firestore } from "@/app/firebase/firebase-cofig";
 import { Skeleton } from "./ui/skeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 interface Destination {
@@ -13,6 +12,7 @@ interface Destination {
   description: string;
   cover: string;
   img: string;
+  createdAt: Timestamp;
 }
 
 const responsive = {
@@ -50,6 +50,14 @@ const Destination: React.FC = () => {
           id: doc.id,
           ...doc.data(),
         })) as Destination[];
+
+        // Sort destinations by the 'createdAt' field in ascending order
+        destinations.sort((a, b) => {
+          const dateA = a.createdAt?.toDate() ?? new Date(0); // Default to epoch if no date
+          const dateB = b.createdAt?.toDate() ?? new Date(0);
+          return dateA.getTime() - dateB.getTime();
+        });
+
         console.log("destinations:", destinations);
         setDestinationData(destinations);
       } catch (error) {
@@ -101,7 +109,7 @@ const Destination: React.FC = () => {
 
       {!isLoading && destinationData.length > 0 && (
         <div className="flex overflow-x-auto no-scrollbar space-x-4 lg:space-x-8 p-4 lg:px-36">
-          {destinationData.map((destination, index) => (
+          {destinationData.reverse().map((destination, index) => (
             <div
               key={index}
               className="flex-shrink-0 w-[22%] lg:w-[10%] cursor-pointer"
@@ -159,7 +167,6 @@ const Destination: React.FC = () => {
         //   ))}
         // </Carousel>
       )}
-      {/* <div className="block sm:hidden mt-4">{renderMobileView()}</div> */}
     </>
   );
 };

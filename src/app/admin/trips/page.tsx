@@ -131,7 +131,6 @@ const TripsPage = () => {
   const [deleteTripId, setDeleteTripId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
-
   const { toast } = useToast();
 
   useEffect(() => {
@@ -554,7 +553,7 @@ const TripsPage = () => {
       selectedCategories.length === 0 ||
       selectedDestination === "" ||
       formData.city === "" ||
-      formData.description === "" ||
+      // formData.description === "" ||
       formData.duration === "" ||
       formData.name === "" ||
       formData.price === "" ||
@@ -1059,7 +1058,7 @@ const TripsPage = () => {
                     />
 
                     {/* Description Textarea */}
-                    <textarea
+                    {/* <textarea
                       placeholder="Description"
                       value={formData.description}
                       onChange={(e) =>
@@ -1070,7 +1069,7 @@ const TripsPage = () => {
                       }
                       className="px-2 py-1 border border-gray-300 rounded"
                       rows={4}
-                    />
+                    /> */}
 
                     {/* Duration Input */}
                     <input
@@ -1530,7 +1529,7 @@ const TripsPage = () => {
                     <h2 className="text-sm font-semibold flex items-center gap-1">
                       <RiPriceTag3Line />₹{trip.price}
                     </h2>
-                    <p>{truncateText(trip.description)}</p>
+                    <p>{truncateText(trip.overview)}</p>
                   </div>
                   <div className="flex gap-2 mt-auto">
                     <button
@@ -1586,7 +1585,7 @@ const TripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
-                  <div className="grid w-full items-center gap-1.5">
+                  {/* <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="description" className="font-semibold">
                       Description
                     </Label>
@@ -1602,7 +1601,7 @@ const TripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                       rows={4}
                     />
-                  </div>
+                  </div> */}
                   <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="duration" className="font-semibold">
                       Duration
