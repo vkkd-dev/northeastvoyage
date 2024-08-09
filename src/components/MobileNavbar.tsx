@@ -89,7 +89,7 @@ function MobileNavbar({ nav, closeNav }: Pros) {
       >
         <XMarkIcon className="w-[1.5rem] h-[1.5rem] text-black font-bold" />
       </div>
-      <div className="w-[60vw] h-[100vh] flex flex-col">
+      <div className="w-[60vw] h-[100vh] flex flex-col overflow-hidden">
         <div className="flex flex-col pt-20 overflow-y-auto max-h-[calc(100vh-4rem)]">
           <div className="nav-links-mobile-border">
             <div
@@ -118,7 +118,7 @@ function MobileNavbar({ nav, closeNav }: Pros) {
               </span>
             </div>
             {isDestinationsExpanded && (
-              <div className="mt-5 max-h-[calc(100vh-10rem)] overflow-y-auto">
+              <div className="mt-5 max-h-[calc(100vh-10rem)] overflow-y-auto overflow-x-hidden">
                 {destinations.map((destination) => (
                   <div
                     key={destination.id}
@@ -151,7 +151,7 @@ function MobileNavbar({ nav, closeNav }: Pros) {
               </span>
             </div>
             {isCategoriesExpanded && (
-              <div className="mt-5 max-h-[calc(100vh-10rem)] overflow-y-auto">
+              <div className="mt-5 max-h-[calc(100vh-10rem)] overflow-y-auto overflow-x-hidden">
                 {categories.map((category) => (
                   <div
                     key={category.id}
