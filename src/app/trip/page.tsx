@@ -230,15 +230,20 @@ const TripPage = () => {
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
 
-      <div className="flex flex-col h-[37vh] lg:h-[66vh]">
-        <div className="relative w-full h-[75vh] lg:h-full overflow-hidden">
-          <Image
+      <div className="flex flex-col h-[45vh] lg:h-[75vh]">
+        <div className="relative w-full h-full overflow-hidden">
+          <div
+            id="hero"
+            className="bg-cover bg-center bg-no-repeat h-full w-full z-10"
+            style={{ backgroundImage: `url(${tripData.image})` }}
+          />
+          {/* <Image
             src={tripData.image}
             alt={tripData.name}
             layout="fill"
             objectFit={!isDesktop ? "cover" : "none"}
             priority
-          />
+          /> */}
         </div>
       </div>
 

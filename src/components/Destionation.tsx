@@ -109,7 +109,7 @@ const Destination: React.FC = () => {
 
       {!isLoading && destinationData.length > 0 && (
         <div className="flex overflow-x-auto no-scrollbar space-x-4 lg:space-x-8 p-4 lg:px-36">
-          {destinationData.reverse().map((destination, index) => (
+          {destinationData.map((destination, index) => (
             <div
               key={index}
               className="flex-shrink-0 w-[22%] lg:w-[10%] cursor-pointer"

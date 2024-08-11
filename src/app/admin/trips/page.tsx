@@ -549,6 +549,23 @@ const TripsPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate inclusions
+    const areInclusionsValid =
+      formData.inclusions.length > 0 &&
+      formData.inclusions.every((inclusion) => inclusion.trim() !== "");
+
+    // Validate exclusions
+    const areExclusionsValid =
+      formData.exclusions.length > 0 &&
+      formData.exclusions.every((exclusion) => exclusion.trim() !== "");
+
+    // Validate FAQs
+    const areFaqsValid =
+      formData.faqs.length > 0 &&
+      formData.faqs.every(
+        (faq) => faq.question.trim() !== "" && faq.answer.trim() !== ""
+      );
     if (
       selectedCategories.length === 0 ||
       selectedDestination === "" ||
@@ -561,7 +578,15 @@ const TripsPage = () => {
       imageFile === null ||
       coverImageFile === null ||
       selectedType === null ||
-      !pdfFile
+      !pdfFile ||
+      areInclusionsValid ||
+      areExclusionsValid ||
+      areFaqsValid ||
+      (selectedType === "public" && formData.selectedDates.length === 0) ||
+      (selectedType === "customize" &&
+        formData.priceList.every(
+          (item) => item.standard === "" && item.deluxe === ""
+        ))
       // formData.inclusions.some((inclusion) => inclusion.trim() === "")
     ) {
       toast({

@@ -129,13 +129,18 @@ const AboutPage = () => {
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
       <div className="flex flex-col h-[50vh] lg:h-[75vh]">
         <div className="relative w-full h-full lg:h-full overflow-hidden">
-          <Image
+          <div
+            id="hero"
+            className="bg-cover bg-center bg-no-repeat h-full w-full z-10"
+            style={{ backgroundImage: `url(${tripData.img})` }}
+          />
+          {/* <Image
             src={tripData.img}
             alt={tripData.alt}
             layout="fill"
             objectFit="cover"
             priority
-          />
+          /> */}
         </div>
       </div>
 

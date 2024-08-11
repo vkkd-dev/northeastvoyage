@@ -30,7 +30,7 @@ function TripCard({ trip }: TripCardProps) {
         <Image
           src={trip?.coverImage}
           alt={trip?.name}
-          className="transform object-cover transition-all duration-700 scale-100 hover:scale-125"
+          className="transform object-cover object-top transition-all duration-700 scale-100 hover:scale-125"
           fill
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
