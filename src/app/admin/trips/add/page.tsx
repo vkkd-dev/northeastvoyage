@@ -1,5 +1,8 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import PageTitle from "@/components/PageTitle";
+import SideNavbar from "@/components/SideNavbar";
 import {
   addDoc,
   collection,
@@ -19,25 +22,42 @@ import { MdErrorOutline } from "react-icons/md";
 import { RiPriceTag3Line } from "react-icons/ri";
 import { IoMdAddCircle } from "react-icons/io";
 import { IoIosRemoveCircle } from "react-icons/io";
+import { IoMdRemoveCircle } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import { firestore, storage } from "@/app/firebase/firebase-cofig";
-import { useRouter } from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Image from "next/image";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   format,
+  isAfter,
+  isBefore,
   startOfMonth,
   endOfMonth,
   startOfYear,
   endOfYear,
   getMonth,
 } from "date-fns";
-import ConfirmDialog from "@/components/ConfirmDialog";
-import SideNavbar from "@/components/SideNavbar";
-import PageTitle from "@/components/PageTitle";
-import Image from "next/image";
-import Link from "next/link";
-import "react-datepicker/dist/react-datepicker.css";
+import { useRouter } from "next/navigation";
 
 interface Category {
   id: string;
@@ -69,7 +89,7 @@ interface Trip {
   selectedDates: any;
 }
 
-const TripsPage = () => {
+const AddTripsPage = () => {
   const [tripsData, setTripsData] = useState<Trip[]>([]);
   const [formData, setFormData] = useState({
     city: "",
@@ -532,56 +552,215 @@ const TripsPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate inclusions
-    const areInclusionsValid =
-      formData.inclusions.length > 0 &&
-      formData.inclusions.every((inclusion) => inclusion.trim() !== "");
-
-    // Validate exclusions
-    const areExclusionsValid =
-      formData.exclusions.length > 0 &&
-      formData.exclusions.every((exclusion) => exclusion.trim() !== "");
-
-    // Validate FAQs
-    const areFaqsValid =
-      formData.faqs.length > 0 &&
-      formData.faqs.every(
-        (faq) => faq.question.trim() !== "" && faq.answer.trim() !== ""
-      );
-    if (
-      selectedCategories.length === 0 ||
-      selectedDestination === "" ||
-      formData.city === "" ||
-      // formData.description === "" ||
-      formData.duration === "" ||
-      formData.name === "" ||
-      formData.price === "" ||
-      formData.overview === "" ||
-      imageFile === null ||
-      coverImageFile === null ||
-      selectedType === null ||
-      !pdfFile ||
-      areInclusionsValid ||
-      areExclusionsValid ||
-      areFaqsValid ||
-      (selectedType === "public" && formData.selectedDates.length === 0) ||
-      (selectedType === "customize" &&
-        formData.priceList.every(
-          (item) => item.standard === "" && item.deluxe === ""
-        ))
-      // formData.inclusions.some((inclusion) => inclusion.trim() === "")
-    ) {
+    if (selectedDestination === "") {
       toast({
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Fill all the fields</p>
+            <p>Select a destination</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
       });
       return;
     }
+
+    if (formData.name === "") {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Name can not be empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (formData.duration === "") {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Duration can not be empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (formData.city === "") {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>City can not be empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (formData.price === "") {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Price can not be empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (formData.overview === "") {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Overview can not empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (imageFile === null) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Image not found</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+    if (coverImageFile === null) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Pdf file not found</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+    if (!pdfFile) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Cover image not found</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (formData.inclusions.some((inclusion) => inclusion.trim() === "")) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Inclusions can not be empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (formData.exclusions.some((exclusion) => exclusion.trim() === "")) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Inclusions can not be empty</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (
+      selectedType === null ||
+      (selectedType === "public" && formData.selectedDates.length === 0) ||
+      (selectedType === "customize" &&
+        formData.priceList.every(
+          (item) => item.standard === "" && item.deluxe === ""
+        ))
+    ) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Please complete all the inputs of trip type</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    if (selectedCategories.length === 0) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Select atleast one category</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
+    // if (
+    //   selectedCategories.length === 0 ||
+    //   selectedDestination === "" ||
+    //   formData.city === "" ||
+    //   formData.description === "" ||
+    //   formData.duration === "" ||
+    //   formData.name === "" ||
+    //   formData.price === "" ||
+    //   formData.overview === "" ||
+    //   imageFile === null ||
+    //   coverImageFile === null ||
+    //   selectedType === null ||
+    //   !pdfFile ||
+    //   areInclusionsValid ||
+    //   areExclusionsValid ||
+    //   areFaqsValid ||
+    //   (selectedType === "public" && formData.selectedDates.length === 0) ||
+    //   (selectedType === "customize" &&
+    //     formData.priceList.every(
+    //       (item) => item.standard === "" && item.deluxe === ""
+    //     )) ||
+    //   formData.inclusions.some((inclusion) => inclusion.trim() === "")
+    // ) {
+    //   toast({
+    //     description: (
+    //       <div className="flex items-center gap-2">
+    //         <MdErrorOutline size={20} />
+    //         <p>Fill all the fields</p>
+    //       </div>
+    //     ),
+    //     className: "bg-primary text-white font-bold",
+    //   });
+    //   return;
+    // }
+
     try {
       setIsLoading(true);
       let imageUrl = formData.image;
@@ -620,21 +799,12 @@ const TripsPage = () => {
         coverImage: coverImageUrl,
         image: imageUrl,
         pdf: pdfUrl,
+        inclusions: formData.inclusions,
+        exclusions: formData.exclusions,
+        itinerary: formData.itinerary,
+        faqs: formData.faqs,
         tripType: selectedType,
       };
-
-      if (formData.inclusions && formData.inclusions.length > 0) {
-        tripData.inclusions = formData.inclusions;
-      }
-      if (formData.exclusions && formData.exclusions.length > 0) {
-        tripData.exclusions = formData.exclusions;
-      }
-      if (formData.itinerary && formData.itinerary.length > 0) {
-        tripData.itinerary = formData.itinerary;
-      }
-      if (formData.faqs && formData.faqs.length > 0) {
-        tripData.faqs = formData.faqs;
-      }
 
       if (selectedType === "public") {
         tripData.selectedDates = formData.selectedDates;
@@ -663,6 +833,8 @@ const TripsPage = () => {
         ),
         className: "bg-primary text-white font-bold",
       });
+
+      router.push(`/admin/trips`);
     } catch (error) {
       console.error("Error adding trip:", error);
       toast({
@@ -977,120 +1149,50 @@ const TripsPage = () => {
     <div className={"min-h-screen w-full bg-white text-black flex "}>
       <SideNavbar />
       <div className="flex flex-col gap-5 w-full p-8">
-        <PageTitle title="Trips - Main" />
+        <PageTitle title="Add Trip" />
         <div className="container mx-auto p-4">
-          <Link
-            href={"/admin/trips/add"}
-            className="flex justify-between items-center border border-gray-300 px-10 py-6 my-5 rounded-lg cursor-pointer"
+          {/* Form to add new trip */}
+          <form
+            onSubmit={handleSubmit}
+            className="mb-4 border px-5 lg:px-10 py-3 rounded-lg"
+            encType="multipart/form-data"
           >
-            <span className="font-bold text-lg">Add New Trip</span>
-            <IoMdAddCircle size={30} />
-          </Link>
+            <div className="flex flex-col gap-4 mb-4 p-2">
+              <h2 className="font-bold text-lg py-3">Trips Details</h2>
 
-          {isFetching && (
-            <div className="flex justify-center items-center mt-4">
-              <ImSpinner2
-                height={24}
-                width={24}
-                className="animate-spin self-center text-center mt-4"
+              <Label className="block text-sm font-medium text-gray-700">
+                Select Destination
+              </Label>
+              {/* Destination Select */}
+              <Select onValueChange={setSelectedDestination}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select destination" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Trip Destination</SelectLabel>
+                    {destinations.map((destination) => (
+                      <SelectItem key={destination.id} value={destination.id}>
+                        {destination.alt}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {/* Name Input */}
+              <input
+                type="text"
+                placeholder="Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="px-2 py-1 border border-gray-300 rounded"
               />
-            </div>
-          )}
 
-          {tripsData.length === 0 && !isFetching && (
-            <h1 className="text-center">No trips found.</h1>
-          )}
-
-          {/* List of trips */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {!isFetching &&
-              tripsData.map((trip) => (
-                <div
-                  key={trip.id}
-                  className="flex flex-col border border-gray-300 rounded p-2"
-                >
-                  <div className="relative w-full h-40 mb-2 overflow-hidden">
-                    <Image
-                      src={trip.image}
-                      alt={trip.name}
-                      width={300}
-                      height={200}
-                      className="rounded"
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2 gap-2">
-                    <h2 className="text-lg font-bold">{trip.name}</h2>
-                    <h2 className="text-sm font-semibold">{trip.city}</h2>
-                    <h2 className="text-sm font-semibold flex items-center gap-1">
-                      <LuClock10 /> {trip.duration}
-                    </h2>
-                    <h2 className="text-sm font-semibold flex items-center gap-1">
-                      <RiPriceTag3Line />₹{trip.price}
-                    </h2>
-                    <p>{truncateText(trip.overview)}</p>
-                  </div>
-                  <div className="flex gap-2 mt-auto">
-                    <button
-                      // onClick={() =>
-                      //   router.push(`/admin/trips/edit?id=${trip.id}`)
-                      // }
-                      onClick={() => openEditModal(trip)}
-                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
-                    >
-                      <BiSolidEditAlt />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => openConfirmDialog(trip.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-200 flex items-center gap-1"
-                    >
-                      <IoIosRemoveCircle />
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
-          </div>
-
-          {/* Edit Modal */}
-          {editModalOpen && (
-            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-              <div className="bg-white p-4 lg:p-10 m-4 rounded w-full lg:w-[50%] max-h-[90vh] overflow-y-auto">
-                <h2 className="text-xl font-bold mb-4">Edit Trip</h2>
-                <div className="flex flex-col gap-4">
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="title" className="font-semibold">
-                      Title
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="Name"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      className="px-2 py-1 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="city" className="font-semibold">
-                      City
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="City"
-                      value={formData.city}
-                      onChange={(e) =>
-                        setFormData({ ...formData, city: e.target.value })
-                      }
-                      className="px-2 py-1 border border-gray-300 rounded"
-                    />
-                  </div>
-                  {/* <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="description" className="font-semibold">
-                      Description
-                    </Label>
-                    <textarea
+              {/* Description Textarea */}
+              {/* <textarea
                       placeholder="Description"
                       value={formData.description}
                       onChange={(e) =>
@@ -1101,114 +1203,416 @@ const TripsPage = () => {
                       }
                       className="px-2 py-1 border border-gray-300 rounded"
                       rows={4}
+                    /> */}
+
+              {/* Duration Input */}
+              <input
+                type="text"
+                placeholder="Duration"
+                value={formData.duration}
+                onChange={(e) =>
+                  setFormData({ ...formData, duration: e.target.value })
+                }
+                className="px-2 py-1 border border-gray-300 rounded"
+              />
+
+              {/* City Input */}
+              <input
+                type="text"
+                placeholder="City"
+                value={formData.city}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                className="px-2 py-1 border border-gray-300 rounded"
+              />
+
+              {/* Price Input */}
+              <input
+                type="number"
+                placeholder="Price"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({ ...formData, price: e.target.value })
+                }
+                className="px-2 py-1 border border-gray-300 rounded"
+              />
+
+              {/* Overview Textarea */}
+              <textarea
+                placeholder="Overview"
+                value={formData.overview}
+                onChange={(e) =>
+                  setFormData({ ...formData, overview: e.target.value })
+                }
+                className="px-2 py-1 border border-gray-300 rounded"
+                rows={4}
+              />
+
+              {/* Cover Input */}
+              <div className="items-center">
+                <label
+                  htmlFor="coverImageFile"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Select Cover Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange}
+                  className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
+              </div>
+
+              {/* Image Input */}
+              <div className="items-center">
+                <label
+                  htmlFor="imageFile"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Select Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
+              </div>
+
+              {/* PDF Input */}
+              <div className="mb-4">
+                <label
+                  htmlFor="pdfFile"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Select PDF
+                </label>
+                <input
+                  type="file"
+                  id="pdfFile"
+                  accept=".pdf"
+                  onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
+                  className="mt-1 block rounded text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
+              </div>
+
+              {/* Itinerary */}
+              <div className="mt-6">
+                <h2 className="font-bold text-lg">Itinerary</h2>
+                {formData.itinerary.map((section, sectionIndex) => (
+                  <div key={sectionIndex} className="flex flex-col gap-1 mt-5">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="text"
+                        placeholder={`Title ${sectionIndex + 1}`}
+                        value={section.title}
+                        onChange={(e) =>
+                          handleItineraryChange(
+                            sectionIndex,
+                            "title",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <IoMdRemoveCircle
+                        size={24}
+                        onClick={() => removeItinerarySection(sectionIndex)}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                    <input
+                      type="file"
+                      multiple
+                      onChange={(e) => handleFilesChange(e, sectionIndex)}
                     />
-                  </div> */}
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="duration" className="font-semibold">
-                      Duration
-                    </Label>
+                    <div className="flex gap-2 rounded-sm">
+                      {section.images.map((image, imgIndex) => (
+                        <Image
+                          width={150}
+                          height={150}
+                          key={imgIndex}
+                          src={image}
+                          alt={`itinerary image ${imgIndex + 1}`}
+                        />
+                      ))}
+                    </div>
+                    <div className="mx-10">
+                      {section.items.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className="flex items-center gap-2 mt-2"
+                        >
+                          <Input
+                            type="text"
+                            placeholder={`Item ${itemIndex + 1}`}
+                            value={item}
+                            onChange={(e) =>
+                              handleItineraryChange(
+                                sectionIndex,
+                                "item",
+                                e.target.value,
+                                itemIndex
+                              )
+                            }
+                          />
+                          <IoMdRemoveCircle
+                            size={24}
+                            onClick={() =>
+                              removeItineraryItem(sectionIndex, itemIndex)
+                            }
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      ))}
+                      <IoMdAddCircle
+                        size={30}
+                        onClick={() => addItineraryItem(sectionIndex)}
+                        className="cursor-pointer m-2"
+                      />
+                    </div>
+                  </div>
+                ))}
+                <IoMdAddCircle
+                  size={30}
+                  onClick={addItinerarySection}
+                  className="cursor-pointer m-2"
+                />
+              </div>
+
+              {/* Inclusions */}
+              <div>
+                <h2 className="font-bold text-lg">Inclusions</h2>
+                {formData.inclusions.map((inclusion, index) => (
+                  <div key={index} className="flex items-center gap-2 mt-2">
                     <Input
                       type="text"
-                      placeholder="Duration"
-                      value={formData.duration}
+                      placeholder={`Item ${index + 1}`}
+                      value={inclusion}
                       onChange={(e) =>
-                        setFormData({ ...formData, duration: e.target.value })
+                        handleInclusionsChange(index, e.target.value)
                       }
-                      className="px-2 py-1 border border-gray-300 rounded"
+                      className="flex-1"
+                    />
+                    <IoMdRemoveCircle
+                      size={24}
+                      onClick={() => handleRemoveInclusion(index)}
+                      className="cursor-pointer"
                     />
                   </div>
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="price" className="font-semibold">
-                      Price
-                    </Label>
-                    <Input
-                      type="number"
-                      placeholder="Price"
-                      value={formData.price}
-                      onChange={(e) =>
-                        setFormData({ ...formData, price: e.target.value })
-                      }
-                      className="px-2 py-1 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="overview" className="font-semibold">
-                      Overview
-                    </Label>
-                    <textarea
-                      placeholder="Overview"
-                      value={formData.overview}
-                      onChange={(e) =>
-                        setFormData({ ...formData, overview: e.target.value })
-                      }
-                      className="px-2 py-1 border border-gray-300 rounded"
-                      rows={4}
-                    />
-                  </div>
+                ))}
+                <IoMdAddCircle
+                  size={30}
+                  onClick={addInclusions}
+                  className="cursor-pointer m-2"
+                />
+              </div>
 
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="coverImage" className="font-semibold">
-                      Cover Image
-                    </Label>
+              {/* Exclusions */}
+              <div>
+                <h2 className="font-bold text-lg">Exclusions</h2>
+                {formData.exclusions.map((exclusion, index) => (
+                  <div key={index} className="flex items-center gap-2 mt-2">
                     <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileChange(e, "coverImage")}
-                      className="rounded"
+                      type="text"
+                      placeholder={`Item ${index + 1}`}
+                      value={exclusion}
+                      onChange={(e) =>
+                        handleExclusionsChange(index, e.target.value)
+                      }
+                      className="flex-1"
                     />
-                    {coverImagePreview && (
-                      <div className="relative w-16 h-16 mt-2">
-                        <Image
-                          src={coverImagePreview}
-                          alt="Cover Image Preview"
-                          width={100}
-                          height={50}
-                          className="rounded"
-                        />
-                      </div>
-                    )}
+                    <IoMdRemoveCircle
+                      size={24}
+                      onClick={() => handleRemoveExclusion(index)}
+                      className="cursor-pointer"
+                    />
                   </div>
+                ))}
+                <IoMdAddCircle
+                  size={30}
+                  onClick={addExclusions}
+                  className="cursor-pointer m-2"
+                />
+              </div>
 
-                  <div className="grid w-full items-center gap-1.5 mt-4">
-                    <Label htmlFor="image" className="font-semibold">
-                      Image
-                    </Label>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileChange(e, "image")}
-                      className="rounded"
-                    />
-                    {previewImage && (
-                      <div className="relative w-16 h-16 mt-2">
-                        <Image
-                          src={previewImage}
-                          alt="Preview"
-                          width={100}
-                          height={50}
-                          className="rounded"
+              {/* FAQs */}
+              <div>
+                <h2 className="font-bold text-lg">FAQs</h2>
+                {formData.faqs.map((faq, index) => (
+                  <div key={index} className="flex flex-col gap-1 mt-5">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="text"
+                        placeholder={`Question ${index + 1}`}
+                        value={faq.question}
+                        onChange={(e) =>
+                          handleFAQsChange(index, "question", e.target.value)
+                        }
+                      />
+                      {formData.faqs.length > 1 && (
+                        <IoMdRemoveCircle
+                          size={24}
+                          onClick={() => removeFAQs(index)}
+                          className="cursor-pointer"
                         />
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    <Input
+                      type="text"
+                      placeholder={`Answer ${index + 1}`}
+                      value={faq.answer}
+                      onChange={(e) =>
+                        handleFAQsChange(index, "answer", e.target.value)
+                      }
+                    />
                   </div>
-                  <div className="flex justify-end">
-                    <button
-                      onClick={handleUpdate}
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-200"
-                    >
-                      Update
-                    </button>
-                    <button
-                      onClick={closeEditModal}
-                      className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600 transition duration-200 ml-2"
-                    >
-                      Cancel
-                    </button>
+                ))}
+                <IoMdAddCircle
+                  size={30}
+                  onClick={addFAQs}
+                  className="cursor-pointer m-2"
+                />
+              </div>
+
+              {/* Trip Type */}
+              <h2 className="font-bold text-lg">Select Type</h2>
+              <Select onValueChange={setSelectedType}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Trip Types</SelectLabel>
+                    <SelectItem value="public">Public</SelectItem>
+                    <SelectItem value="customize">Customize</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {selectedType === "public" && (
+                <div>
+                  <h2 className="font-bold text-lg my-2">Upcoming Dates</h2>
+                  <div className="mt-6">
+                    <h2 className="font-bold text-lg">Select Dates</h2>
+                    <DatePicker
+                      selected={null} // No single date selected
+                      onChange={handleDateChange}
+                      inline
+                      dateFormat="yyyy-MM-dd"
+                      showMonthDropdown
+                      showYearDropdown
+                      dropdownMode="select"
+                      highlightDates={formData.selectedDates.map(
+                        (date) => new Date(date)
+                      )}
+                      filterDate={(date: Date) =>
+                        // Disable dates before today and outside the current year
+                        isAfter(date, today) ||
+                        (isAfter(date, startOfCurrentYear) &&
+                          isBefore(date, endOfCurrentYear))
+                      }
+                      minDate={today}
+                      maxDate={endOfCurrentYear}
+                      excludeDates={[
+                        // Disable previous months and dates
+                        ...Array.from(
+                          { length: startOfCurrentMonth.getDate() - 1 },
+                          (_, i) =>
+                            new Date(
+                              today.getFullYear(),
+                              today.getMonth(),
+                              i + 1
+                            )
+                        ),
+                      ]}
+                    />
+                    <div className="mt-4">
+                      <h3 className="font-bold text-md">Selected Dates</h3>
+                      {renderDates()}
+                    </div>
                   </div>
                 </div>
+              )}
+
+              {selectedType === "customize" && (
+                <div>
+                  {/* <h2 className="font-bold text-lg">Price List</h2> */}
+                  <table className="min-w-full border-collapse">
+                    <thead>
+                      <tr>
+                        <th className="border p-2">No. of people</th>
+                        <th className="border p-2">Standard Hotel/Homestay</th>
+                        <th className="border p-2">Deluxe Hotel</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData.priceList.map((priceItem, index) => (
+                        <tr key={index}>
+                          <td className="border p-2">{priceItem.people}</td>
+                          <td className="border p-2">
+                            <Input
+                              type="number"
+                              placeholder="Standard Price"
+                              value={priceItem.standard}
+                              onChange={(e) =>
+                                handlePriceChange(
+                                  index,
+                                  "standard",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </td>
+                          <td className="border p-2">
+                            <Input
+                              type="number"
+                              placeholder="Deluxe Price"
+                              value={priceItem.deluxe}
+                              onChange={(e) =>
+                                handlePriceChange(
+                                  index,
+                                  "deluxe",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Select Categories */}
+              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                    className={`px-4 py-2 rounded-full border ${
+                      selectedCategories.includes(category.id)
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "bg-gray-200 text-gray-800 border-gray-400"
+                    }`}
+                  >
+                    {category.title}
+                  </button>
+                ))}
               </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-1 mt-2 self-start rounded hover:bg-blue-600 transition duration-200"
+              >
+                Add Trip
+              </Button>
             </div>
-          )}
+          </form>
 
           {/* Confirmation Dialog */}
           {showConfirmDialog && (
@@ -1225,4 +1629,4 @@ const TripsPage = () => {
   );
 };
 
-export default TripsPage;
+export default AddTripsPage;
