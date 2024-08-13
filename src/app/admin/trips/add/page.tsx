@@ -130,8 +130,8 @@ const AddTripsPage = () => {
   const [editTripId, setEditTripId] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [deleteTripId, setDeleteTripId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -552,6 +552,23 @@ const AddTripsPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (isSubmitting) {
+      return;
+    }
+
+    if (selectedCategories.length === 0) {
+      toast({
+        description: (
+          <div className="flex items-center gap-2">
+            <MdErrorOutline size={20} />
+            <p>Select atleast one category</p>
+          </div>
+        ),
+        className: "bg-primary text-white font-bold",
+      });
+      return;
+    }
+
     if (selectedDestination === "") {
       toast({
         description: (
@@ -635,7 +652,7 @@ const AddTripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Image not found</p>
+            <p>Main image not found</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -647,7 +664,7 @@ const AddTripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Pdf file not found</p>
+            <p>Cover image not found</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -659,7 +676,7 @@ const AddTripsPage = () => {
         description: (
           <div className="flex items-center gap-2">
             <MdErrorOutline size={20} />
-            <p>Cover image not found</p>
+            <p>Pdf file not found</p>
           </div>
         ),
         className: "bg-primary text-white font-bold",
@@ -713,19 +730,6 @@ const AddTripsPage = () => {
       return;
     }
 
-    if (selectedCategories.length === 0) {
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <MdErrorOutline size={20} />
-            <p>Select atleast one category</p>
-          </div>
-        ),
-        className: "bg-primary text-white font-bold",
-      });
-      return;
-    }
-
     // if (
     //   selectedCategories.length === 0 ||
     //   selectedDestination === "" ||
@@ -762,7 +766,7 @@ const AddTripsPage = () => {
     // }
 
     try {
-      setIsLoading(true);
+      setIsSubmitting(true);
       let imageUrl = formData.image;
       if (imageFile) {
         const storageRef = ref(storage, `trips/${imageFile.name}`);
@@ -791,7 +795,7 @@ const AddTripsPage = () => {
         category: selectedCategories,
         destination: selectedDestination,
         city: formData.city,
-        description: formData.description,
+        // description: formData.description,
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
@@ -875,7 +879,7 @@ const AddTripsPage = () => {
       setImageFile(null);
       setPdfFile(null);
       setPreviewImage(null);
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -1160,7 +1164,27 @@ const AddTripsPage = () => {
             <div className="flex flex-col gap-4 mb-4 p-2">
               <h2 className="font-bold text-lg py-3">Trips Details</h2>
 
+              {/* Select Categories */}
               <Label className="block text-sm font-medium text-gray-700">
+                Select Categories
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <div
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                    className={`px-4 py-2 rounded-full border cursor-pointer ${
+                      selectedCategories.includes(category.id)
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "bg-gray-200 text-gray-800 border-gray-400"
+                    }`}
+                  >
+                    {category.title}
+                  </div>
+                ))}
+              </div>
+
+              <Label className="block text-sm font-medium text-gray-700 my-2">
                 Select Destination
               </Label>
               {/* Destination Select */}
@@ -1271,7 +1295,7 @@ const AddTripsPage = () => {
                   htmlFor="imageFile"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Select Image
+                  Select Main Image
                 </label>
                 <input
                   type="file"
@@ -1287,7 +1311,7 @@ const AddTripsPage = () => {
                   htmlFor="pdfFile"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Select PDF
+                  Select PDF File
                 </label>
                 <input
                   type="file"
@@ -1586,27 +1610,10 @@ const AddTripsPage = () => {
                 </div>
               )}
 
-              {/* Select Categories */}
-              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => handleCategoryClick(category.id)}
-                    className={`px-4 py-2 rounded-full border ${
-                      selectedCategories.includes(category.id)
-                        ? "bg-blue-500 text-white border-blue-500"
-                        : "bg-gray-200 text-gray-800 border-gray-400"
-                    }`}
-                  >
-                    {category.title}
-                  </button>
-                ))}
-              </div>
-
               {/* Submit Button */}
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="bg-blue-500 text-white px-4 py-1 mt-2 self-start rounded hover:bg-blue-600 transition duration-200"
               >
                 Add Trip
