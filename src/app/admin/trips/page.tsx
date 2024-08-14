@@ -1031,10 +1031,10 @@ const TripsPage = () => {
                   </div>
                   <div className="flex gap-2 mt-auto">
                     <button
-                      // onClick={() =>
-                      //   router.push(`/admin/trips/edit?id=${trip.id}`)
-                      // }
-                      onClick={() => openEditModal(trip)}
+                      onClick={() =>
+                        router.push(`/admin/trips/edit?id=${trip.id}`)
+                      }
+                      // onClick={() => openEditModal(trip)}
                       className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition duration-200 flex items-center gap-1"
                     >
                       <BiSolidEditAlt />

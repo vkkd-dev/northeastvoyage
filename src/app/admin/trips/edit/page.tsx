@@ -58,7 +58,7 @@ import {
   endOfYear,
   getMonth,
 } from "date-fns";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Category {
   id: string;
@@ -88,6 +88,7 @@ interface Trip {
   faqs: any;
   priceList: any;
   selectedDates: any;
+  category: string[];
 }
 
 const EditTripsPage = () => {
@@ -137,6 +138,7 @@ const EditTripsPage = () => {
   const [isTripLoading, setIsTripLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -363,7 +365,7 @@ const EditTripsPage = () => {
       formData.itinerary[index].items[
         formData.itinerary[index].items.length - 1
       ];
-    if (lastItem.trim() !== "") {
+    if (lastItem?.trim() !== "") {
       const newItinerary = [...formData.itinerary];
       newItinerary[index].items.push("");
       setFormData({ ...formData, itinerary: newItinerary });
@@ -406,7 +408,7 @@ const EditTripsPage = () => {
   const addItinerarySection = () => {
     const lastSection = formData.itinerary[formData.itinerary.length - 1];
     if (
-      lastSection.title.trim() !== "" &&
+      lastSection.title?.trim() !== "" &&
       lastSection.items.every((item) => item.trim() !== "")
     ) {
       setFormData({
@@ -454,7 +456,7 @@ const EditTripsPage = () => {
 
   const addInclusions = () => {
     const lastInclusions = formData.inclusions[formData.inclusions.length - 1];
-    if (lastInclusions.trim() !== "") {
+    if (lastInclusions?.trim() !== "") {
       setFormData({ ...formData, inclusions: [...formData.inclusions, ""] });
     } else {
       toast({
@@ -495,7 +497,7 @@ const EditTripsPage = () => {
 
   const addExclusions = () => {
     const lastExclusions = formData.exclusions[formData.exclusions.length - 1];
-    if (lastExclusions.trim() !== "") {
+    if (lastExclusions?.trim() !== "") {
       setFormData({ ...formData, exclusions: [...formData.exclusions, ""] });
     } else {
       toast({
@@ -536,7 +538,7 @@ const EditTripsPage = () => {
 
   const addFAQs = () => {
     const lastFAQ = formData.faqs[formData.faqs.length - 1];
-    if (lastFAQ.question.trim() !== "" && lastFAQ.answer.trim() !== "") {
+    if (lastFAQ.question?.trim() !== "" && lastFAQ.answer?.trim() !== "") {
       setFormData({
         ...formData,
         faqs: [...formData.faqs, { question: "", answer: "" }],
@@ -574,56 +576,6 @@ const EditTripsPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate inclusions
-    const areInclusionsValid =
-      formData.inclusions.length > 0 &&
-      formData.inclusions.every((inclusion) => inclusion.trim() !== "");
-
-    // Validate exclusions
-    const areExclusionsValid =
-      formData.exclusions.length > 0 &&
-      formData.exclusions.every((exclusion) => exclusion.trim() !== "");
-
-    // Validate FAQs
-    const areFaqsValid =
-      formData.faqs.length > 0 &&
-      formData.faqs.every(
-        (faq) => faq.question.trim() !== "" && faq.answer.trim() !== ""
-      );
-    // if (
-    //   selectedCategories.length === 0 ||
-    //   selectedDestination === "" ||
-    //   formData.city === "" ||
-    //   // formData.description === "" ||
-    //   formData.duration === "" ||
-    //   formData.name === "" ||
-    //   formData.price === "" ||
-    //   formData.overview === "" ||
-    //   imageFile === null ||
-    //   coverImageFile === null ||
-    //   selectedType === null ||
-    //   !pdfFile ||
-    //   areInclusionsValid ||
-    //   areExclusionsValid ||
-    //   areFaqsValid ||
-    //   (selectedType === "public" && formData.selectedDates.length === 0) ||
-    //   (selectedType === "customize" &&
-    //     formData.priceList.every(
-    //       (item) => item.standard === "" && item.deluxe === ""
-    //     ))
-    //   // formData.inclusions.some((inclusion) => inclusion.trim() === "")
-    // ) {
-    //   toast({
-    //     description: (
-    //       <div className="flex items-center gap-2">
-    //         <MdErrorOutline size={20} />
-    //         <p>Fill all the fields</p>
-    //       </div>
-    //     ),
-    //     className: "bg-primary text-white font-bold",
-    //   });
-    //   return;
-    // }
     try {
       setIsLoading(true);
       let imageUrl = formData.image;
@@ -651,18 +603,18 @@ const EditTripsPage = () => {
       }
 
       const tripData: any = {
-        category: selectedCategories,
-        destination: selectedDestination,
+        // category: selectedCategories,
+        // destination: selectedDestination,
         city: formData.city,
         description: formData.description,
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
-        coverImage: coverImageUrl,
-        image: imageUrl,
-        pdf: pdfUrl,
-        tripType: selectedType,
+        // coverImage: coverImageUrl,
+        // image: imageUrl,
+        // pdf: pdfUrl,
+        // tripType: selectedType,
       };
 
       if (formData.inclusions && formData.inclusions.length > 0) {
@@ -678,23 +630,13 @@ const EditTripsPage = () => {
         tripData.faqs = formData.faqs;
       }
 
-      if (selectedType === "public") {
-        tripData.selectedDates = formData.selectedDates;
-      } else if (selectedType === "customize") {
-        tripData.priceList = formData.priceList;
-      }
-
-      const docRef = await addDoc(collection(firestore, "trips"), tripData);
-
-      setTripsData((prevData) => [
-        ...prevData,
-        {
-          id: docRef.id,
-          ...formData,
-          image: imageUrl,
-          coverImage: coverImageUrl,
-        },
-      ]);
+      // if (selectedType === "public") {
+      //   tripData.selectedDates = formData.selectedDates;
+      // } else if (selectedType === "customize") {
+      //   tripData.priceList = formData.priceList;
+      // }
+      const docRef = doc(firestore, "trips", id!); // Adjust collection name and path as needed
+      await updateDoc(docRef, tripData);
 
       toast({
         description: (
@@ -705,6 +647,8 @@ const EditTripsPage = () => {
         ),
         className: "bg-primary text-white font-bold",
       });
+
+      router.push(`/admin/trips`);
     } catch (error) {
       console.error("Error adding trip:", error);
       toast({
@@ -921,31 +865,6 @@ const EditTripsPage = () => {
         coverImage: coverImageUrl, // Update cover image URL
       });
 
-      // Update local state with updated data
-      setTripsData((prevData) =>
-        prevData.map((item) =>
-          item.id === editTripId
-            ? {
-                id: item.id,
-                city: formData.city,
-                description: formData.description,
-                duration: formData.duration,
-                name: formData.name,
-                price: formData.price,
-                overview: formData.overview,
-                itinerary: formData.itinerary,
-                inclusions: formData.inclusions,
-                exclusions: formData.exclusions,
-                faqs: formData.faqs,
-                priceList: formData.priceList,
-                selectedDates: formData.selectedDates,
-                image: imageUrl,
-                coverImage: coverImageUrl, // Update cover image URL
-              }
-            : item
-        )
-      );
-
       toast({
         description: (
           <div className="flex items-center gap-2">
@@ -1034,10 +953,9 @@ const EditTripsPage = () => {
             <div className="flex flex-col gap-4 mb-4 p-2">
               <h2 className="font-bold text-lg py-3">Trips Details</h2>
 
-              <Label className="block text-sm font-medium text-gray-700">
+              {/* <Label className="block text-sm font-medium text-gray-700">
                 Select Destination
               </Label>
-              {/* Destination Select */}
               <Select onValueChange={setSelectedDestination}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select destination" />
@@ -1052,7 +970,7 @@ const EditTripsPage = () => {
                     ))}
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </Select> */}
 
               {/* Name Input */}
               <input
@@ -1124,7 +1042,7 @@ const EditTripsPage = () => {
               />
 
               {/* Cover Input */}
-              <div className="items-center">
+              {/* <div className="items-center">
                 <label
                   htmlFor="coverImageFile"
                   className="block text-sm font-medium text-gray-700"
@@ -1137,10 +1055,10 @@ const EditTripsPage = () => {
                   onChange={handleCoverImageChange}
                   className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
-              </div>
+              </div> */}
 
               {/* Image Input */}
-              <div className="items-center">
+              {/* <div className="items-center">
                 <label
                   htmlFor="imageFile"
                   className="block text-sm font-medium text-gray-700"
@@ -1153,10 +1071,10 @@ const EditTripsPage = () => {
                   onChange={handleImageChange}
                   className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
-              </div>
+              </div> */}
 
               {/* PDF Input */}
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label
                   htmlFor="pdfFile"
                   className="block text-sm font-medium text-gray-700"
@@ -1170,7 +1088,7 @@ const EditTripsPage = () => {
                   onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
                   className="mt-1 block rounded text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
-              </div>
+              </div> */}
 
               {/* Itinerary */}
               <div className="mt-6">
@@ -1351,7 +1269,7 @@ const EditTripsPage = () => {
               </div>
 
               {/* Trip Type */}
-              <h2 className="font-bold text-lg">Select Type</h2>
+              {/* <h2 className="font-bold text-lg">Select Type</h2>
 
               <Select onValueChange={setSelectedType}>
                 <SelectTrigger className="w-[180px]">
@@ -1364,7 +1282,7 @@ const EditTripsPage = () => {
                     <SelectItem value="customize">Customize</SelectItem>
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </Select> */}
 
               {selectedType === "public" && (
                 <div>
@@ -1461,7 +1379,7 @@ const EditTripsPage = () => {
                 </div>
               )}
 
-              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
+              {/* <h2 className="font-bold text-lg mt-2">Select Categories</h2>
 
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
@@ -1477,14 +1395,14 @@ const EditTripsPage = () => {
                     {category.title}
                   </button>
                 ))}
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <Button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-1 mt-2 self-start rounded hover:bg-blue-600 transition duration-200"
               >
-                Add Trip
+                Update Trip
               </Button>
             </div>
           </form>
