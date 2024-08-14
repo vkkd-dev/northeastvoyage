@@ -865,7 +865,7 @@ const TripsPage = () => {
       // Update Firestore document
       await updateDoc(doc(firestore, "trips", editTripId!), {
         city: formData.city,
-        description: formData.description,
+        // description: formData.description,
         duration: formData.duration,
         name: formData.name,
         price: formData.price,

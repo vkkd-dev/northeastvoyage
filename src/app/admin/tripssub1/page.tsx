@@ -273,7 +273,7 @@ const TripsSub1 = () => {
                       <RiPriceTag3Line />
                       {formatCurrency(trip.price)}
                     </h2>
-                    <p>{truncateText(trip.description)}</p>
+                    <p>{truncateText(trip.overview)}</p>
                   </div>
                   <Button
                     onClick={() => handleSelectTrip(trip)}
