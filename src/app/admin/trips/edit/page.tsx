@@ -172,7 +172,7 @@ const EditTripsPage = () => {
 
   useEffect(() => {
     if (tripData) {
-      console.log("tripData", tripData);
+      // console.log("tripData", tripData);
       setFormData({
         category: tripData.category || [""],
         destination: tripData.destination || "",
@@ -203,16 +203,23 @@ const EditTripsPage = () => {
       const destinationId = tripData.destination || "";
       setSelectedDestination(destinationId);
 
+      console.log("destinationId", destinationId);
       // Find the alt text for the selected destination
       const destination = destinations.find(
         (dest) => dest.id === destinationId
       );
+      console.log("destination", destination);
       setSelectedDestinationAlt(destination ? destination.alt : "");
       const categoryIds = tripData.category || [];
-      console.log("categoryIds", categoryIds);
       setSelectedCategories(categoryIds);
     }
-  }, [tripData, destinations]);
+  }, [
+    tripData,
+    destinations,
+    setSelectedDestination,
+    setSelectedDestinationAlt,
+    setSelectedCategories,
+  ]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -831,7 +838,6 @@ const EditTripsPage = () => {
         <PageTitle title="Edit Trip" />
         <div className="container mx-auto p-4">
           {/* Form to add new trip */}
-
           <form
             onSubmit={handleSubmit}
             className="mb-4 border px-5 lg:px-10 py-3 rounded-lg"
@@ -1335,7 +1341,6 @@ const EditTripsPage = () => {
               </Button>
             </div>
           </form>
-
           {/* Confirmation Dialog */}
           {showConfirmDialog && (
             <ConfirmDialog
