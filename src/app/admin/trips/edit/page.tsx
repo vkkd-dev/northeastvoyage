@@ -74,6 +74,8 @@ interface Destination {
 
 interface Trip {
   id: string;
+  category: string[];
+  destination: string;
   name: string;
   city: string;
   price: string;
@@ -88,7 +90,6 @@ interface Trip {
   faqs: any;
   priceList: any;
   selectedDates: any;
-  category: string[];
 }
 
 const EditTripsPage = () => {
@@ -97,6 +98,8 @@ const EditTripsPage = () => {
   const [tripsData, setTripsData] = useState<Trip[]>([]);
   const [tripData, setTripData] = useState<Trip | null>(null);
   const [formData, setFormData] = useState({
+    category: [""],
+    destination: "",
     city: "",
     description: "",
     duration: "",
@@ -122,7 +125,8 @@ const EditTripsPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedDestination, setSelectedDestination] = useState<string>("");
+  const [selectedDestination, setSelectedDestination] = useState("");
+  const [selectedDestinationAlt, setSelectedDestinationAlt] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -170,6 +174,8 @@ const EditTripsPage = () => {
     if (tripData) {
       console.log("tripData", tripData);
       setFormData({
+        category: tripData.category || [""],
+        destination: tripData.destination || "",
         city: tripData.city || "",
         description: tripData.description || "",
         duration: tripData.duration || "",
@@ -194,8 +200,19 @@ const EditTripsPage = () => {
         ],
         selectedDates: tripData.selectedDates || [],
       });
+      const destinationId = tripData.destination || "";
+      setSelectedDestination(destinationId);
+
+      // Find the alt text for the selected destination
+      const destination = destinations.find(
+        (dest) => dest.id === destinationId
+      );
+      setSelectedDestinationAlt(destination ? destination.alt : "");
+      const categoryIds = tripData.category || [];
+      console.log("categoryIds", categoryIds);
+      setSelectedCategories(categoryIds);
     }
-  }, [tripData]);
+  }, [tripData, destinations]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -302,12 +319,13 @@ const EditTripsPage = () => {
   };
 
   const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategories(
-      (prevSelected) =>
-        prevSelected.includes(categoryId)
-          ? prevSelected.filter((id) => id !== categoryId) // Deselect
-          : [...prevSelected, categoryId] // Select
-    );
+    setSelectedCategories((prevSelectedCategories) => {
+      if (prevSelectedCategories.includes(categoryId)) {
+        return prevSelectedCategories.filter((id) => id !== categoryId);
+      } else {
+        return [...prevSelectedCategories, categoryId];
+      }
+    });
   };
 
   const handleInclusionsChange = (index: number, value: string) => {
@@ -603,16 +621,16 @@ const EditTripsPage = () => {
       }
 
       const tripData: any = {
-        // category: selectedCategories,
-        // destination: selectedDestination,
+        category: selectedCategories,
+        destination: selectedDestination,
         city: formData.city,
         description: formData.description,
         duration: formData.duration,
         name: formData.name,
         price: formData.price,
         overview: formData.overview,
-        // coverImage: coverImageUrl,
-        // image: imageUrl,
+        coverImage: coverImageUrl,
+        image: imageUrl,
         // pdf: pdfUrl,
         // tripType: selectedType,
       };
@@ -662,6 +680,8 @@ const EditTripsPage = () => {
       });
     } finally {
       setFormData({
+        category: [""],
+        destination: "",
         city: "",
         description: "",
         duration: "",
@@ -761,140 +781,6 @@ const EditTripsPage = () => {
     setFormData({ ...formData, itinerary: newItinerary });
   };
 
-  const openConfirmDialog = (id: string) => {
-    setDeleteTripId(id);
-    setShowConfirmDialog(true);
-  };
-
-  const openEditModal = (trip: Trip) => {
-    setEditTripId(trip.id);
-    setFormData({
-      city: trip.city,
-      description: trip.description,
-      duration: trip.duration,
-      name: trip.name,
-      price: trip.price,
-      overview: trip.overview,
-      coverImage: trip.coverImage,
-      image: trip.image,
-      itinerary: [{ title: "", items: [""], images: [""] }],
-      inclusions: [],
-      exclusions: [],
-      faqs: [{ question: "", answer: "" }],
-      priceList: [
-        { people: "2 people", standard: "", deluxe: "" },
-        { people: "3 people", standard: "", deluxe: "" },
-        { people: "4 people(dzire)", standard: "", deluxe: "" },
-        { people: "4 people(innova)", standard: "", deluxe: "" },
-        { people: "5 people", standard: "", deluxe: "" },
-        { people: "6 people", standard: "", deluxe: "" },
-      ],
-      selectedDates: [],
-    });
-    setPreviewImage(trip.image);
-    setCoverImagePreview(trip.coverImage);
-    setEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditTripId(null);
-    setFormData({
-      city: "",
-      description: "",
-      duration: "",
-      name: "",
-      price: "",
-      overview: "",
-      coverImage: "",
-      image: "",
-      itinerary: [{ title: "", items: [""], images: [""] }],
-      inclusions: [],
-      exclusions: [],
-      faqs: [{ question: "", answer: "" }],
-      priceList: [
-        { people: "2 people", standard: "", deluxe: "" },
-        { people: "3 people", standard: "", deluxe: "" },
-        { people: "4 people(dzire)", standard: "", deluxe: "" },
-        { people: "4 people(innova)", standard: "", deluxe: "" },
-        { people: "5 people", standard: "", deluxe: "" },
-        { people: "6 people", standard: "", deluxe: "" },
-      ],
-      selectedDates: [],
-    });
-    setPreviewImage(null);
-    setCoverImagePreview(null);
-    setEditModalOpen(false);
-  };
-
-  const handleUpdate = async () => {
-    try {
-      let imageUrl = formData.image;
-      let coverImageUrl = formData.coverImage; // Add cover image handling
-
-      // Handle main image upload
-      if (imageFile) {
-        const storageRef = ref(storage, `trips/${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
-      }
-
-      // Handle cover image upload
-      if (coverImageFile) {
-        const coverImageRef = ref(
-          storage,
-          `trips/coverImages/${coverImageFile.name}`
-        );
-        await uploadBytes(coverImageRef, coverImageFile);
-        coverImageUrl = await getDownloadURL(coverImageRef);
-      }
-
-      // Update Firestore document
-      await updateDoc(doc(firestore, "trips", editTripId!), {
-        city: formData.city,
-        description: formData.description,
-        duration: formData.duration,
-        name: formData.name,
-        price: formData.price,
-        overview: formData.overview,
-        inclusions: formData.inclusions,
-        exclusions: formData.exclusions,
-        faqs: formData.faqs,
-        priceList: formData.priceList,
-        selectedDates: formData.selectedDates,
-        image: imageUrl,
-        coverImage: coverImageUrl, // Update cover image URL
-      });
-
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Trip Updated</p>
-          </div>
-        ),
-        className: "bg-primary text-white font-bold",
-      });
-
-      closeEditModal();
-    } catch (error) {
-      console.error("Error updating trip:", error);
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Error updating document</p>
-          </div>
-        ),
-        variant: "destructive",
-      });
-    }
-  };
-
-  const truncateText = (text: string) => {
-    if (text.length <= 100) return text;
-    return text.slice(0, 100) + "...";
-  };
-
   const groupDatesByMonth = (dates: Date[]) => {
     const months = new Map<number, Date[]>();
     dates.forEach((date) => {
@@ -945,6 +831,7 @@ const EditTripsPage = () => {
         <PageTitle title="Edit Trip" />
         <div className="container mx-auto p-4">
           {/* Form to add new trip */}
+
           <form
             onSubmit={handleSubmit}
             className="mb-4 border px-5 lg:px-10 py-3 rounded-lg"
@@ -953,12 +840,22 @@ const EditTripsPage = () => {
             <div className="flex flex-col gap-4 mb-4 p-2">
               <h2 className="font-bold text-lg py-3">Trips Details</h2>
 
-              {/* <Label className="block text-sm font-medium text-gray-700">
+              <Label className="block text-sm font-medium text-gray-700">
                 Select Destination
               </Label>
-              <Select onValueChange={setSelectedDestination}>
+              <Select
+                value={selectedDestination}
+                onValueChange={(value) => {
+                  setSelectedDestination(value);
+                  const selectedAlt =
+                    destinations.find((dest) => dest.id === value)?.alt || "";
+                  setSelectedDestinationAlt(selectedAlt);
+                }}
+              >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select destination" />
+                  <SelectValue>
+                    {selectedDestinationAlt || "Select destination"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -970,7 +867,7 @@ const EditTripsPage = () => {
                     ))}
                   </SelectGroup>
                 </SelectContent>
-              </Select> */}
+              </Select>
 
               {/* Name Input */}
               <input
@@ -1042,12 +939,12 @@ const EditTripsPage = () => {
               />
 
               {/* Cover Input */}
-              {/* <div className="items-center">
+              <div className="items-center">
                 <label
                   htmlFor="coverImageFile"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Select Cover Image
+                  Change Cover Image
                 </label>
                 <input
                   type="file"
@@ -1055,15 +952,23 @@ const EditTripsPage = () => {
                   onChange={handleCoverImageChange}
                   className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
-              </div> */}
+              </div>
+              {formData.coverImage && (
+                <Image
+                  width={150}
+                  height={150}
+                  src={formData.coverImage}
+                  alt={`cover image`}
+                />
+              )}
 
               {/* Image Input */}
-              {/* <div className="items-center">
+              <div className="items-center">
                 <label
                   htmlFor="imageFile"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Select Image
+                  Chnage Main Image
                 </label>
                 <input
                   type="file"
@@ -1071,7 +976,16 @@ const EditTripsPage = () => {
                   onChange={handleImageChange}
                   className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
-              </div> */}
+              </div>
+
+              {formData.image && (
+                <Image
+                  width={250}
+                  height={150}
+                  src={formData.image}
+                  alt={`cover image`}
+                />
+              )}
 
               {/* PDF Input */}
               {/* <div className="mb-4">
@@ -1379,23 +1293,22 @@ const EditTripsPage = () => {
                 </div>
               )}
 
-              {/* <h2 className="font-bold text-lg mt-2">Select Categories</h2>
-
+              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
-                  <button
+                  <div
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`px-4 py-2 rounded-full border ${
+                    className={`px-4 py-2 rounded-full border cursor-pointer ${
                       selectedCategories.includes(category.id)
                         ? "bg-blue-500 text-white border-blue-500"
                         : "bg-gray-200 text-gray-800 border-gray-400"
                     }`}
                   >
                     {category.title}
-                  </button>
+                  </div>
                 ))}
-              </div> */}
+              </div>
 
               {/* Submit Button */}
               <Button
