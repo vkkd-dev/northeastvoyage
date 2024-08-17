@@ -1,10 +1,8 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import PageTitle from "@/components/PageTitle";
 import SideNavbar from "@/components/SideNavbar";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -15,26 +13,15 @@ import {
   where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { BiSolidEditAlt } from "react-icons/bi";
 import { useToast } from "@/components/ui/use-toast";
 import { SiTicktick } from "react-icons/si";
-import { LuClock10 } from "react-icons/lu";
 import { MdErrorOutline } from "react-icons/md";
-import { RiPriceTag3Line } from "react-icons/ri";
 import { IoMdAddCircle } from "react-icons/io";
-import { IoIosRemoveCircle } from "react-icons/io";
 import { IoMdRemoveCircle } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ImSpinner2 } from "react-icons/im";
 import { firestore, storage } from "@/app/firebase/firebase-cofig";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Select,
   SelectContent,
@@ -126,7 +113,6 @@ const EditTripsPage = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDestination, setSelectedDestination] = useState("");
-  const [selectedDestinationAlt, setSelectedDestinationAlt] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -135,13 +121,10 @@ const EditTripsPage = () => {
     null
   );
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editTripId, setEditTripId] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [deleteTripId, setDeleteTripId] = useState<string | null>(null);
   const [isTripLoading, setIsTripLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -169,57 +152,6 @@ const EditTripsPage = () => {
       fetchTripData();
     }
   }, [id]);
-
-  useEffect(() => {
-    if (tripData) {
-      // console.log("tripData", tripData);
-      setFormData({
-        category: tripData.category || [""],
-        destination: tripData.destination || "",
-        city: tripData.city || "",
-        description: tripData.description || "",
-        duration: tripData.duration || "",
-        name: tripData.name || "",
-        price: tripData.price || "",
-        overview: tripData.overview || "",
-        coverImage: tripData.coverImage || "",
-        image: tripData.image || "",
-        itinerary: tripData.itinerary || [
-          { title: "", items: [""], images: [""] },
-        ],
-        inclusions: tripData.inclusions || [""],
-        exclusions: tripData.exclusions || [""],
-        faqs: tripData.faqs || [{ question: "", answer: "" }],
-        priceList: tripData.priceList || [
-          { people: "2 people", standard: "", deluxe: "" },
-          { people: "3 people", standard: "", deluxe: "" },
-          { people: "4 people(dzire)", standard: "", deluxe: "" },
-          { people: "4 people(innova)", standard: "", deluxe: "" },
-          { people: "5 people", standard: "", deluxe: "" },
-          { people: "6 people", standard: "", deluxe: "" },
-        ],
-        selectedDates: tripData.selectedDates || [],
-      });
-      const destinationId = tripData.destination || "";
-      setSelectedDestination(destinationId);
-
-      console.log("destinationId", destinationId);
-      // Find the alt text for the selected destination
-      const destination = destinations.find(
-        (dest) => dest.id === destinationId
-      );
-      console.log("destination", destination);
-      setSelectedDestinationAlt(destination ? destination.alt : "");
-      const categoryIds = tripData.category || [];
-      setSelectedCategories(categoryIds);
-    }
-  }, [
-    tripData,
-    destinations,
-    setSelectedDestination,
-    setSelectedDestinationAlt,
-    setSelectedCategories,
-  ]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -254,6 +186,41 @@ const EditTripsPage = () => {
 
     fetchDestinations();
   }, []);
+
+  useEffect(() => {
+    if (tripData) {
+      // console.log("tripData", tripData);
+      setFormData({
+        category: tripData.category || [""],
+        destination: tripData.destination || "",
+        city: tripData.city || "",
+        description: tripData.description || "",
+        duration: tripData.duration || "",
+        name: tripData.name || "",
+        price: tripData.price || "",
+        overview: tripData.overview || "",
+        coverImage: tripData.coverImage || "",
+        image: tripData.image || "",
+        itinerary: tripData.itinerary || [
+          { title: "", items: [""], images: [""] },
+        ],
+        inclusions: tripData.inclusions || [""],
+        exclusions: tripData.exclusions || [""],
+        faqs: tripData.faqs || [{ question: "", answer: "" }],
+        priceList: tripData.priceList || [
+          { people: "2 people", standard: "", deluxe: "" },
+          { people: "3 people", standard: "", deluxe: "" },
+          { people: "4 people(dzire)", standard: "", deluxe: "" },
+          { people: "4 people(innova)", standard: "", deluxe: "" },
+          { people: "5 people", standard: "", deluxe: "" },
+          { people: "6 people", standard: "", deluxe: "" },
+        ],
+        selectedDates: tripData.selectedDates || [],
+      });
+      const categoryIds = tripData.category || [];
+      setSelectedCategories(categoryIds);
+    }
+  }, [tripData]);
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -846,22 +813,32 @@ const EditTripsPage = () => {
             <div className="flex flex-col gap-4 mb-4 p-2">
               <h2 className="font-bold text-lg py-3">Trips Details</h2>
 
+              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <div
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                    className={`px-4 py-2 rounded-full border cursor-pointer ${
+                      selectedCategories.includes(category.id)
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "bg-gray-200 text-gray-800 border-gray-400"
+                    }`}
+                  >
+                    {category.title}
+                  </div>
+                ))}
+              </div>
+
               <Label className="block text-sm font-medium text-gray-700">
                 Select Destination
               </Label>
               <Select
-                value={selectedDestination}
-                onValueChange={(value) => {
-                  setSelectedDestination(value);
-                  const selectedAlt =
-                    destinations.find((dest) => dest.id === value)?.alt || "";
-                  setSelectedDestinationAlt(selectedAlt);
-                }}
+                value={tripData?.destination || ""}
+                onValueChange={setSelectedDestination}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue>
-                    {selectedDestinationAlt || "Select destination"}
-                  </SelectValue>
+                  <SelectValue placeholder="Select destination" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -1314,23 +1291,6 @@ const EditTripsPage = () => {
                   </table>
                 </div>
               )}
-
-              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <div
-                    key={category.id}
-                    onClick={() => handleCategoryClick(category.id)}
-                    className={`px-4 py-2 rounded-full border cursor-pointer ${
-                      selectedCategories.includes(category.id)
-                        ? "bg-blue-500 text-white border-blue-500"
-                        : "bg-gray-200 text-gray-800 border-gray-400"
-                    }`}
-                  >
-                    {category.title}
-                  </div>
-                ))}
-              </div>
 
               {/* Submit Button */}
               <Button
