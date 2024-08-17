@@ -953,11 +953,19 @@ const EditTripsPage = () => {
                   className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
               </div>
-              {formData.coverImage && (
+              {formData.coverImage && !coverImagePreview && (
                 <Image
                   width={150}
                   height={150}
                   src={formData.coverImage}
+                  alt={`cover image`}
+                />
+              )}
+              {coverImagePreview && (
+                <Image
+                  width={150}
+                  height={150}
+                  src={coverImagePreview}
                   alt={`cover image`}
                 />
               )}
@@ -978,11 +986,19 @@ const EditTripsPage = () => {
                 />
               </div>
 
-              {formData.image && (
+              {formData.image && !previewImage && (
                 <Image
                   width={250}
                   height={150}
                   src={formData.image}
+                  alt={`cover image`}
+                />
+              )}
+              {previewImage && (
+                <Image
+                  width={150}
+                  height={150}
+                  src={previewImage}
                   alt={`cover image`}
                 />
               )}
