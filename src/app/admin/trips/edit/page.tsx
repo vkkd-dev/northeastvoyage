@@ -62,7 +62,7 @@ interface Destination {
 interface Trip {
   id: string;
   category: string[];
-  destination: string;
+  destination: string[];
   name: string;
   city: string;
   price: string;
@@ -75,6 +75,7 @@ interface Trip {
   inclusions: string[];
   exclusions: string[];
   faqs: any;
+  tripType: string;
   priceList: any;
   selectedDates: any;
 }
@@ -86,7 +87,7 @@ const EditTripsPage = () => {
   const [tripData, setTripData] = useState<Trip | null>(null);
   const [formData, setFormData] = useState({
     category: [""],
-    destination: "",
+    destination: [""],
     city: "",
     description: "",
     duration: "",
@@ -99,6 +100,7 @@ const EditTripsPage = () => {
     inclusions: [""],
     exclusions: [""],
     faqs: [{ question: "", answer: "" }],
+    tripType: "",
     priceList: [
       { people: "2 people", standard: "", deluxe: "" },
       { people: "3 people", standard: "", deluxe: "" },
@@ -111,6 +113,9 @@ const EditTripsPage = () => {
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
+    tripData?.destination || []
+  );
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDestination, setSelectedDestination] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -192,7 +197,7 @@ const EditTripsPage = () => {
       // console.log("tripData", tripData);
       setFormData({
         category: tripData.category || [""],
-        destination: tripData.destination || "",
+        destination: tripData.destination || [""],
         city: tripData.city || "",
         description: tripData.description || "",
         duration: tripData.duration || "",
@@ -207,6 +212,7 @@ const EditTripsPage = () => {
         inclusions: tripData.inclusions || [""],
         exclusions: tripData.exclusions || [""],
         faqs: tripData.faqs || [{ question: "", answer: "" }],
+        tripType: tripData.tripType || "",
         priceList: tripData.priceList || [
           { people: "2 people", standard: "", deluxe: "" },
           { people: "3 people", standard: "", deluxe: "" },
@@ -217,8 +223,10 @@ const EditTripsPage = () => {
         ],
         selectedDates: tripData.selectedDates || [],
       });
+      setSelectedDestinations(tripData.destination || []);
       const categoryIds = tripData.category || [];
       setSelectedCategories(categoryIds);
+      setSelectedType(tripData.tripType || "");
     }
   }, [tripData]);
 
@@ -300,6 +308,16 @@ const EditTripsPage = () => {
         return [...prevSelectedCategories, categoryId];
       }
     });
+  };
+
+  const handleDestinationToggle = (id: string) => {
+    if (selectedDestinations.includes(id)) {
+      setSelectedDestinations(
+        selectedDestinations.filter((destination) => destination !== id)
+      );
+    } else {
+      setSelectedDestinations([...selectedDestinations, id]);
+    }
   };
 
   const handleInclusionsChange = (index: number, value: string) => {
@@ -596,7 +614,7 @@ const EditTripsPage = () => {
 
       const tripData: any = {
         category: selectedCategories,
-        destination: selectedDestination,
+        destination: selectedDestinations,
         city: formData.city,
         description: formData.description,
         duration: formData.duration,
@@ -606,7 +624,7 @@ const EditTripsPage = () => {
         coverImage: coverImageUrl,
         image: imageUrl,
         // pdf: pdfUrl,
-        // tripType: selectedType,
+        tripType: selectedType,
       };
 
       if (formData.inclusions && formData.inclusions.length > 0) {
@@ -621,12 +639,12 @@ const EditTripsPage = () => {
       if (formData.faqs && formData.faqs.length > 0) {
         tripData.faqs = formData.faqs;
       }
-
       // if (selectedType === "public") {
       //   tripData.selectedDates = formData.selectedDates;
-      // } else if (selectedType === "customize") {
-      //   tripData.priceList = formData.priceList;
       // }
+      if (selectedType === "customize") {
+        tripData.priceList = formData.priceList;
+      }
       const docRef = doc(firestore, "trips", id!); // Adjust collection name and path as needed
       await updateDoc(docRef, tripData);
 
@@ -655,7 +673,7 @@ const EditTripsPage = () => {
     } finally {
       setFormData({
         category: [""],
-        destination: "",
+        destination: [""],
         city: "",
         description: "",
         duration: "",
@@ -668,6 +686,7 @@ const EditTripsPage = () => {
         inclusions: [""],
         exclusions: [""],
         faqs: [{ question: "", answer: "" }],
+        tripType: "",
         priceList: [
           { people: "2 people", standard: "", deluxe: "" },
           { people: "3 people", standard: "", deluxe: "" },
@@ -813,13 +832,15 @@ const EditTripsPage = () => {
             <div className="flex flex-col gap-4 mb-4 p-2">
               <h2 className="font-bold text-lg py-3">Trips Details</h2>
 
-              <h2 className="font-bold text-lg mt-2">Select Categories</h2>
+              <Label className="block text-sm font-medium text-gray-700">
+                Select Categories
+              </Label>
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <div
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`px-4 py-2 rounded-full border cursor-pointer ${
+                    className={`px-3 py-1 rounded-full border cursor-pointer ${
                       selectedCategories.includes(category.id)
                         ? "bg-blue-500 text-white border-blue-500"
                         : "bg-gray-200 text-gray-800 border-gray-400"
@@ -833,24 +854,21 @@ const EditTripsPage = () => {
               <Label className="block text-sm font-medium text-gray-700">
                 Select Destination
               </Label>
-              <Select
-                value={tripData?.destination || ""}
-                onValueChange={setSelectedDestination}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select destination" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Trip Destination</SelectLabel>
-                    {destinations.map((destination) => (
-                      <SelectItem key={destination.id} value={destination.id}>
-                        {destination.alt}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-wrap gap-2">
+                {destinations.map((destination) => (
+                  <div
+                    key={destination.id}
+                    className={`cursor-pointer px-3 py-1 border rounded-full ${
+                      selectedDestinations.includes(destination.id)
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    onClick={() => handleDestinationToggle(destination.id)}
+                  >
+                    {destination.alt}
+                  </div>
+                ))}
+              </div>
 
               {/* Name Input */}
               <input
@@ -1182,9 +1200,9 @@ const EditTripsPage = () => {
               </div>
 
               {/* Trip Type */}
-              {/* <h2 className="font-bold text-lg">Select Type</h2>
+              <h2 className="font-bold text-lg">Select Type</h2>
 
-              <Select onValueChange={setSelectedType}>
+              <Select value={tripData.tripType} onValueChange={setSelectedType}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a type" />
                 </SelectTrigger>
@@ -1195,9 +1213,9 @@ const EditTripsPage = () => {
                     <SelectItem value="customize">Customize</SelectItem>
                   </SelectGroup>
                 </SelectContent>
-              </Select> */}
+              </Select>
 
-              {selectedType === "public" && (
+              {/* {tripData.tripType === "public" && (
                 <div>
                   <h2 className="font-bold text-lg my-2">Upcoming Dates</h2>
                   <div className="mt-6">
@@ -1240,9 +1258,9 @@ const EditTripsPage = () => {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
 
-              {selectedType === "customize" && (
+              {tripData.tripType === "customize" && (
                 <div>
                   {/* <h2 className="font-bold text-lg">Price List</h2> */}
                   <table className="min-w-full border-collapse">

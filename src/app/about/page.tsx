@@ -88,9 +88,9 @@ const AboutPage = () => {
       try {
         const tripsCollection = collection(firestore, "trips");
 
-        // Build the query to filter trips by the destination id
+        // Build the query to filter trips by the destination array
         const tripsQuery = id
-          ? query(tripsCollection, where("destination", "==", id))
+          ? query(tripsCollection, where("destination", "array-contains", id))
           : tripsCollection;
 
         const querySnapshot = await getDocs(tripsQuery);
@@ -127,7 +127,7 @@ const AboutPage = () => {
     <div>
       <Navbar nav={nav} openNav={openNavbar} />
       <MobileNavbar nav={nav} closeNav={closeNavbar} />
-      <div className="flex flex-col h-[50vh] lg:h-[75vh]">
+      <div className="flex flex-col h-[50vh] lg:h-[75vh] pt-[5rem]">
         <div className="relative w-full h-full lg:h-full overflow-hidden">
           <div
             id="hero"
