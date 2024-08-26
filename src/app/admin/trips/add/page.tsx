@@ -1,8 +1,16 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import PageTitle from "@/components/PageTitle";
-import SideNavbar from "@/components/SideNavbar";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useToast } from "@/components/ui/use-toast";
+import { SiTicktick } from "react-icons/si";
+import { MdErrorOutline } from "react-icons/md";
+import { IoMdAddCircle } from "react-icons/io";
+import { IoMdRemoveCircle } from "react-icons/io";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { firestore, storage } from "@/app/firebase/firebase-cofig";
+import { useRouter } from "next/navigation";
 import {
   addDoc,
   collection,
@@ -10,30 +18,8 @@ import {
   doc,
   getDocs,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { BiSolidEditAlt } from "react-icons/bi";
-import { useToast } from "@/components/ui/use-toast";
-import { SiTicktick } from "react-icons/si";
-import { LuClock10 } from "react-icons/lu";
-import { MdErrorOutline } from "react-icons/md";
-import { RiPriceTag3Line } from "react-icons/ri";
-import { IoMdAddCircle } from "react-icons/io";
-import { IoIosRemoveCircle } from "react-icons/io";
-import { IoMdRemoveCircle } from "react-icons/io";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { ImSpinner2 } from "react-icons/im";
-import { firestore, storage } from "@/app/firebase/firebase-cofig";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Select,
   SelectContent,
@@ -43,10 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Image from "next/image";
-import ConfirmDialog from "@/components/ConfirmDialog";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import {
   format,
   isAfter,
@@ -57,7 +39,12 @@ import {
   endOfYear,
   getMonth,
 } from "date-fns";
-import { useRouter } from "next/navigation";
+import PageTitle from "@/components/PageTitle";
+import SideNavbar from "@/components/SideNavbar";
+import Image from "next/image";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Category {
   id: string;
@@ -117,7 +104,9 @@ const AddTripsPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedDestination, setSelectedDestination] = useState<string>("");
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
+    []
+  );
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -231,30 +220,6 @@ const AddTripsPage = () => {
     }
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "image" | "coverImage"
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (type === "image") {
-        setImageFile(file);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreviewImage(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      } else if (type === "coverImage") {
-        setCoverImageFile(file);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setCoverImagePreview(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  };
-
   const handleFilesChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     itineraryIndex: number
@@ -284,6 +249,16 @@ const AddTripsPage = () => {
           ? prevSelected.filter((id) => id !== categoryId) // Deselect
           : [...prevSelected, categoryId] // Select
     );
+  };
+
+  const handleDestinationToggle = (id: string) => {
+    if (selectedDestinations.includes(id)) {
+      setSelectedDestinations(
+        selectedDestinations.filter((destination) => destination !== id)
+      );
+    } else {
+      setSelectedDestinations([...selectedDestinations, id]);
+    }
   };
 
   const handleInclusionsChange = (index: number, value: string) => {
@@ -569,7 +544,7 @@ const AddTripsPage = () => {
       return;
     }
 
-    if (selectedDestination === "") {
+    if (selectedDestinations.length === 0) {
       toast({
         description: (
           <div className="flex items-center gap-2">
@@ -730,41 +705,6 @@ const AddTripsPage = () => {
       return;
     }
 
-    // if (
-    //   selectedCategories.length === 0 ||
-    //   selectedDestination === "" ||
-    //   formData.city === "" ||
-    //   formData.description === "" ||
-    //   formData.duration === "" ||
-    //   formData.name === "" ||
-    //   formData.price === "" ||
-    //   formData.overview === "" ||
-    //   imageFile === null ||
-    //   coverImageFile === null ||
-    //   selectedType === null ||
-    //   !pdfFile ||
-    //   areInclusionsValid ||
-    //   areExclusionsValid ||
-    //   areFaqsValid ||
-    //   (selectedType === "public" && formData.selectedDates.length === 0) ||
-    //   (selectedType === "customize" &&
-    //     formData.priceList.every(
-    //       (item) => item.standard === "" && item.deluxe === ""
-    //     )) ||
-    //   formData.inclusions.some((inclusion) => inclusion.trim() === "")
-    // ) {
-    //   toast({
-    //     description: (
-    //       <div className="flex items-center gap-2">
-    //         <MdErrorOutline size={20} />
-    //         <p>Fill all the fields</p>
-    //       </div>
-    //     ),
-    //     className: "bg-primary text-white font-bold",
-    //   });
-    //   return;
-    // }
-
     try {
       setIsSubmitting(true);
       let imageUrl = formData.image;
@@ -793,7 +733,7 @@ const AddTripsPage = () => {
 
       const tripData: any = {
         category: selectedCategories,
-        destination: selectedDestination,
+        destination: selectedDestinations,
         city: formData.city,
         // description: formData.description,
         duration: formData.duration,
@@ -875,7 +815,7 @@ const AddTripsPage = () => {
         selectedDates: [],
       });
       setSelectedCategories([]);
-      setSelectedDestination("");
+      setSelectedDestinations([]);
       setImageFile(null);
       setPdfFile(null);
       setPreviewImage(null);
@@ -951,165 +891,6 @@ const AddTripsPage = () => {
     setFormData({ ...formData, itinerary: newItinerary });
   };
 
-  const openConfirmDialog = (id: string) => {
-    setDeleteTripId(id);
-    setShowConfirmDialog(true);
-  };
-
-  const openEditModal = (trip: Trip) => {
-    setEditTripId(trip.id);
-    setFormData({
-      city: trip.city,
-      description: trip.description,
-      duration: trip.duration,
-      name: trip.name,
-      price: trip.price,
-      overview: trip.overview,
-      coverImage: trip.coverImage,
-      image: trip.image,
-      itinerary: [{ title: "", items: [""], images: [""] }],
-      inclusions: [],
-      exclusions: [],
-      faqs: [{ question: "", answer: "" }],
-      priceList: [
-        { people: "2 people", standard: "", deluxe: "" },
-        { people: "3 people", standard: "", deluxe: "" },
-        { people: "4 people(dzire)", standard: "", deluxe: "" },
-        { people: "4 people(innova)", standard: "", deluxe: "" },
-        { people: "5 people", standard: "", deluxe: "" },
-        { people: "6 people", standard: "", deluxe: "" },
-      ],
-      selectedDates: [],
-    });
-    setPreviewImage(trip.image);
-    setCoverImagePreview(trip.coverImage);
-    setEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditTripId(null);
-    setFormData({
-      city: "",
-      description: "",
-      duration: "",
-      name: "",
-      price: "",
-      overview: "",
-      coverImage: "",
-      image: "",
-      itinerary: [{ title: "", items: [""], images: [""] }],
-      inclusions: [],
-      exclusions: [],
-      faqs: [{ question: "", answer: "" }],
-      priceList: [
-        { people: "2 people", standard: "", deluxe: "" },
-        { people: "3 people", standard: "", deluxe: "" },
-        { people: "4 people(dzire)", standard: "", deluxe: "" },
-        { people: "4 people(innova)", standard: "", deluxe: "" },
-        { people: "5 people", standard: "", deluxe: "" },
-        { people: "6 people", standard: "", deluxe: "" },
-      ],
-      selectedDates: [],
-    });
-    setPreviewImage(null);
-    setCoverImagePreview(null);
-    setEditModalOpen(false);
-  };
-
-  const handleUpdate = async () => {
-    try {
-      let imageUrl = formData.image;
-      let coverImageUrl = formData.coverImage; // Add cover image handling
-
-      // Handle main image upload
-      if (imageFile) {
-        const storageRef = ref(storage, `trips/${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
-      }
-
-      // Handle cover image upload
-      if (coverImageFile) {
-        const coverImageRef = ref(
-          storage,
-          `trips/coverImages/${coverImageFile.name}`
-        );
-        await uploadBytes(coverImageRef, coverImageFile);
-        coverImageUrl = await getDownloadURL(coverImageRef);
-      }
-
-      // Update Firestore document
-      await updateDoc(doc(firestore, "trips", editTripId!), {
-        city: formData.city,
-        description: formData.description,
-        duration: formData.duration,
-        name: formData.name,
-        price: formData.price,
-        overview: formData.overview,
-        inclusions: formData.inclusions,
-        exclusions: formData.exclusions,
-        faqs: formData.faqs,
-        priceList: formData.priceList,
-        selectedDates: formData.selectedDates,
-        image: imageUrl,
-        coverImage: coverImageUrl, // Update cover image URL
-      });
-
-      // Update local state with updated data
-      setTripsData((prevData) =>
-        prevData.map((item) =>
-          item.id === editTripId
-            ? {
-                id: item.id,
-                city: formData.city,
-                description: formData.description,
-                duration: formData.duration,
-                name: formData.name,
-                price: formData.price,
-                overview: formData.overview,
-                itinerary: formData.itinerary,
-                inclusions: formData.inclusions,
-                exclusions: formData.exclusions,
-                faqs: formData.faqs,
-                priceList: formData.priceList,
-                selectedDates: formData.selectedDates,
-                image: imageUrl,
-                coverImage: coverImageUrl, // Update cover image URL
-              }
-            : item
-        )
-      );
-
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Trip Updated</p>
-          </div>
-        ),
-        className: "bg-primary text-white font-bold",
-      });
-
-      closeEditModal();
-    } catch (error) {
-      console.error("Error updating trip:", error);
-      toast({
-        description: (
-          <div className="flex items-center gap-2">
-            <SiTicktick size={20} />
-            <p>Error updating document</p>
-          </div>
-        ),
-        variant: "destructive",
-      });
-    }
-  };
-
-  const truncateText = (text: string) => {
-    if (text.length <= 100) return text;
-    return text.slice(0, 100) + "...";
-  };
-
   const groupDatesByMonth = (dates: Date[]) => {
     const months = new Map<number, Date[]>();
     dates.forEach((date) => {
@@ -1173,7 +954,7 @@ const AddTripsPage = () => {
                   <div
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`px-4 py-2 rounded-full border cursor-pointer ${
+                    className={`px-3 py-1 rounded-full border cursor-pointer ${
                       selectedCategories.includes(category.id)
                         ? "bg-blue-500 text-white border-blue-500"
                         : "bg-gray-200 text-gray-800 border-gray-400"
@@ -1184,25 +965,25 @@ const AddTripsPage = () => {
                 ))}
               </div>
 
+              {/* Destination Select */}
               <Label className="block text-sm font-medium text-gray-700 my-2">
                 Select Destination
               </Label>
-              {/* Destination Select */}
-              <Select onValueChange={setSelectedDestination}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select destination" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Trip Destination</SelectLabel>
-                    {destinations.map((destination) => (
-                      <SelectItem key={destination.id} value={destination.id}>
-                        {destination.alt}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-wrap gap-2">
+                {destinations.map((destination) => (
+                  <div
+                    key={destination.id}
+                    className={`cursor-pointer px-3 py-1 border rounded-full ${
+                      selectedDestinations.includes(destination.id)
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    onClick={() => handleDestinationToggle(destination.id)}
+                  >
+                    {destination.alt}
+                  </div>
+                ))}
+              </div>
 
               {/* Name Input */}
               <input

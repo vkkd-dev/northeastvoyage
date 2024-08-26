@@ -69,6 +69,7 @@ interface Trip {
   duration: string;
   image: string;
   coverImage: string;
+  pdf: string;
   description: string;
   overview: string;
   itinerary: any;
@@ -96,6 +97,7 @@ const EditTripsPage = () => {
     overview: "",
     coverImage: "",
     image: "",
+    pdf: "",
     itinerary: [{ title: "", items: [""], images: [""] }],
     inclusions: [""],
     exclusions: [""],
@@ -206,6 +208,7 @@ const EditTripsPage = () => {
         overview: tripData.overview || "",
         coverImage: tripData.coverImage || "",
         image: tripData.image || "",
+        pdf: tripData.pdf || "",
         itinerary: tripData.itinerary || [
           { title: "", items: [""], images: [""] },
         ],
@@ -605,7 +608,7 @@ const EditTripsPage = () => {
         coverImageUrl = await getDownloadURL(coverImageRef);
       }
 
-      let pdfUrl = "";
+      let pdfUrl = formData.pdf;
       if (pdfFile) {
         const pdfRef = ref(storage, `pdf/${pdfFile.name}`);
         await uploadBytes(pdfRef, pdfFile);
@@ -623,7 +626,7 @@ const EditTripsPage = () => {
         overview: formData.overview,
         coverImage: coverImageUrl,
         image: imageUrl,
-        // pdf: pdfUrl,
+        pdf: pdfUrl,
         tripType: selectedType,
       };
 
@@ -682,6 +685,7 @@ const EditTripsPage = () => {
         overview: "",
         coverImage: "",
         image: "",
+        pdf: "",
         itinerary: [{ title: "", items: [""], images: [""] }],
         inclusions: [""],
         exclusions: [""],
@@ -831,7 +835,6 @@ const EditTripsPage = () => {
           >
             <div className="flex flex-col gap-4 mb-4 p-2">
               <h2 className="font-bold text-lg py-3">Trips Details</h2>
-
               <Label className="block text-sm font-medium text-gray-700">
                 Select Categories
               </Label>
@@ -850,7 +853,6 @@ const EditTripsPage = () => {
                   </div>
                 ))}
               </div>
-
               <Label className="block text-sm font-medium text-gray-700">
                 Select Destination
               </Label>
@@ -869,7 +871,6 @@ const EditTripsPage = () => {
                   </div>
                 ))}
               </div>
-
               {/* Name Input */}
               <input
                 type="text"
@@ -880,7 +881,6 @@ const EditTripsPage = () => {
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
-
               {/* Description Textarea */}
               {/* <textarea
                       placeholder="Description"
@@ -894,7 +894,6 @@ const EditTripsPage = () => {
                       className="px-2 py-1 border border-gray-300 rounded"
                       rows={4}
                     /> */}
-
               {/* Duration Input */}
               <input
                 type="text"
@@ -905,7 +904,6 @@ const EditTripsPage = () => {
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
-
               {/* City Input */}
               <input
                 type="text"
@@ -916,7 +914,6 @@ const EditTripsPage = () => {
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
-
               {/* Price Input */}
               <input
                 type="number"
@@ -927,7 +924,6 @@ const EditTripsPage = () => {
                 }
                 className="px-2 py-1 border border-gray-300 rounded"
               />
-
               {/* Overview Textarea */}
               <textarea
                 placeholder="Overview"
@@ -938,8 +934,7 @@ const EditTripsPage = () => {
                 className="px-2 py-1 border border-gray-300 rounded"
                 rows={4}
               />
-
-              {/* Cover Input */}
+              {/* Cover Input */}x
               <div className="items-center">
                 <label
                   htmlFor="coverImageFile"
@@ -970,7 +965,6 @@ const EditTripsPage = () => {
                   alt={`cover image`}
                 />
               )}
-
               {/* Image Input */}
               <div className="items-center">
                 <label
@@ -986,7 +980,6 @@ const EditTripsPage = () => {
                   className="mt-1 rounded block text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
               </div>
-
               {formData.image && !previewImage && (
                 <Image
                   width={250}
@@ -1003,9 +996,8 @@ const EditTripsPage = () => {
                   alt={`cover image`}
                 />
               )}
-
               {/* PDF Input */}
-              {/* <div className="mb-4">
+              <div className="mb-4">
                 <label
                   htmlFor="pdfFile"
                   className="block text-sm font-medium text-gray-700"
@@ -1019,8 +1011,15 @@ const EditTripsPage = () => {
                   onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
                   className="mt-1 block rounded text-sm text-gray-500 border border-gray-300 focus:ring-primary focus:border-primary"
                 />
-              </div> */}
-
+              </div>
+              {formData.pdf && (
+                <Image
+                  width={50}
+                  height={50}
+                  src={"/graphics/pdf.png"}
+                  alt="pdf"
+                />
+              )}
               {/* Itinerary */}
               <div className="mt-6">
                 <h2 className="font-bold text-lg">Itinerary</h2>
@@ -1103,7 +1102,6 @@ const EditTripsPage = () => {
                   className="cursor-pointer m-2"
                 />
               </div>
-
               {/* Inclusions */}
               <div>
                 <h2 className="font-bold text-lg">Inclusions</h2>
@@ -1131,7 +1129,6 @@ const EditTripsPage = () => {
                   className="cursor-pointer m-2"
                 />
               </div>
-
               {/* Exclusions */}
               <div>
                 <h2 className="font-bold text-lg">Exclusions</h2>
@@ -1159,7 +1156,6 @@ const EditTripsPage = () => {
                   className="cursor-pointer m-2"
                 />
               </div>
-
               {/* FAQs */}
               <div>
                 <h2 className="font-bold text-lg">FAQs</h2>
@@ -1198,10 +1194,8 @@ const EditTripsPage = () => {
                   className="cursor-pointer m-2"
                 />
               </div>
-
               {/* Trip Type */}
               <h2 className="font-bold text-lg">Select Type</h2>
-
               <Select value={tripData.tripType} onValueChange={setSelectedType}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a type" />
@@ -1214,7 +1208,6 @@ const EditTripsPage = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-
               {/* {tripData.tripType === "public" && (
                 <div>
                   <h2 className="font-bold text-lg my-2">Upcoming Dates</h2>
@@ -1259,7 +1252,6 @@ const EditTripsPage = () => {
                   </div>
                 </div>
               )} */}
-
               {tripData.tripType === "customize" && (
                 <div>
                   {/* <h2 className="font-bold text-lg">Price List</h2> */}
@@ -1309,7 +1301,6 @@ const EditTripsPage = () => {
                   </table>
                 </div>
               )}
-
               {/* Submit Button */}
               <Button
                 type="submit"
