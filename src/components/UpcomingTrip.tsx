@@ -78,7 +78,9 @@ function UpcomingTrip() {
 
         {!isLoading &&
           tripData.length > 0 &&
-          tripData.map((trip, index) => <TripCard key={index} trip={trip} />)}
+          tripData
+            .slice(0, 8)
+            .map((trip, index) => <TripCard key={index} trip={trip} />)}
       </div>
     </div>
   );

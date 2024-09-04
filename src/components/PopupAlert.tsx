@@ -43,15 +43,18 @@ const PopupAlert = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // const isVisited = localStorage.getItem("isVisited");
-      // if (!isVisited) {
-      setIsOpen(true);
-      // localStorage.setItem("isVisited", "true");
-      // }
-    }, 30000); // 30 seconds delay
+    const currentUrl = window.location.href;
+    if (!currentUrl.includes("/admin")) {
+      const timer = setTimeout(() => {
+        // const isVisited = localStorage.getItem("isVisited");
+        // if (!isVisited) {
+        setIsOpen(true);
+        // localStorage.setItem("isVisited", "true");
+        // }
+      }, 30000); // 30 seconds delay
 
-    return () => clearTimeout(timer); // Cleanup timeout on component unmount
+      return () => clearTimeout(timer); // Cleanup timeout on component unmount
+    }
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

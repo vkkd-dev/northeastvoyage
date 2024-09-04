@@ -1,5 +1,6 @@
 "use client";
 
+import PopupAlert from "@/components/PopupAlert";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface UserContextType {
@@ -23,7 +24,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const isLogin = localStorage.getItem("isLogin");
     if (isLogin) {
-    //   console.log("isLogin:", isLogin);
+      //   console.log("isLogin:", isLogin);
       setIsAdminLoggedIn(true);
     }
     setIsLoading(false);
@@ -33,6 +34,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     <UserContext.Provider
       value={{ isAdminLoggedIn, setIsAdminLoggedIn, isLoading }}
     >
+      <PopupAlert />
       {children}
     </UserContext.Provider>
   );

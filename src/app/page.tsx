@@ -11,7 +11,6 @@ import WhyUs from "@/components/WhyUs";
 import Image from "next/image";
 import TripsSub1 from "../components/TripsSub1";
 import TripsSub2 from "../components/TripsSub2";
-import PopupAlert from "@/components/PopupAlert";
 import { useState } from "react";
 
 function HomePage() {
@@ -25,7 +24,6 @@ function HomePage() {
 
   return (
     <div className="relative overflow-x-hidden">
-      <PopupAlert />
       <Image
         width={75}
         height={75}

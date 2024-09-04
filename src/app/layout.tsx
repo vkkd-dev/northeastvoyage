@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { UserProvider } from "@/context/AdminContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
-import "./globals.css";
 import { ChangePasswordProvider } from "@/context/ChangePasswordContext";
+import PopupAlert from "@/components/PopupAlert";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Northeast Travel Guide | Explore the Marvels of the Northeast",
