@@ -564,7 +564,7 @@ const TripPage = () => {
         )}
         {!isTripsLoading && (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-            {trips.map((trip, index) => (
+            {trips.slice(0, 8).map((trip, index) => (
               <TripCard key={index} trip={trip} />
             ))}
           </div>
